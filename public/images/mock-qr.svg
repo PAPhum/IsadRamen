@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <rect width="300" height="300" fill="#ffffff" rx="16"/>
+  
+  <!-- Thai QR Header Banner -->
+  <rect x="20" y="15" width="260" height="42" rx="8" fill="#003D6B"/>
+  <text x="150" y="38" fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" letter-spacing="1">THAI QR PAYMENT</text>
+  <text x="150" y="50" fill="#FFCC00" font-family="Arial, sans-serif" font-weight="bold" font-size="9" text-anchor="middle">PROMPTPAY</text>
+  
+  <!-- QR Frame Outer -->
+  <rect x="35" y="68" width="230" height="215" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" rx="8"/>
+  
+  <!-- QR Finder Pattern Top-Left -->
+  <rect x="50" y="80" width="45" height="45" fill="#000000"/>
+  <rect x="56" y="86" width="33" height="33" fill="#ffffff"/>
+  <rect x="63" y="93" width="19" height="19" fill="#000000"/>
+  
+  <!-- QR Finder Pattern Top-Right -->
+  <rect x="205" y="80" width="45" height="45" fill="#000000"/>
+  <rect x="211" y="86" width="33" height="33" fill="#ffffff"/>
+  <rect x="218" y="93" width="19" height="19" fill="#000000"/>
+  
+  <!-- QR Finder Pattern Bottom-Left -->
+  <rect x="50" y="222" width="45" height="45" fill="#000000"/>
+  <rect x="56" y="228" width="33" height="33" fill="#ffffff"/>
+  <rect x="63" y="235" width="19" height="19" fill="#000000"/>
+  
+  <!-- QR Matrix Dots Mock -->
+  <g fill="#000000">
+    <!-- Row 1 -->
+    <rect x="105" y="80" width="7" height="7"/>
+    <rect x="120" y="80" width="14" height="7"/>
+    <rect x="145" y="80" width="7" height="7"/>
+    <rect x="160" y="80" width="14" height="7"/>
+    <rect x="185" y="80" width="7" height="7"/>
+    
+    <!-- Row 2 -->
+    <rect x="105" y="92" width="14" height="7"/>
+    <rect x="130" y="92" width="7" height="7"/>
+    <rect x="150" y="92" width="20" height="7"/>
+    <rect x="180" y="92" width="14" height="7"/>
+    
+    <!-- Row 3 -->
+    <rect x="110" y="104" width="7" height="7"/>
+    <rect x="125" y="104" width="21" height="7"/>
+    <rect x="160" y="104" width="7" height="7"/>
+    <rect x="175" y="104" width="14" height="7"/>
+
+    <!-- Row 4 -->
+    <rect x="105" y="116" width="14" height="7"/>
+    <rect x="135" y="116" width="14" height="7"/>
+    <rect x="170" y="116" width="7" height="7"/>
+    
+    <!-- Middle Band -->
+    <rect x="50" y="135" width="14" height="7"/>
+    <rect x="75" y="135" width="7" height="7"/>
+    <rect x="90" y="135" width="14" height="7"/>
+    <rect x="115" y="135" width="21" height="7"/>
+    <rect x="150" y="135" width="14" height="7"/>
+    <rect x="175" y="135" width="7" height="7"/>
+    <rect x="195" y="135" width="14" height="7"/>
+    <rect x="220" y="135" width="25" height="7"/>
+
+    <rect x="55" y="147" width="21" height="7"/>
+    <rect x="90" y="147" width="7" height="7"/>
+    <rect x="110" y="147" width="14" height="7"/>
+    <rect x="135" y="147" width="28" height="7"/>
+    <rect x="175" y="147" width="14" height="7"/>
+    <rect x="200" y="147" width="7" height="7"/>
+    <rect x="220" y="147" width="14" height="7"/>
+
+    <rect x="50" y="159" width="7" height="7"/>
+    <rect x="70" y="159" width="14" height="7"/>
+    <rect x="100" y="159" width="14" height="7"/>
+    <rect x="125" y="159" width="7" height="7"/>
+    <rect x="145" y="159" width="14" height="7"/>
+    <rect x="170" y="159" width="21" height="7"/>
+    <rect x="205" y="159" width="14" height="7"/>
+    <rect x="230" y="159" width="14" height="7"/>
+
+    <rect x="60" y="171" width="14" height="7"/>
+    <rect x="85" y="171" width="21" height="7"/>
+    <rect x="120" y="171" width="7" height="7"/>
+    <rect x="140" y="171" width="21" height="7"/>
+    <rect x="175" y="171" width="14" height="7"/>
+    <rect x="210" y="171" width="7" height="7"/>
+    <rect x="225" y="171" width="21" height="7"/>
+
+    <rect x="50" y="183" width="28" height="7"/>
+    <rect x="90" y="183" width="14" height="7"/>
+    <rect x="115" y="183" width="7" height="7"/>
+    <rect x="135" y="183" width="14" height="7"/>
+    <rect x="160" y="183" width="21" height="7"/>
+    <rect x="195" y="183" width="14" height="7"/>
+    <rect x="220" y="183" width="7" height="7"/>
+    <rect x="235" y="183" width="14" height="7"/>
+
+    <rect x="65" y="195" width="14" height="7"/>
+    <rect x="95" y="195" width="21" height="7"/>
+    <rect x="130" y="195" width="14" height="7"/>
+    <rect x="155" y="195" width="7" height="7"/>
+    <rect x="170" y="195" width="21" height="7"/>
+    <rect x="205" y="195" width="14" height="7"/>
+    <rect x="230" y="195" width="14" height="7"/>
+
+    <rect x="50" y="207" width="14" height="7"/>
+    <rect x="75" y="207" width="7" height="7"/>
+    <rect x="90" y="207" width="21" height="7"/>
+    <rect x="125" y="207" width="14" height="7"/>
+    <rect x="150" y="207" width="14" height="7"/>
+    <rect x="180" y="207" width="7" height="7"/>
+    <rect x="200" y="207" width="21" height="7"/>
+    <rect x="230" y="207" width="14" height="7"/>
+
+    <!-- Bottom Right region -->
+    <rect x="105" y="222" width="14" height="7"/>
+    <rect x="130" y="222" width="21" height="7"/>
+    <rect x="165" y="222" width="14" height="7"/>
+    <rect x="190" y="222" width="7" height="7"/>
+    <rect x="210" y="222" width="21" height="7"/>
+
+    <rect x="115" y="234" width="7" height="7"/>
+    <rect x="135" y="234" width="14" height="7"/>
+    <rect x="160" y="234" width="28" height="7"/>
+    <rect x="200" y="234" width="14" height="7"/>
+    <rect x="225" y="234" width="14" height="7"/>
+
+    <rect x="105" y="246" width="21" height="7"/>
+    <rect x="140" y="246" width="7" height="7"/>
+    <rect x="155" y="246" width="14" height="7"/>
+    <rect x="180" y="246" width="21" height="7"/>
+    <rect x="210" y="246" width="7" height="7"/>
+    <rect x="225" y="246" width="20" height="7"/>
+
+    <rect x="110" y="258" width="14" height="7"/>
+    <rect x="135" y="258" width="14" height="7"/>
+    <rect x="160" y="258" width="7" height="7"/>
+    <rect x="175" y="258" width="21" height="7"/>
+    <rect x="205" y="258" width="14" height="7"/>
+    <rect x="230" y="258" width="14" height="7"/>
+  </g>
+
+  <!-- Center PromptPay Logo Badge -->
+  <circle cx="150" cy="175" r="18" fill="#ffffff" stroke="#003D6B" stroke-width="2"/>
+  <text x="150" y="179" fill="#003D6B" font-family="Arial, sans-serif" font-weight="900" font-size="12" text-anchor="middle">PP</text>
+</svg>

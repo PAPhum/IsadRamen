@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>หน้าจอกลางครัว (KDS) - IsadRamen</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-900 text-white font-sans h-screen flex flex-col p-6 overflow-hidden">
+
+  <!-- Header จอครัว -->
+  <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
+    <div class="flex items-center gap-3">
+      <span class="text-3xl">👨‍🍳</span>
+      <h1 class="text-2xl font-bold tracking-wide text-yellow-500">คิวรายการอาหาร (Kitchen Display)</h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 bg-green-500 rounded-full animate-ping"></span>
+      <span class="text-sm text-gray-400">Auto Refresh (3s)</span>
+    </div>
+  </div>
+
+  <!-- ตารางคิวรายการอาหาร -->
+  <div class="flex-1 bg-gray-800 border border-gray-700 rounded-2xl p-4 overflow-y-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b border-gray-700 text-gray-400 text-sm">
+          <th class="p-3">เวลาสั่ง</th>
+          <th class="p-3">โต๊ะ</th>
+          <th class="p-3">รายการอาหาร</th>
+          <th class="p-3">การปรับแต่ง / Topping</th>
+          <th class="p-3">หมายเหตุ</th>
+          <th class="p-3 text-center">จำนวน</th>
+          <th class="p-3 text-center">สถานะ</th>
+          <th class="p-3 text-center">จัดการ</th>
+        </tr>
+      </thead>
+      <tbody id="kitchen-orders-body">
+        <!-- JS จะ Render คิวอาหารตรงนี้ -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // ฟังก์ชันดึงออเดอร์จาก API
+    function fetchKitchenOrders() {
+      fetch('/kitchen/api/orders')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            renderOrders(data.orders);
+          }
+        })
+        .catch(err => console.error('Fetch error:', err));
+    }
+
+    // ฟังก์ชัน Render ข้อมูลลง HTML Table
+    function renderOrders(orders) {
+      const tbody = document.getElementById('kitchen-orders-body');
+      tbody.innerHTML = '';
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-12 text-gray-500 font-bold text-lg">
+              🎉 ไม่มีคิวอาหารที่รอปรุงในขณะนี้
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      orders.forEach(item => {
+        const timeStr = new Date(item.order_item_time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        
+        // กำหนดสีตามสถานะ
+        const isQueue = item.status === 'queue';
+        const statusBadge = isQueue 
+          ? `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-3 py-1 rounded-full text-xs font-bold">อยู่ในคิว</span>`
+          : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 px-3 py-1 rounded-full text-xs font-bold animate-pulse">กำลังปรุง</span>`;
+
+        // ปุ่มเปลี่ยนสถานะ
+        const actionBtn = isQueue
+          ? `<button onclick="updateStatus(${item.order_item_id}, 'prepare')" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">รับออเดอร์</button>`
+          : `<button onclick="updateStatus(${item.order_item_id}, 'finish')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">ทำเสร็จแล้ว</button>`;
+
+        const optionsText = [item.options, item.toppings].filter(Boolean).join(' | ') || '-';
+
+        tbody.innerHTML += `
+          <tr class="border-b border-gray-700 hover:bg-gray-750 transition text-sm">
+            <td class="p-3 font-mono text-gray-400">${timeStr}</td>
+            <td class="p-3 font-bold text-yellow-500 text-base">${item.table_number}</td>
+            <td class="p-3 font-semibold text-white text-base">${item.menu_name}</td>
+            <td class="p-3 text-gray-300">${optionsText}</td>
+            <td class="p-3 text-red-400 font-medium">${item.note || '-'}</td>
+            <td class="p-3 text-center font-bold text-lg">${item.quantity}</td>
+            <td class="p-3 text-center">${statusBadge}</td>
+            <td class="p-3 text-center">${actionBtn}</td>
+          </tr>
+        `;
+      });
+    }
+
+    // ฟังก์ชันยิง API เปลี่ยนสถานะ
+    function updateStatus(orderItemId, nextStatus) {
+      fetch('/kitchen/api/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_item_id: orderItemId, next_status: nextStatus })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          fetchKitchenOrders(); // โหลดข้อมูลใหม่ทันทีที่อัปเดตสำเร็จ
+        }
+      });
+    }
+
+    // เรียกดึงข้อมูลครั้งแรก
+    fetchKitchenOrders();
+
+    // ตั้ง Auto Refresh ทุกๆ 3 วินาที (3000 ms)
+    setInterval(fetchKitchenOrders, 3000);
+  </script>
+</body>
+</html>

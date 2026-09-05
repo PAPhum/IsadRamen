@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประวัติการสั่งอาหาร - โต๊ะ <%= table.table_number %> | IsadRamen</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none">
+
+  <!-- Tablet Frame (1024x768 Landscape) -->
+  <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-8 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
+    
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <h2 class="text-center font-black text-2xl mb-4 tracking-wide text-gray-800">รายการอาหารที่สั่ง</h2>
+
+      <!-- ตารางประวัติรายการที่สั่ง (อย่างน้อย 8 แถวตาม Wireframe) -->
+      <div class="flex-1 border border-black overflow-y-auto">
+        <table class="w-full border-collapse text-xs md:text-sm text-center">
+          <thead>
+            <tr class="border-b border-black bg-gray-100 font-bold">
+              <th class="border-r border-black p-2.5 w-14">ลำดับ</th>
+              <th class="border-r border-black p-2.5 text-left pl-4">รายการอาหาร</th>
+              <th class="border-r border-black p-2.5 w-24">จำนวน</th>
+              <th class="p-2.5 w-32 text-right pr-4">ราคา</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+              const totalSlots = Math.max(8, items.length);
+              for (let i = 0; i < totalSlots; i++) { 
+                const item = items[i];
+            %>
+              <tr class="h-11 border-b border-black hover:bg-gray-50">
+                <td class="border-r border-black text-gray-500 font-bold"><%= item ? (i + 1) : '' %></td>
+                <td class="border-r border-black text-left pl-4">
+                  <% if (item) { %>
+                    <div class="font-bold text-gray-900"><%= item.menu_name %></div>
+                    <% if (item.options_text || item.toppings_text) { %>
+                      <div class="text-[11px] text-gray-500 mt-0.5">
+                        <%= [item.options_text, item.toppings_text].filter(Boolean).join(' | ') %>
+                      </div>
+                    <% } %>
+                  <% } %>
+                </td>
+                <td class="border-r border-black font-bold text-gray-800"><%= item ? item.quantity : '' %></td>
+                <td class="text-right pr-4 font-black text-gray-900"><%= item ? `${item.total_item_price} ฿` : '' %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- แถบสรุปเงินด้านล่าง ตาม Wireframe -->
+    <div class="flex justify-between items-center border-t-2 border-black pt-4 mt-4">
+      <a href="/customer/<%= table.table_number %>/menu" 
+         class="bg-gray-200 border border-gray-400 hover:bg-gray-300 active:bg-gray-400 font-bold px-8 py-3 rounded-xl text-black transition text-base">
+        ย้อนกลับ
+      </a>
+
+      <span class="font-black text-3xl text-gray-900">
+        รวม <%= grandTotal %> ฿
+      </span>
+
+      <button onclick="openNoticeModal()" 
+              class="bg-gray-300 border border-gray-400 hover:bg-gray-400 active:bg-gray-500 font-bold px-10 py-3 rounded-xl text-black transition text-lg shadow-sm">
+        ชำระเงิน
+      </button>
+    </div>
+
+    <!-- หมายเลขโต๊ะ มุมขวาล่าง -->
+    <div class="absolute bottom-2 right-2 bg-gray-200 border border-gray-400 px-3 py-0.5 text-xs font-bold text-gray-700 rounded pointer-events-none">
+      <%= table.table_number %>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- Modal เมื่อกดชำระเงิน (นำ paymentcard ไปชำระเงินที่แคชเชียร์) ตาม Wireframe -->
+    <!-- ======================================================== -->
+    <div id="checkout-notice-modal" 
+         class="hidden absolute inset-0 bg-white border-4 border-black flex flex-col items-center justify-center z-50 p-8">
+      
+      <div class="text-center mb-8">
+        <div class="text-7xl mb-4">💳</div>
+        <h1 class="text-5xl md:text-6xl font-black mb-4 tracking-tight">นำ paymentcard ไป</h1>
+        <h1 class="text-5xl md:text-6xl font-black text-red-600 tracking-tight">ชำระเงินที่แคชเชียร์</h1>
+        <p class="text-gray-400 text-base mt-4">กรุณานำการ์ดประจำโต๊ะของคุณไปติดต่อที่เคาน์เตอร์แคชเชียร์</p>
+      </div>
+
+      <button onclick="closeNoticeModal()" 
+              class="absolute bottom-6 left-6 bg-gray-200 border border-gray-400 hover:bg-gray-300 active:bg-gray-400 font-bold px-8 py-3 rounded-xl text-base transition">
+        ย้อนกลับ
+      </button>
+
+      <div class="absolute bottom-4 right-4 bg-gray-200 border-2 border-gray-400 px-6 py-2 text-base font-bold text-black rounded-lg shadow-sm">
+        โต๊ะ <%= table.table_number %>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let noticeTimer = null;
+
+    function openNoticeModal() {
+      document.getElementById('checkout-notice-modal').classList.remove('hidden');
+      if (noticeTimer) clearTimeout(noticeTimer);
+      // ค้างประมาณ 10 วิ แล้วปิดอัตโนมัติ ตาม Wireframe
+      noticeTimer = setTimeout(() => {
+        closeNoticeModal();
+      }, 10000);
+    }
+
+    function closeNoticeModal() {
+      if (noticeTimer) clearTimeout(noticeTimer);
+      document.getElementById('checkout-notice-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ใบเสร็จรับเงิน #<%= payment.payment_id %> | IsadRamen</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-mono">
+
+  <div class="bg-white w-[380px] border-4 border-black p-6 rounded-lg shadow-2xl space-y-4">
+    <div class="text-center border-b-2 border-dashed border-black pb-4">
+      <h1 class="font-black text-xl tracking-wider">RAMEN RESTAURANT</h1>
+      <p class="font-sans text-xs text-gray-500 font-bold mt-1">ใบเสร็จรับเงิน (RECEIPT)</p>
+    </div>
+
+    <div class="flex justify-between text-xs font-bold">
+      <span>TABLE: <%= payment.table_number %></span>
+      <span>CARD: <%= payment.card_id %></span>
+    </div>
+    <div class="flex justify-between text-xs text-gray-600 border-b border-dashed border-gray-400 pb-3">
+      <span><%= new Date(payment.payment_time).toLocaleString('th-TH') %></span>
+      <span>#REC-<%= String(payment.payment_id).padStart(4, '0') %></span>
+    </div>
+
+    <div class="space-y-1.5 border-b-2 border-dashed border-black pb-4 text-xs">
+      <div class="flex justify-between font-black text-sm">
+        <span>TOTAL AMOUNT:</span>
+        <span><%= payment.total_amount %> ฿</span>
+      </div>
+      <div class="flex justify-between">
+        <span>PAYMENT METHOD:</span>
+        <span><%= payment.payment_method %></span>
+      </div>
+      <div class="flex justify-between">
+        <span>AMOUNT PAID:</span>
+        <span><%= payment.amount_paid %> ฿</span>
+      </div>
+      <div class="flex justify-between font-bold text-green-700">
+        <span>CHANGE:</span>
+        <span><%= payment.change_amount %> ฿</span>
+      </div>
+    </div>
+
+    <p class="text-center text-[10px] text-gray-400 font-sans">
+      ขอบคุณที่ใช้บริการ / Thank you!
+    </p>
+
+    <div class="flex gap-2 pt-2">
+      <button onclick="window.print()" class="flex-1 bg-black text-white font-bold py-2 rounded-lg text-xs hover:bg-gray-800">
+        🖨️ พิมพ์ใบเสร็จ
+      </button>
+      <a href="/cashier" class="flex-1 bg-gray-200 border border-black font-bold py-2 rounded-lg text-xs text-center hover:bg-gray-300">
+        กลับหน้าแคชเชียร์
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

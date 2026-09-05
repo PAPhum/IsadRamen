@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IsadRamen - เลือกระบบเพื่อทดสอบ Demo</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col justify-between p-6">
+
+  <div class="max-w-5xl mx-auto w-full space-y-8">
+    
+    <!-- Hero Header -->
+    <div class="text-center space-y-3 pt-4">
+      <div class="inline-block bg-red-600 text-white font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase shadow">
+        Interactive Prototype
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight text-gray-900">
+        🍜 ระบบสั่งราเมงผ่าน Tablet (Demo)
+      </h1>
+      <p class="text-gray-600 text-base max-w-2xl mx-auto font-medium">
+        จำลองการทำงาน 3 ฝั่งหลัก: <strong>Customer</strong> (หน้าจอแท็บเล็ตสั่งอาหาร), 
+        <strong>Chef</strong> (หน้าจอครัว KDS), และ <strong>Cashier</strong> (เคาน์เตอร์แคชเชียร์และจอลูกค้า)
+      </p>
+    </div>
+
+    <!-- 4 Main Role Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- CARD 1: Customer Tablet -->
+      <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+        <div class="space-y-4">
+          <div class="w-14 h-14 bg-red-100 border-2 border-red-500 rounded-xl flex items-center justify-center text-3xl">
+            🍜
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-gray-900">1. ฝั่งลูกค้า (Customer)</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">
+              หน้าจอ Tablet ประจำโต๊ะ (Touch/Click only, ไม่มี Slider/Note)
+            </p>
+          </div>
+          <div class="space-y-2 pt-2">
+            <label for="quick-table-select" class="text-xs font-bold text-gray-600 block">เลือกโต๊ะที่ต้องการทดสอบ:</label>
+            <div class="flex gap-2">
+              <select id="quick-table-select" class="flex-1 border-2 border-black rounded-xl p-2.5 font-bold text-sm bg-gray-50">
+                <% for(let i = 1; i <= 20; i++) { 
+                     const tNum = `T${String(i).padStart(2, '0')}`;
+                %>
+                  <option value="<%= tNum %>" <%= tNum === 'T05' ? 'selected' : '' %>>
+                    โต๊ะ <%= tNum %> (CARD-<%= String(i).padStart(2, '0') %>)
+                  </option>
+                <% } %>
+              </select>
+              <button onclick="goToCustomerTable()" 
+                      class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition">
+                ไป
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-gray-200 mt-4 space-y-2">
+          <a href="/customer/T05" 
+             class="block w-full bg-black text-white hover:bg-gray-800 font-bold py-3 rounded-xl text-center text-sm shadow transition">
+            เปิด Tablet โต๊ะ T05 (Acceptance Test)
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 2: Chef KDS -->
+      <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+        <div class="space-y-4">
+          <div class="w-14 h-14 bg-yellow-100 border-2 border-yellow-500 rounded-xl flex items-center justify-center text-3xl">
+            👨‍🍳
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-gray-900">2. ฝั่งครัว (Chef KDS)</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">
+              คิวอาหาร (queue → prepare → finish), จัดการทีละ Item, พิมพ์ Food Slip อัตโนมัติ
+            </p>
+          </div>
+          <ul class="text-xs text-gray-600 space-y-1 pt-2 font-medium">
+            <li>✓ รับคำสั่งซื้อ (อยู่ในคิว → กำลังทำ)</li>
+            <li>✓ ทำเสร็จสิ้น (กำลังทำ → เสร็จสิ้น)</li>
+            <li>✓ แสดง Food Slip จำลองทันทีเมื่อเสร็จ</li>
+            <li>✓ ดูประวัติและพิมพ์ใบเมนูย้อนหลังได้</li>
+          </ul>
+        </div>
+
+        <div class="pt-6 border-t border-gray-200 mt-4">
+          <a href="/chef" 
+             class="block w-full bg-yellow-500 hover:bg-yellow-600 text-black font-black py-3 rounded-xl text-center text-sm shadow transition">
+            เปิดหน้าจอครัว (/chef)
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD 3: Cashier POS -->
+      <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:-translate-y-1 transition duration-200">
+        <div class="space-y-4">
+          <div class="w-14 h-14 bg-blue-100 border-2 border-blue-500 rounded-xl flex items-center justify-center text-3xl">
+            💳
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-gray-900">3. ฝั่งแคชเชียร์ (Cashier)</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">
+              สแกน Payment Card, รวมบิลทุกรอบของโต๊ะ, Keypad ตัวเลข, Receipt, Reset โต๊ะ
+            </p>
+          </div>
+          <ul class="text-xs text-gray-600 space-y-1 pt-2 font-medium">
+            <li>✓ สแกน / ค้นหา CARD-01 ถึง CARD-20</li>
+            <li>✓ คำนวณเงินทอนด้วย Numeric Keypad</li>
+            <li>✓ ชำระแบบโอนเงิน (QR Mock)</li>
+            <li>✓ ออกใบเสร็จ Receipt และ Reset โต๊ะ</li>
+          </ul>
+        </div>
+
+        <div class="pt-6 border-t border-gray-200 mt-4 space-y-2">
+          <a href="/cashier" 
+             class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-center text-sm shadow transition">
+            เปิดระบบแคชเชียร์ (/cashier)
+          </a>
+          <a href="/cashier/customer-display" target="_blank"
+             class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 rounded-xl text-center text-xs border border-black transition">
+            🖥️ หน้าจอลูกค้า (Cashierจอลูกค้า)
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Acceptance Test Checklist Summary (29 Steps) -->
+    <div class="bg-white border-2 border-gray-300 p-6 rounded-2xl shadow-sm space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-black text-lg text-gray-800 flex items-center gap-2">
+          <span>📋</span> ลำดับการทดสอบ Acceptance Test (ครบ 29 ขั้นตอน)
+        </h3>
+        <button onclick="resetAllDemoOrders()" 
+                class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-300 font-bold px-4 py-1.5 rounded-lg text-xs transition">
+          🔄 ล้างข้อมูล Order เพื่อเริ่มทดสอบใหม่
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-gray-700">
+        <div class="space-y-1.5 bg-gray-50 p-3 rounded-lg">
+          <p class="font-bold text-gray-900 border-b pb-1">ขั้นตอนที่ 1-15: สั่งอาหาร & ทำครัว</p>
+          <p>1. เปิด <a href="/customer/T05" class="text-blue-600 underline">/customer/T05</a></p>
+          <p>2. กดปุ่มใหญ่ "กดเพื่อเลือกเมนู"</p>
+          <p>3. เลือกหมวดราเมง</p>
+          <p>4. กด "ทงคตสึราเมง"</p>
+          <p>5. เลือก Option: เส้นแข็ง, ซุปข้นมาก, เผ็ดปานกลาง</p>
+          <p>6. เลือก Topping: เพิ่มหมูชาชู (+10)</p>
+          <p>7. ปรับจำนวน และกด "เพิ่มลงตะกร้า"</p>
+          <p>8. เลือก "เกี๊ยวซ่า" (ของทานเล่น) เพิ่มเข้าตะกร้าตรงๆ</p>
+          <p>9. แก้ไขจำนวน / ลบ / กดชื่อเพื่อแก้ไขได้</p>
+          <p>10. กดยืนยันรายการ "สั่งอาหาร"</p>
+          <p>11. หน้าจอแสดง "รออาหารสักครู่" ค้าง 5 วิ แล้วกลับหน้าเมนู</p>
+          <p>12. เปิด <a href="/chef" target="_blank" class="text-blue-600 underline">/chef</a> เห็นรายการ T05 ใน Queue</p>
+          <p>13. กดที่รายการ → กด "รับคำสั่งซื้อ" (queue → prepare)</p>
+          <p>14. กด "เสร็จสิ้น" (prepare → finish)</p>
+          <p>15. ระบบแสดง Food Slip แบบจำลองทันที</p>
+        </div>
+
+        <div class="space-y-1.5 bg-gray-50 p-3 rounded-lg">
+          <p class="font-bold text-gray-900 border-b pb-1">ขั้นตอนที่ 16-29: สั่งเพิ่ม & ชำระเงิน & Reset โต๊ะ</p>
+          <p>16. Customer โต๊ะ T05 สั่งโค้กเพิ่ม และเกิด Order รอบใหม่ได้</p>
+          <p>17. ตรวจสอบ "ประวัติการสั่ง/ชำระเงิน" รวมทุกรอบที่ยังไม่จ่าย</p>
+          <p>18. กดชำระเงิน → แสดง "นำ paymentcard ไปชำระเงินที่แคชเชียร์"</p>
+          <p>19. เปิด <a href="/cashier" target="_blank" class="text-blue-600 underline">/cashier</a></p>
+          <p>20. กด "สแกน" แล้วเลือก CARD-05</p>
+          <p>21. ระบบค้นหาโต๊ะ T05 และรวมรายการค้างจ่ายทั้งหมด</p>
+          <p>22. ทดสอบเลือก "โอน (QR)" หรือ "เงินสด (CASH)"</p>
+          <p>23. เงินสด: กดปุ่ม Numeric Keypad คำนวณเงินทอน</p>
+          <p>24. กดยืนยันการชำระเงิน</p>
+          <p>25. แสดงใบเสร็จรับเงิน (Receipt)</p>
+          <p>26. ระบบ Reset โต๊ะ T05 ให้ว่าง</p>
+          <p>27. กลับไปที่ <a href="/customer/T05" class="text-blue-600 underline">/customer/T05</a> จะไม่เห็นรายการของลูกค้าคนก่อน</p>
+          <p>28. ลูกค้าคนใหม่เริ่มสั่งอาหารรอบใหม่ได้อย่างถูกต้อง</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-xs text-gray-500 py-4">
+    Ramen Tablet Demo System • Express.js + SQLite + EJS + Tailwind CSS
+  </footer>
+
+  <script>
+    function goToCustomerTable() {
+      const tableVal = document.getElementById('quick-table-select').value;
+      window.location.href = `/customer/${tableVal}`;
+    }
+
+    function resetAllDemoOrders() {
+      if (!confirm('ต้องการล้างข้อมูลออเดอร์ทั้งหมดเพื่อเริ่มต้นทดสอบใหม่หรือไม่?')) return;
+      fetch('/api/reset-demo-orders', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          alert('ล้างข้อมูลเรียบร้อยแล้ว ทุกโต๊ะว่างพร้อมทดสอบใหม่');
+          location.reload();
+        })
+        .catch(err => alert('เกิดข้อผิดพลาด'));
+    }
+  </script>
+</body>
+</html>

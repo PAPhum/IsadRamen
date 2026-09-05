@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สั่งอาหาร - โต๊ะ <%= table.table_number %> | IsadRamen</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none">
+
+  <!-- Tablet Frame (1024x768 Landscape) -->
+  <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-4 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
+    
+    <!-- Main Content Area -->
+    <div class="flex-1 flex gap-4 overflow-hidden">
+      
+      <!-- ฝั่งซ้าย: หมวดหมู่และเมนูอาหาร (60%) -->
+      <div class="w-[62%] flex flex-col justify-between pr-2">
+        <div class="flex-1 flex flex-col">
+          
+          <!-- Category Tabs -->
+          <div class="flex gap-2 mb-3">
+            <% categories.forEach((cat, idx) => { %>
+              <button onclick="switchCategory(<%= cat.category_id %>)" 
+                      id="cat-tab-<%= cat.category_id %>"
+                      class="category-tab <%= idx === 0 ? 'bg-black text-white' : 'bg-gray-200 text-black border border-gray-400' %> font-bold px-5 py-2 rounded-xl text-sm transition hover:bg-gray-300">
+                <%= cat.category_name %>
+              </button>
+            <% }) %>
+          </div>
+
+          <!-- Menu Grid (2 Rows x 3 Cols = 6 Items) -->
+          <div id="menu-grid" class="grid grid-cols-3 gap-3 flex-1">
+            <!-- Rendered by JS based on active category & page -->
+          </div>
+        </div>
+
+        <!-- Pagination Bar (ย้อนกลับ / ถัดไป) -->
+        <div class="flex justify-between items-center mt-3 pt-2 border-t border-gray-200">
+          <button id="prev-page-btn" onclick="prevMenuPage()" 
+                  class="bg-gray-200 border border-gray-400 font-bold px-8 py-2 rounded-xl text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-300 transition">
+            ย้อนกลับ
+          </button>
+          <span id="page-indicator" class="text-xs text-gray-500 font-bold">1 / 1</span>
+          <button id="next-page-btn" onclick="nextMenuPage()" 
+                  class="bg-gray-200 border border-gray-400 font-bold px-8 py-2 rounded-xl text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-300 transition">
+            ถัดไป
+          </button>
+        </div>
+      </div>
+
+      <!-- ฝั่งขวา: ปุ่มประวัติ + ตาราง Cart (40%) -->
+      <div class="w-[38%] flex flex-col justify-between border-l-2 border-black pl-4">
+        <div class="flex-1 flex flex-col">
+          <!-- ปุ่มประวัติการสั่ง/ชำระเงิน -->
+          <a href="/customer/<%= table.table_number %>/history" 
+             class="block w-full bg-gray-200 border border-gray-400 hover:bg-gray-300 font-bold py-2 rounded-xl text-center text-sm mb-3 transition">
+            ประวัติการสั่ง/ชำระเงิน
+          </a>
+
+          <!-- Cart Table (8 fixed rows matching Wireframe) -->
+          <div class="flex-1 border border-black overflow-hidden flex flex-col">
+            <table class="w-full border-collapse text-xs text-center">
+              <thead>
+                <tr class="border-b border-black bg-gray-100 font-bold text-gray-800">
+                  <th class="border-r border-black p-1.5 text-left pl-2">รายการอาหาร</th>
+                  <th class="border-r border-black p-1.5 w-12">จำนวน</th>
+                  <th class="border-r border-black p-1.5 w-9">เพิ่ม</th>
+                  <th class="border-r border-black p-1.5 w-9">ลด</th>
+                  <th class="p-1.5 w-12">ยกเลิก</th>
+                </tr>
+              </thead>
+              <tbody id="cart-tbody">
+                <!-- 8 rows will be rendered here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Cart Summary & Submit Order Button -->
+        <div class="mt-3 pt-2 border-t border-black">
+          <div class="flex justify-between items-center mb-2 px-1">
+            <span class="text-sm font-bold text-gray-600">รวมทั้งหมด:</span>
+            <span class="text-2xl font-black text-black"><span id="cart-total-price">0</span> ฿</span>
+          </div>
+          <button onclick="submitOrder()" 
+                  id="submit-order-btn"
+                  class="w-full bg-gray-300 hover:bg-gray-400 border border-gray-400 active:bg-gray-500 font-bold py-3 rounded-xl text-lg transition disabled:opacity-50">
+            สั่งอาหาร
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- หมายเลขโต๊ะ มุมขวาล่าง -->
+    <div class="absolute bottom-2 right-2 bg-gray-200 border border-gray-400 px-3 py-0.5 text-xs font-bold text-gray-700 rounded pointer-events-none">
+      <%= table.table_number %>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- Customize Modal (เมื่อกดเลือกเมนูที่ปรับแต่งได้ ตาม Wireframe) -->
+    <!-- ======================================================== -->
+    <div id="customize-modal" class="hidden absolute inset-0 bg-white border-4 border-black p-6 flex flex-col justify-between z-50">
+      <div class="flex gap-6 flex-1 overflow-hidden">
+        
+        <!-- ฝั่งซ้าย: รูป + ชื่ออาหาร + ราคาเริ่มต้น -->
+        <div class="w-1/3 flex flex-col items-center justify-center border-r border-gray-200 pr-4">
+          <img id="modal-img" src="/images/shoyu.jpg" class="w-full h-52 object-cover border border-black rounded-lg mb-3 shadow-sm">
+          <div class="bg-gray-200 border border-black w-full text-center py-2.5 font-bold text-lg rounded-lg shadow-sm" id="modal-menu-name">
+            โชยุราเมง
+          </div>
+          <p class="text-sm font-bold text-gray-600 mt-2">ราคาเริ่มต้น: <span id="modal-base-price">0</span> ฿</p>
+        </div>
+
+        <!-- ฝั่งขวา: ตารางปรับแต่งฟรี + Topping -->
+        <div class="w-2/3 flex flex-col justify-between overflow-y-auto pl-2 space-y-3">
+          
+          <!-- ตารางปรับแต่งฟรี -->
+          <div>
+            <h3 class="text-center font-bold text-base mb-1.5 bg-gray-100 py-1 border border-black">ปรับแต่ง</h3>
+            <table class="w-full border-collapse border border-black text-xs text-center">
+              <tbody>
+                <% 
+                  const optionCategories = ['ความนุ่มเส้น', 'ความข้นซุป', 'ความเผ็ด', 'ต้นหอม'];
+                  optionCategories.forEach(catName => {
+                    const catOpts = options.filter(o => o.option_category === catName);
+                %>
+                  <tr class="border-b border-black">
+                    <td class="border-r border-black font-bold p-1.5 bg-gray-50 w-28 text-left pl-3">
+                      <%= catName %>
+                    </td>
+                    <td class="p-1">
+                      <div class="flex gap-1.5 justify-center">
+                        <% catOpts.forEach(opt => { %>
+                          <button type="button" 
+                                  onclick="selectOption('<%= catName %>', <%= opt.option_id %>, '<%= opt.option_name %>')"
+                                  id="opt-btn-<%= opt.option_id %>"
+                                  data-cat="<%= catName %>"
+                                  data-optid="<%= opt.option_id %>"
+                                  class="opt-button flex-1 py-1.5 px-2 text-xs font-semibold rounded border border-gray-400 bg-white hover:bg-gray-100 transition">
+                            <%= opt.option_name %>
+                          </button>
+                        <% }) %>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ตาราง Topping -->
+          <div>
+            <h3 class="text-center font-bold text-base mb-1.5 bg-gray-100 py-1 border border-black">ท็อปปิ้ง</h3>
+            <table class="w-full border-collapse border border-black text-xs text-center">
+              <tbody>
+                <% toppings.forEach(top => { %>
+                  <tr class="border-b border-black">
+                    <td class="border-r border-black p-1.5 font-bold text-left pl-3 w-1/2">
+                      <%= top.topping_name %> (+<%= top.price %>฿)
+                    </td>
+                    <td class="border-r border-black p-1 w-12">
+                      <button type="button" onclick="changeToppingQty(<%= top.topping_id %>, <%= top.price %>, -1)" 
+                              class="w-8 h-7 bg-gray-200 border border-gray-400 rounded font-black text-sm active:bg-gray-300">-</button>
+                    </td>
+                    <td class="border-r border-black p-1 w-16 font-bold text-sm">
+                      <span id="top_qty_<%= top.topping_id %>">0</span>
+                    </td>
+                    <td class="p-1 w-12">
+                      <button type="button" onclick="changeToppingQty(<%= top.topping_id %>, <%= top.price %>, 1)" 
+                              class="w-8 h-7 bg-gray-200 border border-gray-400 rounded font-black text-sm active:bg-gray-300">+</button>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- จำนวนชามที่ต้องการสั่ง -->
+          <div class="flex items-center justify-between bg-gray-50 border border-black p-2 rounded">
+            <span class="font-bold text-sm pl-2">จำนวน:</span>
+            <div class="flex items-center gap-3 pr-2">
+              <button type="button" onclick="changeModalQuantity(-1)" 
+                      class="w-9 h-8 bg-gray-200 border border-gray-400 rounded font-black text-base active:bg-gray-300">-</button>
+              <span id="modal-quantity" class="font-black text-lg w-8 text-center">1</span>
+              <button type="button" onclick="changeModalQuantity(1)" 
+                      class="w-9 h-8 bg-gray-200 border border-gray-400 rounded font-black text-base active:bg-gray-300">+</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- แถบด้านล่างของ Modal: ย้อนกลับ / ราคารวม / เพิ่มลงตะกร้า -->
+      <div class="flex justify-between items-center border-t-2 border-black pt-3 mt-2">
+        <button type="button" onclick="closeModal()" 
+                class="bg-gray-200 border border-gray-400 hover:bg-gray-300 font-bold px-8 py-2.5 rounded-xl transition">
+          ย้อนกลับ
+        </button>
+        <span class="font-black text-2xl">
+          รวม <span id="modal-total-price">0</span> ฿
+        </span>
+        <button type="button" onclick="saveCustomizeToCart()" 
+                class="bg-gray-300 border border-gray-400 hover:bg-gray-400 active:bg-gray-500 font-bold px-8 py-2.5 rounded-xl transition">
+          เพิ่มลงตะกร้า
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- Wait Screen Modal ("รออาหารสักครู่" ตาม Wireframe) -->
+    <!-- ======================================================== -->
+    <div id="wait-modal" class="hidden absolute inset-0 bg-white border-4 border-black flex flex-col items-center justify-center z-50 cursor-pointer"
+         onclick="closeWaitModal()">
+      <div class="text-7xl mb-6">⏳</div>
+      <h1 class="text-6xl font-black text-black tracking-tight mb-4">รออาหารสักครู่</h1>
+      <p class="text-gray-400 text-sm">ระบบได้ส่งรายการไปยังห้องครัวเรียบร้อยแล้ว (จะปิดอัตโนมัติใน 5 วินาที)</p>
+      
+      <div class="absolute bottom-4 right-4 bg-gray-200 border-2 border-gray-400 px-6 py-2 text-base font-bold text-black rounded-lg shadow-sm">
+        โต๊ะ <%= table.table_number %>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ข้อมูลจาก Server
+    const allMenuItems = <%- JSON.stringify(menuItems) %>;
+    const allOptions = <%- JSON.stringify(options) %>;
+    const allToppings = <%- JSON.stringify(toppings) %>;
+    const tableNumber = '<%= table.table_number %>';
+
+    // สถานะหน้าเมนู
+    let currentCategoryId = <%= categories[0] ? categories[0].category_id : 1 %>;
+    let currentMenuPage = 1;
+    const itemsPerPage = 6;
+
+    // ตะกร้าสินค้าปัจจุบัน
+    let currentCart = [];
+
+    // ตัวแปรสำหรับ Customize Modal
+    let editingCartIndex = null; // null = เพิ่มใหม่, number = กำลังแก้ไข
+    let selectedMenu = null;
+    let modalQuantity = 1;
+    let selectedOptionsMap = {}; // { 'ความนุ่มเส้น': { option_id, option_name } }
+    let selectedToppingsMap = {}; // { topping_id: { quantity, price, topping_name } }
+
+    // เปลี่ยนหมวดหมู่อาหาร
+    function switchCategory(catId) {
+      currentCategoryId = catId;
+      currentMenuPage = 1;
+
+      // อัปเดตสไตล์ของแท็บ
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.className = 'category-tab bg-gray-200 text-black border border-gray-400 font-bold px-5 py-2 rounded-xl text-sm transition hover:bg-gray-300';
+      });
+      const activeTab = document.getElementById('cat-tab-' + catId);
+      if (activeTab) {
+        activeTab.className = 'category-tab bg-black text-white font-bold px-5 py-2 rounded-xl text-sm transition';
+      }
+
+      renderMenuGrid();
+    }
+
+    // Render รายการอาหาร (Grid 2x3 = 6 ช่อง)
+    function renderMenuGrid() {
+      const container = document.getElementById('menu-grid');
+      container.innerHTML = '';
+
+      const filtered = allMenuItems.filter(item => item.category_id === currentCategoryId);
+      const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+
+      if (currentMenuPage > totalPages) currentMenuPage = totalPages;
+
+      const startIndex = (currentMenuPage - 1) * itemsPerPage;
+      const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+      pageItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'border-2 border-gray-300 hover:border-black p-2 cursor-pointer bg-white text-center rounded-lg shadow-sm hover:shadow-md transition flex flex-col justify-between';
+        card.onclick = () => onMenuItemClick(item);
+
+        const imgPath = item.menu_image ? '/images/' + item.menu_image : '/images/shoyu.jpg';
+        card.innerHTML = `
+          <div class="h-24 w-full mb-1.5 overflow-hidden rounded border border-gray-200">
+            <img src="${imgPath}" alt="${item.menu_name}" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <p class="font-bold text-xs md:text-sm text-gray-900 leading-snug line-clamp-1">${item.menu_name}</p>
+            <p class="text-xs font-black text-red-600 mt-0.5">${item.base_price} ฿</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // ถ้ามีไม่ถึง 6 ช่อง เติมกล่องเปล่าเพื่อให้โครงสร้างตารางไม่เบี้ยว
+      for (let i = pageItems.length; i < itemsPerPage; i++) {
+        const emptyBox = document.createElement('div');
+        emptyBox.className = 'border border-dashed border-gray-200 rounded-lg p-2 invisible';
+        container.appendChild(emptyBox);
+      }
+
+      // ปรับปุ่ม ย้อนกลับ / ถัดไป
+      document.getElementById('prev-page-btn').disabled = (currentMenuPage <= 1);
+      document.getElementById('next-page-btn').disabled = (currentMenuPage >= totalPages);
+      document.getElementById('page-indicator').innerText = `${currentMenuPage} / ${totalPages}`;
+    }
+
+    function prevMenuPage() {
+      if (currentMenuPage > 1) {
+        currentMenuPage--;
+        renderMenuGrid();
+      }
+    }
+
+    function nextMenuPage() {
+      const filtered = allMenuItems.filter(item => item.category_id === currentCategoryId);
+      const totalPages = Math.ceil(filtered.length / itemsPerPage);
+      if (currentMenuPage < totalPages) {
+        currentMenuPage++;
+        renderMenuGrid();
+      }
+    }
+
+    // เมื่อกดคลิกที่ Menu Card
+    function onMenuItemClick(item) {
+      // Category 1 คือ "ราเมง" สามารถปรับแต่งได้
+      if (item.category_id === 1) {
+        openCustomizeModal(item);
+      } else {
+        // ของทานเล่น / เครื่องดื่ม ไม่ต้องปรับแต่ง -> เพิ่มเข้า Order ทันที
+        addDirectItemToCart(item);
+      }
+    }
+
+    // เพิ่มเมนูที่ไม่ต้องปรับแต่งเข้าตะกร้าตรงๆ
+    function addDirectItemToCart(item) {
+      // เช็กว่ามีรายการนี้ในตะกร้าแล้วหรือไม่
+      const existing = currentCart.find(c => c.menu_id === item.menu_id && (!c.selected_options || c.selected_options.length === 0));
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        currentCart.push({
+          menu_id: item.menu_id,
+          menu_name: item.menu_name,
+          category_id: item.category_id,
+          base_price: parseFloat(item.base_price),
+          unit_price: parseFloat(item.base_price),
+          quantity: 1,
+          selected_options: [],
+          selected_options_text: '',
+          selected_toppings: [],
+          selected_toppings_text: ''
+        });
+      }
+      renderCartTable();
+    }
+
+    // ==========================================
+    // CUSTOMIZE MODAL LOGIC
+    // ==========================================
+    function openCustomizeModal(item, existingItem = null, cartIndex = null) {
+      selectedMenu = item;
+      editingCartIndex = cartIndex;
+      modalQuantity = existingItem ? existingItem.quantity : 1;
+      selectedOptionsMap = {};
+      selectedToppingsMap = {};
+
+      document.getElementById('modal-menu-name').innerText = item.menu_name;
+      document.getElementById('modal-base-price').innerText = item.base_price;
+      document.getElementById('modal-img').src = item.menu_image ? '/images/' + item.menu_image : '/images/shoyu.jpg';
+      document.getElementById('modal-quantity').innerText = modalQuantity;
+
+      // รีเซ็ตปุ่ม Topping
+      allToppings.forEach(t => {
+        const qtyEl = document.getElementById('top_qty_' + t.topping_id);
+        if (qtyEl) qtyEl.innerText = '0';
+      });
+
+      // ตั้งค่าตัวเลือกฟรี (Default หรือตามที่มีอยู่)
+      const catList = ['ความนุ่มเส้น', 'ความข้นซุป', 'ความเผ็ด', 'ต้นหอม'];
+      catList.forEach(catName => {
+        const catOpts = allOptions.filter(o => o.option_category === catName);
+        if (catOpts.length === 0) return;
+
+        let selectedOpt = null;
+        if (existingItem && existingItem.selected_options) {
+          selectedOpt = catOpts.find(o => existingItem.selected_options.includes(o.option_id));
+        }
+
+        // ค่า Default ถ้าไม่มีการเลือกมาก่อน
+        if (!selectedOpt) {
+          if (catName === 'ความนุ่มเส้น') selectedOpt = catOpts.find(o => o.option_name === 'ปานกลาง') || catOpts[0];
+          else if (catName === 'ความข้นซุป') selectedOpt = catOpts.find(o => o.option_name === 'ปานกลาง') || catOpts[0];
+          else if (catName === 'ความเผ็ด') selectedOpt = catOpts.find(o => o.option_name === 'ปานกลาง') || catOpts[0];
+          else if (catName === 'ต้นหอม') selectedOpt = catOpts.find(o => o.option_name === 'ใส่') || catOpts[0];
+        }
+
+        if (selectedOpt) {
+          selectOption(catName, selectedOpt.option_id, selectedOpt.option_name);
+        }
+      });
+
+      // ตั้งค่า Topping ถ้าเป็นการแก้ไข
+      if (existingItem && existingItem.selected_toppings) {
+        existingItem.selected_toppings.forEach(t => {
+          selectedToppingsMap[t.topping_id] = {
+            quantity: t.quantity,
+            price: t.price,
+            topping_name: t.topping_name
+          };
+          const qtyEl = document.getElementById('top_qty_' + t.topping_id);
+          if (qtyEl) qtyEl.innerText = t.quantity;
+        });
+      }
+
+      calculateModalTotal();
+      document.getElementById('customize-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('customize-modal').classList.add('hidden');
+      editingCartIndex = null;
+    }
+
+    // เลือกตัวเลือกฟรี (เส้น, ซุป, เผ็ด, ต้นหอม)
+    function selectOption(catName, optId, optName) {
+      selectedOptionsMap[catName] = { option_id: optId, option_name: optName };
+
+      // ไฮไลต์ปุ่มที่เลือกในหมวดนี้
+      document.querySelectorAll(`button[data-cat="${catName}"]`).forEach(btn => {
+        btn.className = 'opt-button flex-1 py-1.5 px-2 text-xs font-semibold rounded border border-gray-400 bg-white hover:bg-gray-100 transition';
+      });
+
+      const activeBtn = document.getElementById('opt-btn-' + optId);
+      if (activeBtn) {
+        activeBtn.className = 'opt-button flex-1 py-1.5 px-2 text-xs font-bold rounded border-2 border-black bg-black text-white transition';
+      }
+    }
+
+    // เพิ่ม/ลด Topping
+    function changeToppingQty(toppingId, price, delta) {
+      const current = selectedToppingsMap[toppingId] ? selectedToppingsMap[toppingId].quantity : 0;
+      const next = Math.max(0, current + delta);
+
+      const topObj = allToppings.find(t => t.topping_id === toppingId);
+      const topName = topObj ? topObj.topping_name : '';
+
+      if (next === 0) {
+        delete selectedToppingsMap[toppingId];
+      } else {
+        selectedToppingsMap[toppingId] = {
+          quantity: next,
+          price: price,
+          topping_name: topName
+        };
+      }
+
+      const qtyEl = document.getElementById('top_qty_' + toppingId);
+      if (qtyEl) qtyEl.innerText = next;
+
+      calculateModalTotal();
+    }
+
+    // เพิ่ม/ลดจำนวนชามใน Modal
+    function changeModalQuantity(delta) {
+      modalQuantity = Math.max(1, modalQuantity + delta);
+      document.getElementById('modal-quantity').innerText = modalQuantity;
+      calculateModalTotal();
+    }
+
+    // คำนวณราคารวมใน Modal
+    function calculateModalTotal() {
+      let toppingSum = 0;
+      for (const id in selectedToppingsMap) {
+        toppingSum += selectedToppingsMap[id].price * selectedToppingsMap[id].quantity;
+      }
+      const unitPrice = parseFloat(selectedMenu.base_price) + toppingSum;
+      const total = unitPrice * modalQuantity;
+      document.getElementById('modal-total-price').innerText = total;
+    }
+
+    // บันทึกลงตะกร้า
+    function saveCustomizeToCart() {
+      const selectedOptsList = Object.values(selectedOptionsMap);
+      const optIds = selectedOptsList.map(o => o.option_id);
+      const optNames = selectedOptsList.map(o => o.option_name).join(' / ');
+
+      const toppingsList = [];
+      const toppingTextParts = [];
+      let toppingSum = 0;
+
+      for (const tId in selectedToppingsMap) {
+        const item = selectedToppingsMap[tId];
+        toppingsList.push({
+          topping_id: parseInt(tId),
+          topping_name: item.topping_name,
+          quantity: item.quantity,
+          price: item.price
+        });
+        toppingTextParts.push(`${item.topping_name} x${item.quantity}`);
+        toppingSum += item.price * item.quantity;
+      }
+
+      const unitPrice = parseFloat(selectedMenu.base_price) + toppingSum;
+
+      const cartItemData = {
+        menu_id: selectedMenu.menu_id,
+        menu_name: selectedMenu.menu_name,
+        category_id: selectedMenu.category_id,
+        base_price: parseFloat(selectedMenu.base_price),
+        unit_price: unitPrice,
+        quantity: modalQuantity,
+        selected_options: optIds,
+        selected_options_text: optNames,
+        selected_toppings: toppingsList,
+        selected_toppings_text: toppingTextParts.join(', ')
+      };
+
+      if (editingCartIndex !== null && currentCart[editingCartIndex]) {
+        // แก้ไขรายการเดิม
+        currentCart[editingCartIndex] = cartItemData;
+      } else {
+        // เพิ่มรายการใหม่
+        currentCart.push(cartItemData);
+      }
+
+      renderCartTable();
+      closeModal();
+    }
+
+    // ==========================================
+    // CART TABLE RENDERING (8 Rows Fixed)
+    // ==========================================
+    function renderCartTable() {
+      const tbody = document.getElementById('cart-tbody');
+      tbody.innerHTML = '';
+
+      let grandTotal = 0;
+
+      for (let i = 0; i < 8; i++) {
+        const item = currentCart[i];
+        if (item) {
+          grandTotal += item.unit_price * item.quantity;
+          
+          const isCustomized = item.category_id === 1;
+          const editTooltip = isCustomized ? 'แตะเพื่อแก้ไข' : '';
+          const customMark = isCustomized ? '<span class="text-xs text-red-600 font-bold ml-1">*</span>' : '';
+
+          tbody.innerHTML += `
+            <tr class="h-9 border-b border-black hover:bg-gray-50">
+              <td class="border-r border-black text-left pl-2 font-medium cursor-pointer" 
+                  title="${editTooltip}" onclick="editCartItem(${i})">
+                <div class="line-clamp-1">${item.menu_name}${customMark}</div>
+              </td>
+              <td class="border-r border-black font-bold">${item.quantity}</td>
+              <td class="border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300" 
+                  onclick="changeCartQty(${i}, 1)">+</td>
+              <td class="border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300" 
+                  onclick="changeCartQty(${i}, -1)">-</td>
+              <td class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs cursor-pointer active:bg-red-800" 
+                  onclick="removeCartItem(${i})">ลบ</td>
+            </tr>
+          `;
+        } else {
+          // แถวว่าง เพื่อรักษาความสูง 8 แถว
+          tbody.innerHTML += `
+            <tr class="h-9 border-b border-black">
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td></td>
+            </tr>
+          `;
+        }
+      }
+
+      document.getElementById('cart-total-price').innerText = grandTotal;
+      document.getElementById('submit-order-btn').disabled = (currentCart.length === 0);
+    }
+
+    function changeCartQty(index, delta) {
+      if (currentCart[index]) {
+        currentCart[index].quantity += delta;
+        if (currentCart[index].quantity <= 0) {
+          currentCart.splice(index, 1);
+        }
+        renderCartTable();
+      }
+    }
+
+    function removeCartItem(index) {
+      currentCart.splice(index, 1);
+      renderCartTable();
+    }
+
+    // กดชื่อรายการเพื่อเปิด Customize แก้ไข
+    function editCartItem(index) {
+      const item = currentCart[index];
+      if (!item) return;
+      if (item.category_id === 1) {
+        const fullMenu = allMenuItems.find(m => m.menu_id === item.menu_id) || item;
+        openCustomizeModal(fullMenu, item, index);
+      }
+    }
+
+    // ==========================================
+    // SUBMIT ORDER
+    // ==========================================
+    let waitTimer = null;
+
+    function submitOrder() {
+      if (currentCart.length === 0) {
+        alert('กรุณาเลือกรายการอาหารก่อนสั่ง');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-order-btn');
+      submitBtn.disabled = true;
+
+      fetch(`/customer/${tableNumber}/order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: currentCart })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // ล้างตะกร้า
+          currentCart = [];
+          renderCartTable();
+
+          // แสดง Modal "รออาหารสักครู่" ค้างประมาณ 5 วินาที ตาม Wireframe
+          document.getElementById('wait-modal').classList.remove('hidden');
+          if (waitTimer) clearTimeout(waitTimer);
+          waitTimer = setTimeout(() => {
+            closeWaitModal();
+          }, 5000);
+        } else {
+          alert('เกิดข้อผิดพลาด: ' + (data.message || 'ไม่สามารถสั่งอาหารได้'));
+          submitBtn.disabled = false;
+        }
+      })
+      .catch(err => {
+        console.error('Submit order error:', err);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+        submitBtn.disabled = false;
+      });
+    }
+
+    function closeWaitModal() {
+      if (waitTimer) clearTimeout(waitTimer);
+      document.getElementById('wait-modal').classList.add('hidden');
+      document.getElementById('submit-order-btn').disabled = (currentCart.length === 0);
+    }
+
+    // Initialize
+    renderMenuGrid();
+    renderCartTable();
+  </script>
+</body>
+</html>

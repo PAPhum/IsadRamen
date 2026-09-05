@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องครัว (Chef KDS) | IsadRamen</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none">
+
+  <!-- Chef Tablet / Monitor Container (Matching Wireframe in UI.png) -->
+  <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-6 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
+    
+    <!-- ======================================================== -->
+    <!-- VIEW 1: คิวรายการอาหาร (Queue View) -->
+    <!-- ======================================================== -->
+    <div id="view-queue" class="flex-1 flex flex-col justify-between">
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-center flex-1 font-black text-2xl tracking-wide text-gray-800">คิวรายการอาหาร</h2>
+          <div class="flex items-center gap-2 text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full border">
+            <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+            Auto Refresh (3s)
+          </div>
+        </div>
+
+        <!-- ตารางคิวอาหาร -->
+        <div class="flex-1 border border-black overflow-y-auto">
+          <table class="w-full border-collapse text-xs md:text-sm text-center">
+            <thead>
+              <tr class="border-b border-black bg-gray-100 font-bold">
+                <th class="border-r border-black p-2.5 w-16">ID</th>
+                <th class="border-r border-black p-2.5 w-20">โต๊ะ</th>
+                <th class="border-r border-black p-2.5 text-left pl-4">รายการอาหาร</th>
+                <th class="border-r border-black p-2.5 w-20">จำนวน</th>
+                <th class="p-2.5 w-28">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody id="queue-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- แถบด้านล่าง: ปุ่มประวัติรายการ -->
+      <div class="flex justify-start items-center border-t-2 border-black pt-4 mt-4">
+        <button onclick="switchChefView('history')" 
+                class="bg-gray-200 border border-gray-400 hover:bg-gray-300 font-bold px-8 py-2.5 rounded-xl text-black transition text-sm">
+          ประวัติรายการ
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 2: ประวัติรายการอาหาร (Finished History View) -->
+    <!-- ======================================================== -->
+    <div id="view-history" class="hidden flex-1 flex flex-col justify-between">
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <h2 class="text-center font-black text-2xl mb-4 tracking-wide text-gray-800">ประวัติรายการอาหาร</h2>
+
+        <!-- ตารางประวัติที่ทำเสร็จแล้ว -->
+        <div class="flex-1 border border-black overflow-y-auto">
+          <table class="w-full border-collapse text-xs md:text-sm text-center">
+            <thead>
+              <tr class="border-b border-black bg-gray-100 font-bold">
+                <th class="border-r border-black p-2.5 w-16">ID</th>
+                <th class="border-r border-black p-2.5 w-20">โต๊ะ</th>
+                <th class="border-r border-black p-2.5 text-left pl-4">รายการอาหาร</th>
+                <th class="border-r border-black p-2.5 w-20">จำนวน</th>
+                <th class="p-2.5 w-28">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- แถบด้านล่าง: ปุ่มย้อนกลับ -->
+      <div class="flex justify-start items-center border-t-2 border-black pt-4 mt-4">
+        <button onclick="switchChefView('queue')" 
+                class="bg-gray-200 border border-gray-400 hover:bg-gray-300 font-bold px-8 py-2.5 rounded-xl text-black transition text-sm">
+          ย้อนกลับ
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- DETAIL MODAL: เมื่อกดที่รายการอาหาร (ตรงตาม Wireframe UI.png) -->
+    <!-- ======================================================== -->
+    <div id="chef-detail-modal" class="hidden absolute inset-0 bg-white border-4 border-black p-8 flex flex-col justify-between z-40">
+      <div>
+        <h2 class="text-center font-black text-3xl mb-6 text-gray-900" id="detail-modal-title">
+          ID: 005
+        </h2>
+
+        <!-- ตารางสรุปย่อตาม Wireframe -->
+        <table class="w-full border-collapse border border-black text-sm text-center mb-6">
+          <thead>
+            <tr class="border-b border-black bg-gray-100 font-bold">
+              <th class="border-r border-black p-2 w-20">ID</th>
+              <th class="border-r border-black p-2 w-24">โต๊ะ</th>
+              <th class="border-r border-black p-2 text-left pl-4">รายการอาหาร</th>
+              <th class="border-r border-black p-2 w-20">จำนวน</th>
+              <th class="p-2 w-28">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-black">
+              <td class="border-r border-black p-3 font-bold" id="detail-id">-</td>
+              <td class="border-r border-black p-3 font-bold text-red-600 text-base" id="detail-table">-</td>
+              <td class="border-r border-black p-3 text-left pl-4 font-bold" id="detail-menu">-</td>
+              <td class="border-r border-black p-3 font-bold" id="detail-qty">-</td>
+              <td class="p-3 font-bold" id="detail-status">-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- รายละเอียดการปรับแต่งและท็อปปิ้ง -->
+        <div class="bg-gray-50 border border-black p-4 rounded-lg space-y-2">
+          <p class="font-bold text-gray-800 text-sm">รายละเอียดการสั่ง:</p>
+          <div id="detail-customization" class="text-sm text-gray-700 pl-4 space-y-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons กลางหน้าจอ / ล่าง ตามสถานะใน Wireframe -->
+      <div>
+        <!-- ปุ่มหลักสำหรับ Queue / Prepare / Finish -->
+        <div id="detail-actions" class="flex justify-center items-center gap-6 mb-4">
+          <!-- Dynamic Buttons will be inserted here -->
+        </div>
+
+        <!-- ปุ่มย้อนกลับ มุมล่างซ้าย ตาม Wireframe -->
+        <div class="flex justify-start border-t border-black pt-4">
+          <button onclick="closeDetailModal()" 
+                  class="bg-gray-200 border border-gray-400 hover:bg-gray-300 font-bold px-8 py-2.5 rounded-xl text-black transition text-sm">
+            ย้อนกลับ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- FOOD SLIP MODAL: ใบรายการอาหารแบบจำลอง (ตรงตาม Wireframe & Prompt) -->
+    <!-- ======================================================== -->
+    <div id="food-slip-modal" class="hidden absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div class="bg-white w-[380px] border-4 border-black p-6 rounded-lg shadow-2xl flex flex-col justify-between font-mono">
+        <div>
+          <div class="text-center border-b-2 border-dashed border-black pb-3 mb-3">
+            <h3 class="font-black text-xl text-black tracking-widest">FOOD SLIP</h3>
+            <p class="text-xs text-gray-500 font-sans mt-0.5">ใบรายการอาหารสำหรับส่งโต๊ะ</p>
+          </div>
+
+          <div class="space-y-1 text-sm border-b-2 border-dashed border-black pb-3 mb-3">
+            <div class="flex justify-between font-bold text-base">
+              <span>TABLE:</span>
+              <span id="slip-table" class="text-red-600 font-black">T05</span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>ITEM ID:</span>
+              <span id="slip-id">#005</span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-600">
+              <span>TIME:</span>
+              <span id="slip-time">19:30</span>
+            </div>
+          </div>
+
+          <div class="border-b-2 border-dashed border-black pb-3 mb-4 space-y-2">
+            <div class="flex justify-between font-black text-lg">
+              <span id="slip-menu">ทงคตสึราเมง</span>
+              <span id="slip-qty">x1</span>
+            </div>
+            <div id="slip-details" class="text-xs text-gray-700 pl-2 space-y-1 font-sans">
+              <!-- Options & Toppings -->
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button onclick="printFoodSlip()" 
+                  class="flex-1 bg-black text-white font-bold py-2.5 rounded-lg text-sm hover:bg-gray-800 transition">
+            🖨️ พิมพ์ใบจำลอง
+          </button>
+          <button onclick="closeFoodSlip()" 
+                  class="flex-1 bg-gray-200 border border-gray-400 font-bold py-2.5 rounded-lg text-sm hover:bg-gray-300 transition">
+            ปิด
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let queueOrders = [];
+    let historyOrders = [];
+    let currentSelectedOrder = null;
+    let activeChefView = 'queue';
+
+    // สลับ View ระหว่าง Queue และ History
+    function switchChefView(view) {
+      activeChefView = view;
+      if (view === 'queue') {
+        document.getElementById('view-queue').classList.remove('hidden');
+        document.getElementById('view-history').classList.add('hidden');
+      } else {
+        document.getElementById('view-queue').classList.add('hidden');
+        document.getElementById('view-history').classList.remove('hidden');
+      }
+      closeDetailModal();
+    }
+
+    // ดึงข้อมูลรายการอาหารจาก API
+    function fetchChefOrders() {
+      fetch('/chef/api/orders')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            queueOrders = data.queueOrders || [];
+            historyOrders = data.historyOrders || [];
+            renderQueueTable();
+            renderHistoryTable();
+
+            // หากกำลังเปิด Modal ของออเดอร์ใดอยู่ ให้อัปเดตข้อมูลด้วย
+            if (currentSelectedOrder) {
+              const updated = [...queueOrders, ...historyOrders].find(o => o.order_item_id === currentSelectedOrder.order_item_id);
+              if (updated) {
+                currentSelectedOrder = updated;
+                updateDetailModalContent(updated);
+              }
+            }
+          }
+        })
+        .catch(err => console.error('Chef fetch error:', err));
+    }
+
+    // ฟังก์ชันจัด Format ID เช่น 5 -> 005
+    function padId(id) {
+      return String(id).padStart(3, '0');
+    }
+
+    // Render ตารางคิวรายการอาหาร (Queue View)
+    function renderQueueTable() {
+      const tbody = document.getElementById('queue-tbody');
+      tbody.innerHTML = '';
+
+      const totalSlots = Math.max(8, queueOrders.length);
+
+      for (let i = 0; i < totalSlots; i++) {
+        const item = queueOrders[i];
+        if (item) {
+          const isPreparing = item.status === 'prepare';
+          const statusText = isPreparing ? 'กำลังทำ' : 'อยู่ในคิว';
+          const statusClass = isPreparing 
+            ? 'bg-blue-100 text-blue-800 border border-blue-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block animate-pulse' 
+            : 'bg-yellow-100 text-yellow-800 border border-yellow-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block';
+
+          // สรุปชื่ออาหาร + ตัวเลือกแบบกระชับ ตาม Wireframe
+          const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
+
+          tbody.innerHTML += `
+            <tr class="h-11 border-b border-black hover:bg-gray-50 cursor-pointer" onclick="openDetailModal(${item.order_item_id})">
+              <td class="border-r border-black font-mono font-bold text-gray-700">${padId(item.order_item_id)}</td>
+              <td class="border-r border-black font-bold text-red-600 text-base">${item.table_number}</td>
+              <td class="border-r border-black text-left pl-4">
+                <div class="font-bold text-gray-900">${item.menu_name}</div>
+                ${summaryDetail ? `<div class="text-[11px] text-gray-500">${summaryDetail}</div>` : ''}
+              </td>
+              <td class="border-r border-black font-black text-base">${item.quantity}</td>
+              <td><span class="${statusClass}">${statusText}</span></td>
+            </tr>
+          `;
+        } else {
+          // เติมแถวว่างเพื่อความสวยงามตาม Wireframe
+          tbody.innerHTML += `
+            <tr class="h-11 border-b border-black">
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td></td>
+            </tr>
+          `;
+        }
+      }
+    }
+
+    // Render ตารางประวัติรายการ (History View)
+    function renderHistoryTable() {
+      const tbody = document.getElementById('history-tbody');
+      tbody.innerHTML = '';
+
+      const totalSlots = Math.max(8, historyOrders.length);
+
+      for (let i = 0; i < totalSlots; i++) {
+        const item = historyOrders[i];
+        if (item) {
+          const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
+
+          tbody.innerHTML += `
+            <tr class="h-11 border-b border-black hover:bg-gray-50 cursor-pointer" onclick="openDetailModal(${item.order_item_id})">
+              <td class="border-r border-black font-mono font-bold text-gray-700">${padId(item.order_item_id)}</td>
+              <td class="border-r border-black font-bold text-gray-800">${item.table_number}</td>
+              <td class="border-r border-black text-left pl-4">
+                <div class="font-bold text-gray-900">${item.menu_name}</div>
+                ${summaryDetail ? `<div class="text-[11px] text-gray-500">${summaryDetail}</div>` : ''}
+              </td>
+              <td class="border-r border-black font-bold text-base">${item.quantity}</td>
+              <td><span class="bg-green-100 text-green-800 border border-green-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block">เสร็จสิ้น</span></td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr class="h-11 border-b border-black">
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td class="border-r border-black"></td>
+              <td></td>
+            </tr>
+          `;
+        }
+      }
+    }
+
+    // ==========================================
+    // DETAIL MODAL LOGIC (ตรงตาม Wireframe UI.png)
+    // ==========================================
+    function openDetailModal(orderItemId) {
+      const all = [...queueOrders, ...historyOrders];
+      const item = all.find(o => o.order_item_id === orderItemId);
+      if (!item) return;
+
+      currentSelectedOrder = item;
+      updateDetailModalContent(item);
+      document.getElementById('chef-detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('chef-detail-modal').classList.add('hidden');
+      currentSelectedOrder = null;
+    }
+
+    function updateDetailModalContent(item) {
+      document.getElementById('detail-modal-title').innerText = `ID: ${padId(item.order_item_id)}`;
+      document.getElementById('detail-id').innerText = padId(item.order_item_id);
+      document.getElementById('detail-table').innerText = item.table_number;
+      document.getElementById('detail-menu').innerText = item.menu_name;
+      document.getElementById('detail-qty').innerText = item.quantity;
+
+      const statusMap = {
+        'queue': 'อยู่ในคิว',
+        'prepare': 'กำลังทำ',
+        'finish': 'เสร็จสิ้น'
+      };
+      document.getElementById('detail-status').innerText = statusMap[item.status] || item.status;
+
+      // จัดการแสดง Customization
+      const customDiv = document.getElementById('detail-customization');
+      customDiv.innerHTML = '';
+      if (item.options_text) {
+        customDiv.innerHTML += `<div><strong>ตัวเลือก:</strong> ${item.options_text}</div>`;
+      }
+      if (item.toppings_text) {
+        customDiv.innerHTML += `<div><strong>ท็อปปิ้ง:</strong> ${item.toppings_text}</div>`;
+      }
+      if (!item.options_text && !item.toppings_text) {
+        customDiv.innerHTML = `<span class="text-gray-400">ไม่มีการปรับแต่งเพิ่มเติม</span>`;
+      }
+
+      // Action Buttons ตามสถานะใน Wireframe
+      const actionsDiv = document.getElementById('detail-actions');
+      actionsDiv.innerHTML = '';
+
+      if (item.status === 'queue') {
+        // รายการที่อยู่ในคิวจะมีแค่ปุ่ม "รับคำสั่งซื้อ"
+        actionsDiv.innerHTML = `
+          <button onclick="updateOrderStatus(${item.order_item_id}, 'prepare')" 
+                  class="bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-12 py-4 rounded-2xl text-xl shadow-md transition active:scale-95">
+            รับคำสั่งซื้อ
+          </button>
+        `;
+      } else if (item.status === 'prepare') {
+        // รายการที่กำลังทำจะมีปุ่ม "อยู่ในคิว(กลับ)" และ "เสร็จสิ้น"
+        actionsDiv.innerHTML = `
+          <button onclick="updateOrderStatus(${item.order_item_id}, 'queue')" 
+                  class="bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-base shadow transition active:scale-95">
+            อยู่ในคิว (กลับ)
+          </button>
+          <button onclick="finishOrderAndShowSlip(${item.order_item_id})" 
+                  class="bg-green-600 border-2 border-green-800 text-white hover:bg-green-700 font-bold px-10 py-3.5 rounded-2xl text-lg shadow-md transition active:scale-95">
+            เสร็จสิ้น
+          </button>
+        `;
+      } else if (item.status === 'finish') {
+        // เมื่อกดรายการในประวัติ จะมีปุ่ม "นำกลับไปอยู่ในคิว" และ "พิมพ์ใบเมนู"
+        actionsDiv.innerHTML = `
+          <button onclick="updateOrderStatus(${item.order_item_id}, 'queue')" 
+                  class="bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95">
+            นำกลับไปอยู่ในคิว
+          </button>
+          <button onclick="showFoodSlip(currentSelectedOrder)" 
+                  class="bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95">
+            พิมพ์ใบเมนู
+          </button>
+        `;
+      }
+    }
+
+    // อัปเดตสถานะผ่าน API
+    function updateOrderStatus(orderItemId, nextStatus) {
+      fetch('/chef/api/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_item_id: orderItemId, next_status: nextStatus })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          fetchChefOrders();
+          closeDetailModal();
+        } else {
+          alert('ไม่สามารถอัปเดตสถานะได้');
+        }
+      });
+    }
+
+    // เมื่อกดเสร็จสิ้น -> อัปเดตสถานะ และแสดง Food Slip แบบจำลองทันที
+    function finishOrderAndShowSlip(orderItemId) {
+      fetch('/chef/api/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_item_id: orderItemId, next_status: 'finish' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const itemToSlip = currentSelectedOrder;
+          closeDetailModal();
+          fetchChefOrders();
+          // แสดง Food Slip Modal ทันทีตามข้อกำหนด
+          if (itemToSlip) {
+            showFoodSlip(itemToSlip);
+          }
+        }
+      });
+    }
+
+    // ==========================================
+    // FOOD SLIP LOGIC (ใบรายการอาหารแบบจำลอง)
+    // ==========================================
+    function showFoodSlip(item) {
+      document.getElementById('slip-table').innerText = item.table_number;
+      document.getElementById('slip-id').innerText = '#' + padId(item.order_item_id);
+      document.getElementById('slip-time').innerText = new Date(item.order_item_time).toLocaleTimeString('th-TH');
+      document.getElementById('slip-menu').innerText = item.menu_name;
+      document.getElementById('slip-qty').innerText = `x${item.quantity}`;
+
+      const detailsContainer = document.getElementById('slip-details');
+      detailsContainer.innerHTML = '';
+
+      if (item.options_text) {
+        item.options_text.split(', ').forEach(opt => {
+          detailsContainer.innerHTML += `<div>• ${opt}</div>`;
+        });
+      }
+      if (item.toppings_text) {
+        detailsContainer.innerHTML += `<div class="font-bold pt-1">ท็อปปิ้ง:</div>`;
+        item.toppings_text.split(', ').forEach(top => {
+          detailsContainer.innerHTML += `<div class="pl-2">+ ${top}</div>`;
+        });
+      }
+
+      document.getElementById('food-slip-modal').classList.remove('hidden');
+    }
+
+    function closeFoodSlip() {
+      document.getElementById('food-slip-modal').classList.add('hidden');
+    }
+
+    function printFoodSlip() {
+      alert('🖨️ [จำลองการพิมพ์] ใบรายการอาหารสำหรับพนักงานเสิร์ฟได้ถูกพิมพ์เรียบร้อยแล้ว');
+      closeFoodSlip();
+    }
+
+    // เริ่มต้นดึงข้อมูล และตั้ง Auto Refresh ทุกๆ 3 วินาที
+    fetchChefOrders();
+    setInterval(fetchChefOrders, 3000);
+  </script>
+</body>
+</html>
