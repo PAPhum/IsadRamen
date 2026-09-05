@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "build": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/style.css --minify",
     "build:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/style.css --watch"
   },
   "keywords": [],
