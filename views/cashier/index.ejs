@@ -345,7 +345,7 @@
     // Render ปุ่มโต๊ะ (8 โต๊ะต่อหน้า)
     function renderTablesGrid() {
       const container = document.getElementById('tables-grid');
-      container.innerHTML = '';
+      container.replaceChildren();
 
       const totalPages = Math.ceil(allTables.length / tablesPerPage);
       const start = (currentTablePage - 1) * tablesPerPage;
@@ -364,17 +364,24 @@
           btnClass += 'border-gray-400 bg-white text-gray-700 hover:bg-gray-100';
         }
 
-        const badgeHtml = hasUnpaid 
-          ? `<span class="text-[10px] font-black text-red-600 mt-0.5">${t.unpaid_total} ฿</span>` 
-          : `<span class="text-[10px] text-gray-400 mt-0.5">ว่าง</span>`;
-
         const btn = document.createElement('button');
         btn.className = btnClass;
         btn.onclick = () => selectAndLoadTable(t.table_id);
-        btn.innerHTML = `
-          <span class="text-sm font-black">${t.table_number}</span>
-          ${badgeHtml}
-        `;
+
+        const numSpan = document.createElement('span');
+        numSpan.className = 'text-sm font-black';
+        numSpan.textContent = t.table_number;
+
+        const badgeSpan = document.createElement('span');
+        if (hasUnpaid) {
+          badgeSpan.className = 'text-[10px] font-black text-red-600 mt-0.5';
+          badgeSpan.textContent = `${t.unpaid_total} ฿`;
+        } else {
+          badgeSpan.className = 'text-[10px] text-gray-400 mt-0.5';
+          badgeSpan.textContent = 'ว่าง';
+        }
+
+        btn.append(numSpan, badgeSpan);
         container.appendChild(btn);
       });
 
@@ -419,7 +426,7 @@
     // Render รายการอาหารใน Column 2
     function renderBill() {
       const tbody = document.getElementById('bill-tbody');
-      tbody.innerHTML = '';
+      tbody.replaceChildren();
 
       if (!currentBill || !currentBill.items || currentBill.items.length === 0) {
         document.getElementById('table-title').innerText = selectedTable ? `รายการอาหาร ${selectedTable.table_number} (ไม่มีรายการค้าง)` : 'รายการอาหาร (เลือกโต๊ะ)';
@@ -430,15 +437,14 @@
 
         // เติม 8 แถวว่าง
         for (let i = 0; i < 8; i++) {
-          tbody.innerHTML += `
-            <tr class="h-9 border-b border-black">
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td></td>
-            </tr>
-          `;
+          const tr = document.createElement('tr');
+          tr.className = 'h-9 border-b border-black';
+          for (let j = 0; j < 5; j++) {
+            const td = document.createElement('td');
+            if (j < 4) td.className = 'border-r border-black';
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
         }
         return;
       }
@@ -453,28 +459,42 @@
 
       for (let i = 0; i < totalSlots; i++) {
         const item = currentBill.items[i];
+        const tr = document.createElement('tr');
+        tr.className = 'h-9 border-b border-black';
+
         if (item) {
+          tr.classList.add('hover:bg-gray-50');
           const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
-          tbody.innerHTML += `
-            <tr class="h-9 border-b border-black hover:bg-gray-50">
-              <td class="border-r border-black font-bold text-gray-600">${i + 1}</td>
-              <td class="border-r border-black text-left pl-2 font-bold text-gray-900">${item.menu_name}</td>
-              <td class="border-r border-black text-left pl-2 text-[11px] text-gray-600">${customText}</td>
-              <td class="border-r border-black font-bold">${item.quantity}</td>
-              <td class="text-right pr-2 font-black">${item.item_total} ฿</td>
-            </tr>
-          `;
+
+          const tdIndex = document.createElement('td');
+          tdIndex.className = 'border-r border-black font-bold text-gray-600';
+          tdIndex.textContent = i + 1;
+
+          const tdName = document.createElement('td');
+          tdName.className = 'border-r border-black text-left pl-2 font-bold text-gray-900';
+          tdName.textContent = item.menu_name;
+
+          const tdCustom = document.createElement('td');
+          tdCustom.className = 'border-r border-black text-left pl-2 text-[11px] text-gray-600';
+          tdCustom.textContent = customText;
+
+          const tdQty = document.createElement('td');
+          tdQty.className = 'border-r border-black font-bold';
+          tdQty.textContent = item.quantity;
+
+          const tdPrice = document.createElement('td');
+          tdPrice.className = 'text-right pr-2 font-black';
+          tdPrice.textContent = `${item.item_total} ฿`;
+
+          tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
         } else {
-          tbody.innerHTML += `
-            <tr class="h-9 border-b border-black">
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td></td>
-            </tr>
-          `;
+          for (let j = 0; j < 5; j++) {
+            const td = document.createElement('td');
+            if (j < 4) td.className = 'border-r border-black';
+            tr.appendChild(td);
+          }
         }
+        tbody.appendChild(tr);
       }
 
       // Reset ช่องรับเงิน
@@ -609,19 +629,39 @@
       document.getElementById('receipt-date').innerText = new Date(paymentData.payment_time).toLocaleString('th-TH');
 
       const itemsList = document.getElementById('receipt-items-list');
-      itemsList.innerHTML = '';
+      itemsList.replaceChildren();
       paymentData.items.forEach(item => {
         const custom = [item.options_text, item.toppings_text].filter(Boolean).join(', ');
-        itemsList.innerHTML += `
-          <div class="flex justify-between items-start">
-            <div class="pr-2">
-              <span class="font-bold text-black">${item.menu_name}</span>
-              <span class="text-gray-500 font-bold ml-1">x${item.quantity}</span>
-              ${custom ? `<div class="text-[10px] text-gray-500 pl-1">• ${custom}</div>` : ''}
-            </div>
-            <span class="font-bold text-black whitespace-nowrap">${item.item_total} ฿</span>
-          </div>
-        `;
+
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'flex justify-between items-start';
+
+        const leftDiv = document.createElement('div');
+        leftDiv.className = 'pr-2';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'font-bold text-black';
+        nameSpan.textContent = item.menu_name;
+
+        const qtySpan = document.createElement('span');
+        qtySpan.className = 'text-gray-500 font-bold ml-1';
+        qtySpan.textContent = ` x${item.quantity}`;
+
+        leftDiv.append(nameSpan, qtySpan);
+
+        if (custom) {
+          const customDiv = document.createElement('div');
+          customDiv.className = 'text-[10px] text-gray-500 pl-1';
+          customDiv.textContent = `• ${custom}`;
+          leftDiv.appendChild(customDiv);
+        }
+
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'font-bold text-black whitespace-nowrap';
+        priceSpan.textContent = `${item.item_total} ฿`;
+
+        rowDiv.append(leftDiv, priceSpan);
+        itemsList.appendChild(rowDiv);
       });
 
       document.getElementById('receipt-total').innerText = paymentData.total_amount;

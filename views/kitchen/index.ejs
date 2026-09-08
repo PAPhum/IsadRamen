@@ -57,47 +57,80 @@
     // ฟังก์ชัน Render ข้อมูลลง HTML Table
     function renderOrders(orders) {
       const tbody = document.getElementById('kitchen-orders-body');
-      tbody.innerHTML = '';
+      tbody.replaceChildren();
 
       if (orders.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="text-center py-12 text-gray-500 font-bold text-lg">
-              🎉 ไม่มีคิวอาหารที่รอปรุงในขณะนี้
-            </td>
-          </tr>
-        `;
+        const emptyTr = document.createElement('tr');
+        const emptyTd = document.createElement('td');
+        emptyTd.colSpan = 8;
+        emptyTd.className = 'text-center py-12 text-gray-500 font-bold text-lg';
+        emptyTd.textContent = '🎉 ไม่มีคิวอาหารที่รอปรุงในขณะนี้';
+        emptyTr.appendChild(emptyTd);
+        tbody.appendChild(emptyTr);
         return;
       }
 
       orders.forEach(item => {
         const timeStr = new Date(item.order_item_time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
         
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-gray-700 hover:bg-gray-750 transition text-sm';
+
+        const tdTime = document.createElement('td');
+        tdTime.className = 'p-3 font-mono text-gray-400';
+        tdTime.textContent = timeStr;
+
+        const tdTable = document.createElement('td');
+        tdTable.className = 'p-3 font-bold text-yellow-500 text-base';
+        tdTable.textContent = item.table_number;
+
+        const tdName = document.createElement('td');
+        tdName.className = 'p-3 font-semibold text-white text-base';
+        tdName.textContent = item.menu_name;
+
+        const tdOptions = document.createElement('td');
+        tdOptions.className = 'p-3 text-gray-300';
+        tdOptions.textContent = [item.options, item.toppings].filter(Boolean).join(' | ') || '-';
+
+        const tdNote = document.createElement('td');
+        tdNote.className = 'p-3 text-red-400 font-medium';
+        tdNote.textContent = item.note || '-';
+
+        const tdQty = document.createElement('td');
+        tdQty.className = 'p-3 text-center font-bold text-lg';
+        tdQty.textContent = item.quantity;
+
         // กำหนดสีตามสถานะ
         const isQueue = item.status === 'queue';
-        const statusBadge = isQueue 
-          ? `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-3 py-1 rounded-full text-xs font-bold">อยู่ในคิว</span>`
-          : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/50 px-3 py-1 rounded-full text-xs font-bold animate-pulse">กำลังปรุง</span>`;
+        const tdStatus = document.createElement('td');
+        tdStatus.className = 'p-3 text-center';
+        const statusBadge = document.createElement('span');
+        if (isQueue) {
+          statusBadge.className = 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-3 py-1 rounded-full text-xs font-bold';
+          statusBadge.textContent = 'อยู่ในคิว';
+        } else {
+          statusBadge.className = 'bg-blue-500/20 text-blue-400 border border-blue-500/50 px-3 py-1 rounded-full text-xs font-bold animate-pulse';
+          statusBadge.textContent = 'กำลังปรุง';
+        }
+        tdStatus.appendChild(statusBadge);
 
         // ปุ่มเปลี่ยนสถานะ
-        const actionBtn = isQueue
-          ? `<button onclick="updateStatus(${item.order_item_id}, 'prepare')" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">รับออเดอร์</button>`
-          : `<button onclick="updateStatus(${item.order_item_id}, 'finish')" class="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition">ทำเสร็จแล้ว</button>`;
+        const tdAction = document.createElement('td');
+        tdAction.className = 'p-3 text-center';
+        const actionBtn = document.createElement('button');
+        if (isQueue) {
+          actionBtn.className = 'bg-yellow-600 hover:bg-yellow-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition';
+          actionBtn.textContent = 'รับออเดอร์';
+          actionBtn.onclick = () => updateStatus(item.order_item_id, 'prepare');
+        } else {
+          actionBtn.className = 'bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition';
+          actionBtn.textContent = 'ทำเสร็จแล้ว';
+          actionBtn.onclick = () => updateStatus(item.order_item_id, 'finish');
+        }
+        tdAction.appendChild(actionBtn);
 
-        const optionsText = [item.options, item.toppings].filter(Boolean).join(' | ') || '-';
-
-        tbody.innerHTML += `
-          <tr class="border-b border-gray-700 hover:bg-gray-750 transition text-sm">
-            <td class="p-3 font-mono text-gray-400">${timeStr}</td>
-            <td class="p-3 font-bold text-yellow-500 text-base">${item.table_number}</td>
-            <td class="p-3 font-semibold text-white text-base">${item.menu_name}</td>
-            <td class="p-3 text-gray-300">${optionsText}</td>
-            <td class="p-3 text-red-400 font-medium">${item.note || '-'}</td>
-            <td class="p-3 text-center font-bold text-lg">${item.quantity}</td>
-            <td class="p-3 text-center">${statusBadge}</td>
-            <td class="p-3 text-center">${actionBtn}</td>
-          </tr>
-        `;
+        tr.append(tdTime, tdTable, tdName, tdOptions, tdNote, tdQty, tdStatus, tdAction);
+        tbody.appendChild(tr);
       });
     }
 

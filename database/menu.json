@@ -1,0 +1,326 @@
+[
+  {
+    "category_id": 1,
+    "menu_name": "โชยุราเมง",
+    "base_price": 120.00,
+    "menu_image": "shoyu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ทงคตสึราเมง",
+    "base_price": 140.00,
+    "menu_image": "tonkotsu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ซารุราเมง",
+    "base_price": 100.00,
+    "menu_image": "zaru.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ชิโอะเลม่อนราเมง",
+    "base_price": 140.00,
+    "menu_image": "shio-lemon.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "สไปซี่มิโซะราเมง",
+    "base_price": 140.00,
+    "menu_image": "spicy-miso.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "สึเคเมน",
+    "base_price": 160.00,
+    "menu_image": "tsukemen.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "สไปซี่ราจันเมง",
+    "base_price": 150.00,
+    "menu_image": "spicy-rajan.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ต้มยำกุ้งราเมง",
+    "base_price": 170.00,
+    "menu_image": "tom-yum-kung.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "โกโมะคึราเมง",
+    "base_price": 150.00,
+    "menu_image": "gomoku.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ต้มยำชาชูเมง",
+    "base_price": 160.00,
+    "menu_image": "tom-yum-chasyu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ฮะจังเมง",
+    "base_price": 90.00,
+    "menu_image": "hachang-men.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ชาชูเมน",
+    "base_price": 160.00,
+    "menu_image": "chasyu-men.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "มิโซะราเมง",
+    "base_price": 130.00,
+    "menu_image": "miso.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ชิโอะราเมง",
+    "base_price": 120.00,
+    "menu_image": "shio.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "คุโระทงคตสึราเมง",
+    "base_price": 160.00,
+    "menu_image": "kuro-tonkotsu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "อากะทงคตสึราเมง",
+    "base_price": 150.00,
+    "menu_image": "aka-tonkotsu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ทันทันเมน",
+    "base_price": 150.00,
+    "menu_image": "tantan-men.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "เนกิราเมง",
+    "base_price": 110.00,
+    "menu_image": "negi.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "คาเรราเมง",
+    "base_price": 150.00,
+    "menu_image": "curry.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "มาเซโซบะ",
+    "base_price": 140.00,
+    "menu_image": "mazesoba.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ยากิโซบะ",
+    "base_price": 120.00,
+    "menu_image": "yakisoba.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "เมนไตโกะซารุราเมง",
+    "base_price": 130.00,
+    "menu_image": "mentaiko-zaru.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "วาซาบิซารุราเมง",
+    "base_price": 110.00,
+    "menu_image": "wasabi-zaru.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ต้มยำหมูสับราเมง",
+    "base_price": 130.00,
+    "menu_image": "tom-yum-minced-pork.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "ราเมงเนื้อวากิวต้มโคล้ง",
+    "base_price": 180.00,
+    "menu_image": "wagyu-tom-khlong.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "คัตสึราเมง",
+    "base_price": 150.00,
+    "menu_image": "katsu.jpg"
+  },
+  {
+    "category_id": 1,
+    "menu_name": "เอบิฟรายราเมง",
+    "base_price": 160.00,
+    "menu_image": "ebi-fry.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เกี๊ยวซ่า",
+    "base_price": 60.00,
+    "menu_image": "gyoza.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "คาราอาเกะ",
+    "base_price": 60.00,
+    "menu_image": "karaage.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "ทาโกะยากิ",
+    "base_price": 70.00,
+    "menu_image": "takoyaki.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เมนชิ คัตสึ",
+    "base_price": 80.00,
+    "menu_image": "menchi-katsu.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เทบะ คาระ",
+    "base_price": 75.00,
+    "menu_image": "teba-kara.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เอบิ โรล",
+    "base_price": 85.00,
+    "menu_image": "ebi-roll.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "ถั่วแระญี่ปุ่น",
+    "base_price": 50.00,
+    "menu_image": "edamame.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "กิมจิ",
+    "base_price": 40.00,
+    "menu_image": "kimchi.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "ยำสาหร่ายญี่ปุ่น",
+    "base_price": 50.00,
+    "menu_image": "chuka-wakame.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "หมูชาชูจานเดี่ยว",
+    "base_price": 90.00,
+    "menu_image": "chasyu-plate.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "หัวไชเท้าดองญี่ปุ่น",
+    "base_price": 40.00,
+    "menu_image": "takuan.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "หน่อไม้ดองญี่ปุ่น",
+    "base_price": 45.00,
+    "menu_image": "menma-plate.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เฟรนช์ฟรายส์รสเกลือ",
+    "base_price": 55.00,
+    "menu_image": "french-fries.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "นักเก็ตไก่",
+    "base_price": 60.00,
+    "menu_image": "chicken-nuggets.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "กุ้งชุบแป้งทอด",
+    "base_price": 95.00,
+    "menu_image": "ebi-tempura.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "ชีสสติ๊กทอด",
+    "base_price": 75.00,
+    "menu_image": "cheese-sticks.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "คัตสึโทจิ",
+    "base_price": 110.00,
+    "menu_image": "katsu-toji.jpg"
+  },
+  {
+    "category_id": 2,
+    "menu_name": "เกี๊ยวซ่าชีสย่าง",
+    "base_price": 80.00,
+    "menu_image": "cheese-gyoza.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "โค้ก",
+    "base_price": 30.00,
+    "menu_image": "coke.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "โค้กซีโร่",
+    "base_price": 30.00,
+    "menu_image": "coke-zero.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "น้ำเปล่า",
+    "base_price": 20.00,
+    "menu_image": "water.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "ชาเขียวเย็น",
+    "base_price": 35.00,
+    "menu_image": "iced-green-tea.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "ชาเขียวร้อน",
+    "base_price": 30.00,
+    "menu_image": "hot-green-tea.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "สไปรท์",
+    "base_price": 30.00,
+    "menu_image": "sprite.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "แฟนต้าน้ำส้ม",
+    "base_price": 30.00,
+    "menu_image": "fanta-orange.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "น้ำส้มคั้น 100%",
+    "base_price": 45.00,
+    "menu_image": "orange-juice.jpg"
+  },
+  {
+    "category_id": 3,
+    "menu_name": "ชามะนาว",
+    "base_price": 35.00,
+    "menu_image": "lemon-tea.jpg"
+  }
+]

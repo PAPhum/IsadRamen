@@ -248,84 +248,129 @@
     // Render ตารางคิวรายการอาหาร (Queue View)
     function renderQueueTable() {
       const tbody = document.getElementById('queue-tbody');
-      tbody.innerHTML = '';
+      tbody.replaceChildren();
 
       const totalSlots = Math.max(8, queueOrders.length);
 
       for (let i = 0; i < totalSlots; i++) {
         const item = queueOrders[i];
+        const tr = document.createElement('tr');
+        tr.className = 'h-11 border-b border-black';
+
         if (item) {
-          const isPreparing = item.status === 'prepare';
-          const statusText = isPreparing ? 'กำลังทำ' : 'อยู่ในคิว';
-          const statusClass = isPreparing 
-            ? 'bg-blue-100 text-blue-800 border border-blue-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block animate-pulse' 
-            : 'bg-yellow-100 text-yellow-800 border border-yellow-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block';
+          tr.classList.add('hover:bg-gray-50', 'cursor-pointer');
+          tr.onclick = () => openDetailModal(item.order_item_id);
 
-          // สรุปชื่ออาหาร + ตัวเลือกแบบกระชับ ตาม Wireframe
+          const tdId = document.createElement('td');
+          tdId.className = 'border-r border-black font-mono font-bold text-gray-700';
+          tdId.textContent = padId(item.order_item_id);
+
+          const tdTable = document.createElement('td');
+          tdTable.className = 'border-r border-black font-bold text-red-600 text-base';
+          tdTable.textContent = item.table_number;
+
+          const tdName = document.createElement('td');
+          tdName.className = 'border-r border-black text-left pl-4';
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'font-bold text-gray-900';
+          nameDiv.textContent = item.menu_name;
+          tdName.appendChild(nameDiv);
+
           const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
+          if (summaryDetail) {
+            const detailDiv = document.createElement('div');
+            detailDiv.className = 'text-[11px] text-gray-500';
+            detailDiv.textContent = summaryDetail;
+            tdName.appendChild(detailDiv);
+          }
 
-          tbody.innerHTML += `
-            <tr class="h-11 border-b border-black hover:bg-gray-50 cursor-pointer" onclick="openDetailModal(${item.order_item_id})">
-              <td class="border-r border-black font-mono font-bold text-gray-700">${padId(item.order_item_id)}</td>
-              <td class="border-r border-black font-bold text-red-600 text-base">${item.table_number}</td>
-              <td class="border-r border-black text-left pl-4">
-                <div class="font-bold text-gray-900">${item.menu_name}</div>
-                ${summaryDetail ? `<div class="text-[11px] text-gray-500">${summaryDetail}</div>` : ''}
-              </td>
-              <td class="border-r border-black font-black text-base">${item.quantity}</td>
-              <td><span class="${statusClass}">${statusText}</span></td>
-            </tr>
-          `;
+          const tdQty = document.createElement('td');
+          tdQty.className = 'border-r border-black font-black text-base';
+          tdQty.textContent = item.quantity;
+
+          const tdStatus = document.createElement('td');
+          const isPreparing = item.status === 'prepare';
+          const statusBadge = document.createElement('span');
+          if (isPreparing) {
+            statusBadge.className = 'bg-blue-100 text-blue-800 border border-blue-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block animate-pulse';
+            statusBadge.textContent = 'กำลังทำ';
+          } else {
+            statusBadge.className = 'bg-yellow-100 text-yellow-800 border border-yellow-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block';
+            statusBadge.textContent = 'อยู่ในคิว';
+          }
+          tdStatus.appendChild(statusBadge);
+
+          tr.append(tdId, tdTable, tdName, tdQty, tdStatus);
         } else {
           // เติมแถวว่างเพื่อความสวยงามตาม Wireframe
-          tbody.innerHTML += `
-            <tr class="h-11 border-b border-black">
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td></td>
-            </tr>
-          `;
+          for (let j = 0; j < 5; j++) {
+            const td = document.createElement('td');
+            if (j < 4) td.className = 'border-r border-black';
+            tr.appendChild(td);
+          }
         }
+        tbody.appendChild(tr);
       }
     }
 
     // Render ตารางประวัติรายการ (History View)
     function renderHistoryTable() {
       const tbody = document.getElementById('history-tbody');
-      tbody.innerHTML = '';
+      tbody.replaceChildren();
 
       const totalSlots = Math.max(8, historyOrders.length);
 
       for (let i = 0; i < totalSlots; i++) {
         const item = historyOrders[i];
-        if (item) {
-          const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
+        const tr = document.createElement('tr');
+        tr.className = 'h-11 border-b border-black';
 
-          tbody.innerHTML += `
-            <tr class="h-11 border-b border-black hover:bg-gray-50 cursor-pointer" onclick="openDetailModal(${item.order_item_id})">
-              <td class="border-r border-black font-mono font-bold text-gray-700">${padId(item.order_item_id)}</td>
-              <td class="border-r border-black font-bold text-gray-800">${item.table_number}</td>
-              <td class="border-r border-black text-left pl-4">
-                <div class="font-bold text-gray-900">${item.menu_name}</div>
-                ${summaryDetail ? `<div class="text-[11px] text-gray-500">${summaryDetail}</div>` : ''}
-              </td>
-              <td class="border-r border-black font-bold text-base">${item.quantity}</td>
-              <td><span class="bg-green-100 text-green-800 border border-green-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block">เสร็จสิ้น</span></td>
-            </tr>
-          `;
+        if (item) {
+          tr.classList.add('hover:bg-gray-50', 'cursor-pointer');
+          tr.onclick = () => openDetailModal(item.order_item_id);
+
+          const tdId = document.createElement('td');
+          tdId.className = 'border-r border-black font-mono font-bold text-gray-700';
+          tdId.textContent = padId(item.order_item_id);
+
+          const tdTable = document.createElement('td');
+          tdTable.className = 'border-r border-black font-bold text-gray-800';
+          tdTable.textContent = item.table_number;
+
+          const tdName = document.createElement('td');
+          tdName.className = 'border-r border-black text-left pl-4';
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'font-bold text-gray-900';
+          nameDiv.textContent = item.menu_name;
+          tdName.appendChild(nameDiv);
+
+          const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
+          if (summaryDetail) {
+            const detailDiv = document.createElement('div');
+            detailDiv.className = 'text-[11px] text-gray-500';
+            detailDiv.textContent = summaryDetail;
+            tdName.appendChild(detailDiv);
+          }
+
+          const tdQty = document.createElement('td');
+          tdQty.className = 'border-r border-black font-bold text-base';
+          tdQty.textContent = item.quantity;
+
+          const tdStatus = document.createElement('td');
+          const statusBadge = document.createElement('span');
+          statusBadge.className = 'bg-green-100 text-green-800 border border-green-400 font-bold px-2.5 py-1 rounded-md text-xs inline-block';
+          statusBadge.textContent = 'เสร็จสิ้น';
+          tdStatus.appendChild(statusBadge);
+
+          tr.append(tdId, tdTable, tdName, tdQty, tdStatus);
         } else {
-          tbody.innerHTML += `
-            <tr class="h-11 border-b border-black">
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td></td>
-            </tr>
-          `;
+          for (let j = 0; j < 5; j++) {
+            const td = document.createElement('td');
+            if (j < 4) td.className = 'border-r border-black';
+            tr.appendChild(td);
+          }
         }
+        tbody.appendChild(tr);
       }
     }
 
@@ -363,53 +408,65 @@
 
       // จัดการแสดง Customization
       const customDiv = document.getElementById('detail-customization');
-      customDiv.innerHTML = '';
+      customDiv.replaceChildren();
       if (item.options_text) {
-        customDiv.innerHTML += `<div><strong>ตัวเลือก:</strong> ${item.options_text}</div>`;
+        const optDiv = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.textContent = 'ตัวเลือก:';
+        optDiv.append(strong, document.createTextNode(' ' + item.options_text));
+        customDiv.appendChild(optDiv);
       }
       if (item.toppings_text) {
-        customDiv.innerHTML += `<div><strong>ท็อปปิ้ง:</strong> ${item.toppings_text}</div>`;
+        const topDiv = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.textContent = 'ท็อปปิ้ง:';
+        topDiv.append(strong, document.createTextNode(' ' + item.toppings_text));
+        customDiv.appendChild(topDiv);
       }
       if (!item.options_text && !item.toppings_text) {
-        customDiv.innerHTML = `<span class="text-gray-400">ไม่มีการปรับแต่งเพิ่มเติม</span>`;
+        const noCustomSpan = document.createElement('span');
+        noCustomSpan.className = 'text-gray-400';
+        noCustomSpan.textContent = 'ไม่มีการปรับแต่งเพิ่มเติม';
+        customDiv.appendChild(noCustomSpan);
       }
 
       // Action Buttons ตามสถานะใน Wireframe
       const actionsDiv = document.getElementById('detail-actions');
-      actionsDiv.innerHTML = '';
+      actionsDiv.replaceChildren();
 
       if (item.status === 'queue') {
         // รายการที่อยู่ในคิวจะมีแค่ปุ่ม "รับคำสั่งซื้อ"
-        actionsDiv.innerHTML = `
-          <button onclick="updateOrderStatus(${item.order_item_id}, 'prepare')" 
-                  class="bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-12 py-4 rounded-2xl text-xl shadow-md transition active:scale-95">
-            รับคำสั่งซื้อ
-          </button>
-        `;
+        const btn = document.createElement('button');
+        btn.onclick = () => updateOrderStatus(item.order_item_id, 'prepare');
+        btn.className = 'bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-12 py-4 rounded-2xl text-xl shadow-md transition active:scale-95';
+        btn.textContent = 'รับคำสั่งซื้อ';
+        actionsDiv.appendChild(btn);
       } else if (item.status === 'prepare') {
         // รายการที่กำลังทำจะมีปุ่ม "อยู่ในคิว(กลับ)" และ "เสร็จสิ้น"
-        actionsDiv.innerHTML = `
-          <button onclick="updateOrderStatus(${item.order_item_id}, 'queue')" 
-                  class="bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-base shadow transition active:scale-95">
-            อยู่ในคิว (กลับ)
-          </button>
-          <button onclick="finishOrderAndShowSlip(${item.order_item_id})" 
-                  class="bg-green-600 border-2 border-green-800 text-white hover:bg-green-700 font-bold px-10 py-3.5 rounded-2xl text-lg shadow-md transition active:scale-95">
-            เสร็จสิ้น
-          </button>
-        `;
+        const btnBack = document.createElement('button');
+        btnBack.onclick = () => updateOrderStatus(item.order_item_id, 'queue');
+        btnBack.className = 'bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-base shadow transition active:scale-95';
+        btnBack.textContent = 'อยู่ในคิว (กลับ)';
+
+        const btnFinish = document.createElement('button');
+        btnFinish.onclick = () => finishOrderAndShowSlip(item.order_item_id);
+        btnFinish.className = 'bg-green-600 border-2 border-green-800 text-white hover:bg-green-700 font-bold px-10 py-3.5 rounded-2xl text-lg shadow-md transition active:scale-95';
+        btnFinish.textContent = 'เสร็จสิ้น';
+
+        actionsDiv.append(btnBack, btnFinish);
       } else if (item.status === 'finish') {
         // เมื่อกดรายการในประวัติ จะมีปุ่ม "นำกลับไปอยู่ในคิว" และ "พิมพ์ใบเมนู"
-        actionsDiv.innerHTML = `
-          <button onclick="updateOrderStatus(${item.order_item_id}, 'queue')" 
-                  class="bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95">
-            นำกลับไปอยู่ในคิว
-          </button>
-          <button onclick="showFoodSlip(currentSelectedOrder)" 
-                  class="bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95">
-            พิมพ์ใบเมนู
-          </button>
-        `;
+        const btnQueue = document.createElement('button');
+        btnQueue.onclick = () => updateOrderStatus(item.order_item_id, 'queue');
+        btnQueue.className = 'bg-gray-200 border-2 border-gray-400 hover:bg-gray-300 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95';
+        btnQueue.textContent = 'นำกลับไปอยู่ในคิว';
+
+        const btnPrint = document.createElement('button');
+        btnPrint.onclick = () => showFoodSlip(currentSelectedOrder);
+        btnPrint.className = 'bg-gray-300 border-2 border-black hover:bg-gray-400 font-bold px-8 py-3 rounded-2xl text-sm shadow transition active:scale-95';
+        btnPrint.textContent = 'พิมพ์ใบเมนู';
+
+        actionsDiv.append(btnQueue, btnPrint);
       }
     }
 
@@ -463,17 +520,26 @@
       document.getElementById('slip-qty').innerText = `x${item.quantity}`;
 
       const detailsContainer = document.getElementById('slip-details');
-      detailsContainer.innerHTML = '';
+      detailsContainer.replaceChildren();
 
       if (item.options_text) {
         item.options_text.split(', ').forEach(opt => {
-          detailsContainer.innerHTML += `<div>• ${opt}</div>`;
+          const div = document.createElement('div');
+          div.textContent = `• ${opt}`;
+          detailsContainer.appendChild(div);
         });
       }
       if (item.toppings_text) {
-        detailsContainer.innerHTML += `<div class="font-bold pt-1">ท็อปปิ้ง:</div>`;
+        const header = document.createElement('div');
+        header.className = 'font-bold pt-1';
+        header.textContent = 'ท็อปปิ้ง:';
+        detailsContainer.appendChild(header);
+
         item.toppings_text.split(', ').forEach(top => {
-          detailsContainer.innerHTML += `<div class="pl-2">+ ${top}</div>`;
+          const div = document.createElement('div');
+          div.className = 'pl-2';
+          div.textContent = `+ ${top}`;
+          detailsContainer.appendChild(div);
         });
       }
 

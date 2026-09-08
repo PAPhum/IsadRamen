@@ -113,34 +113,48 @@
             document.getElementById('display-qr-amount').innerText = data.grand_total;
 
             const tbody = document.getElementById('display-tbody');
-            tbody.innerHTML = '';
+            tbody.replaceChildren();
 
             const totalSlots = Math.max(8, data.items.length);
 
             for (let i = 0; i < totalSlots; i++) {
               const item = data.items[i];
+              const tr = document.createElement('tr');
+              tr.className = 'h-10 border-b border-black';
+
               if (item) {
+                tr.classList.add('hover:bg-gray-50');
                 const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
-                tbody.innerHTML += `
-                  <tr class="h-10 border-b border-black hover:bg-gray-50">
-                    <td class="border-r border-black font-bold text-gray-500">${i + 1}</td>
-                    <td class="border-r border-black text-left pl-3 font-bold text-gray-900">${item.menu_name}</td>
-                    <td class="border-r border-black text-left pl-3 text-xs text-gray-600">${customText}</td>
-                    <td class="border-r border-black font-bold text-base">${item.quantity}</td>
-                    <td class="text-right pr-3 font-black text-base">${item.item_total} ฿</td>
-                  </tr>
-                `;
+
+                const tdIndex = document.createElement('td');
+                tdIndex.className = 'border-r border-black font-bold text-gray-500';
+                tdIndex.textContent = i + 1;
+
+                const tdName = document.createElement('td');
+                tdName.className = 'border-r border-black text-left pl-3 font-bold text-gray-900';
+                tdName.textContent = item.menu_name;
+
+                const tdCustom = document.createElement('td');
+                tdCustom.className = 'border-r border-black text-left pl-3 text-xs text-gray-600';
+                tdCustom.textContent = customText;
+
+                const tdQty = document.createElement('td');
+                tdQty.className = 'border-r border-black font-bold text-base';
+                tdQty.textContent = item.quantity;
+
+                const tdPrice = document.createElement('td');
+                tdPrice.className = 'text-right pr-3 font-black text-base';
+                tdPrice.textContent = `${item.item_total} ฿`;
+
+                tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
               } else {
-                tbody.innerHTML += `
-                  <tr class="h-10 border-b border-black">
-                    <td class="border-r border-black"></td>
-                    <td class="border-r border-black"></td>
-                    <td class="border-r border-black"></td>
-                    <td class="border-r border-black"></td>
-                    <td></td>
-                  </tr>
-                `;
+                for (let j = 0; j < 5; j++) {
+                  const td = document.createElement('td');
+                  if (j < 4) td.className = 'border-r border-black';
+                  tr.appendChild(td);
+                }
               }
+              tbody.appendChild(tr);
             }
           } else {
             // โต๊ะไม่มีรายการค้างชำระ
@@ -148,13 +162,15 @@
             document.getElementById('display-grand-total').innerText = '0';
             document.getElementById('display-qr-amount').innerText = '0';
             const tbody = document.getElementById('display-tbody');
-            tbody.innerHTML = `
-              <tr>
-                <td colspan="5" class="py-16 text-center text-gray-400 font-bold text-base">
-                  ✨ ไม่มีรายการอาหารที่รอชำระเงินสำหรับโต๊ะนี้
-                </td>
-              </tr>
-            `;
+            tbody.replaceChildren();
+
+            const emptyTr = document.createElement('tr');
+            const emptyTd = document.createElement('td');
+            emptyTd.colSpan = 5;
+            emptyTd.className = 'py-16 text-center text-gray-400 font-bold text-base';
+            emptyTd.textContent = '✨ ไม่มีรายการอาหารที่รอชำระเงินสำหรับโต๊ะนี้';
+            emptyTr.appendChild(emptyTd);
+            tbody.appendChild(emptyTr);
           }
         })
         .catch(err => console.error('Fetch customer display bill error:', err));

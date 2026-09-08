@@ -266,7 +266,7 @@
     // Render รายการอาหาร (Grid 2x3 = 6 ช่อง)
     function renderMenuGrid() {
       const container = document.getElementById('menu-grid');
-      container.innerHTML = '';
+      container.replaceChildren();
 
       const filtered = allMenuItems.filter(item => item.category_id === currentCategoryId);
       const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
@@ -282,15 +282,28 @@
         card.onclick = () => onMenuItemClick(item);
 
         const imgPath = item.menu_image ? '/images/' + item.menu_image : '/images/shoyu.jpg';
-        card.innerHTML = `
-          <div class="h-24 w-full mb-1.5 overflow-hidden rounded border border-gray-200">
-            <img src="${imgPath}" alt="${item.menu_name}" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <p class="font-bold text-xs md:text-sm text-gray-900 leading-snug line-clamp-1">${item.menu_name}</p>
-            <p class="text-xs font-black text-red-600 mt-0.5">${item.base_price} ฿</p>
-          </div>
-        `;
+
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'h-24 w-full mb-1.5 overflow-hidden rounded border border-gray-200';
+
+        const img = document.createElement('img');
+        img.src = imgPath;
+        img.alt = item.menu_name;
+        img.className = 'w-full h-full object-cover';
+        imgContainer.appendChild(img);
+
+        const textContainer = document.createElement('div');
+
+        const nameP = document.createElement('p');
+        nameP.className = 'font-bold text-xs md:text-sm text-gray-900 leading-snug line-clamp-1';
+        nameP.textContent = item.menu_name;
+
+        const priceP = document.createElement('p');
+        priceP.className = 'text-xs font-black text-red-600 mt-0.5';
+        priceP.textContent = `${item.base_price} ฿`;
+
+        textContainer.append(nameP, priceP);
+        card.append(imgContainer, textContainer);
         container.appendChild(card);
       });
 
@@ -535,46 +548,69 @@
     // ==========================================
     function renderCartTable() {
       const tbody = document.getElementById('cart-tbody');
-      tbody.innerHTML = '';
+      tbody.replaceChildren();
 
       let grandTotal = 0;
 
       for (let i = 0; i < 8; i++) {
         const item = currentCart[i];
+        const tr = document.createElement('tr');
+        tr.className = 'h-9 border-b border-black';
+
         if (item) {
+          tr.classList.add('hover:bg-gray-50');
           grandTotal += item.unit_price * item.quantity;
           
           const isCustomized = item.category_id === 1;
-          const editTooltip = isCustomized ? 'แตะเพื่อแก้ไข' : '';
-          const customMark = isCustomized ? '<span class="text-xs text-red-600 font-bold ml-1">*</span>' : '';
 
-          tbody.innerHTML += `
-            <tr class="h-9 border-b border-black hover:bg-gray-50">
-              <td class="border-r border-black text-left pl-2 font-medium cursor-pointer" 
-                  title="${editTooltip}" onclick="editCartItem(${i})">
-                <div class="line-clamp-1">${item.menu_name}${customMark}</div>
-              </td>
-              <td class="border-r border-black font-bold">${item.quantity}</td>
-              <td class="border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300" 
-                  onclick="changeCartQty(${i}, 1)">+</td>
-              <td class="border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300" 
-                  onclick="changeCartQty(${i}, -1)">-</td>
-              <td class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs cursor-pointer active:bg-red-800" 
-                  onclick="removeCartItem(${i})">ลบ</td>
-            </tr>
-          `;
+          const tdName = document.createElement('td');
+          tdName.className = 'border-r border-black text-left pl-2 font-medium cursor-pointer';
+          if (isCustomized) {
+            tdName.title = 'แตะเพื่อแก้ไข';
+          }
+          tdName.onclick = () => editCartItem(i);
+
+          const divName = document.createElement('div');
+          divName.className = 'line-clamp-1';
+          divName.textContent = item.menu_name;
+
+          if (isCustomized) {
+            const star = document.createElement('span');
+            star.className = 'text-xs text-red-600 font-bold ml-1';
+            star.textContent = '*';
+            divName.appendChild(star);
+          }
+          tdName.appendChild(divName);
+
+          const tdQty = document.createElement('td');
+          tdQty.className = 'border-r border-black font-bold';
+          tdQty.textContent = item.quantity;
+
+          const tdPlus = document.createElement('td');
+          tdPlus.className = 'border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300';
+          tdPlus.textContent = '+';
+          tdPlus.onclick = () => changeCartQty(i, 1);
+
+          const tdMinus = document.createElement('td');
+          tdMinus.className = 'border-r border-black font-black text-sm cursor-pointer hover:bg-gray-200 active:bg-gray-300';
+          tdMinus.textContent = '-';
+          tdMinus.onclick = () => changeCartQty(i, -1);
+
+          const tdRemove = document.createElement('td');
+          tdRemove.className = 'bg-red-600 hover:bg-red-700 text-white font-bold text-xs cursor-pointer active:bg-red-800';
+          tdRemove.textContent = 'ลบ';
+          tdRemove.onclick = () => removeCartItem(i);
+
+          tr.append(tdName, tdQty, tdPlus, tdMinus, tdRemove);
         } else {
           // แถวว่าง เพื่อรักษาความสูง 8 แถว
-          tbody.innerHTML += `
-            <tr class="h-9 border-b border-black">
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td class="border-r border-black"></td>
-              <td></td>
-            </tr>
-          `;
+          for (let j = 0; j < 5; j++) {
+            const td = document.createElement('td');
+            if (j < 4) td.className = 'border-r border-black';
+            tr.appendChild(td);
+          }
         }
+        tbody.appendChild(tr);
       }
 
       document.getElementById('cart-total-price').innerText = grandTotal;
