@@ -12,29 +12,30 @@
   <!-- Tablet Frame (1024x768 Landscape) -->
   <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-8 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
     
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden min-h-0">
       <h2 class="text-center font-black text-2xl mb-4 tracking-wide text-gray-800">รายการอาหารที่สั่ง</h2>
 
-      <!-- ตารางประวัติรายการที่สั่ง (อย่างน้อย 8 แถวตาม Wireframe) -->
-      <div class="flex-1 border border-black overflow-y-auto">
-        <table class="w-full border-collapse text-xs md:text-sm text-center">
+      <!-- ตารางประวัติรายการที่สั่ง (ขยายเต็มพื้นที่ 8 แถว) -->
+      <div class="flex-1 border border-black overflow-hidden flex flex-col min-h-0">
+        <table class="w-full h-full border-collapse text-xs md:text-sm text-center table-fixed">
           <thead>
-            <tr class="border-b border-black bg-gray-100 font-bold">
-              <th class="border-r border-black p-2.5 w-14">ลำดับ</th>
-              <th class="border-r border-black p-2.5 text-left pl-4">รายการอาหาร</th>
-              <th class="border-r border-black p-2.5 w-24">จำนวน</th>
-              <th class="p-2.5 w-32 text-right pr-4">ราคา</th>
+            <tr class="border-b border-black bg-gray-100 font-bold h-10">
+              <th class="border-r border-black p-2 w-14">ลำดับ</th>
+              <th class="border-r border-black p-2 text-left pl-4">รายการอาหาร</th>
+              <th class="border-r border-black p-2 w-20">จำนวน</th>
+              <th class="border-r border-black p-2 w-28">สถานะ</th>
+              <th class="p-2 w-28 text-right pr-4">ราคา</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="h-full">
             <% 
               const totalSlots = Math.max(8, items.length);
               for (let i = 0; i < totalSlots; i++) { 
                 const item = items[i];
             %>
-              <tr class="h-11 border-b border-black hover:bg-gray-50">
-                <td class="border-r border-black text-gray-500 font-bold"><%= item ? (i + 1) : '' %></td>
-                <td class="border-r border-black text-left pl-4">
+              <tr class="border-b border-black hover:bg-gray-50 <%= totalSlots === 8 ? 'h-[12.5%]' : '' %>" style="<%= totalSlots === 8 ? 'height: 12.5%;' : '' %>">
+                <td class="border-r border-black text-gray-500 font-bold align-middle"><%= item ? (i + 1) : '' %></td>
+                <td class="border-r border-black text-left pl-4 align-middle">
                   <% if (item) { %>
                     <div class="font-bold text-gray-900"><%= item.menu_name %></div>
                     <% if (item.options_text || item.toppings_text) { %>
@@ -44,8 +45,20 @@
                     <% } %>
                   <% } %>
                 </td>
-                <td class="border-r border-black font-bold text-gray-800"><%= item ? item.quantity : '' %></td>
-                <td class="text-right pr-4 font-black text-gray-900"><%= item ? `${item.total_item_price} ฿` : '' %></td>
+                <td class="border-r border-black font-bold text-gray-800 align-middle"><%= item ? item.quantity : '' %></td>
+                <!-- คอลัมน์สถานะ ข้อความตัวอักษรเรียบๆ ไม่มีกรอบ/เส้นขอบ -->
+                <td class="border-r border-black font-bold text-gray-800 align-middle">
+                  <% if (item) { %>
+                    <% if (item.status === 'finish') { %>
+                      เสร็จสิ้น
+                    <% } else if (item.status === 'prepare') { %>
+                      กำลังทำ
+                    <% } else { %>
+                      อยู่ในคิว
+                    <% } %>
+                  <% } %>
+                </td>
+                <td class="text-right pr-4 font-black text-gray-900 align-middle"><%= item ? `${item.total_item_price} ฿` : '' %></td>
               </tr>
             <% } %>
           </tbody>

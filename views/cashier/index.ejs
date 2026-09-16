@@ -18,77 +18,68 @@
         <span class="text-2xl">💳</span>
         <h1 class="font-black text-xl tracking-wide text-gray-800">ระบบแคชเชียร์ (Cashier POS)</h1>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="/cashier/customer-display" target="_blank"
-           class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
-          🖥️ เปิดหน้าจอลูกค้า (Customer Display)
-        </a>
-        <a href="/" class="bg-gray-200 hover:bg-gray-300 font-bold px-3 py-1.5 rounded-lg text-xs text-gray-700 border transition">
-          🏠 หน้าหลัก Demo
-        </a>
-      </div>
     </div>
 
     <!-- 3 Columns Layout according to Wireframe in UI.png -->
-    <div class="flex-1 grid grid-cols-12 gap-3 overflow-hidden">
+    <div class="flex-1 grid grid-cols-12 gap-3 overflow-hidden min-h-0">
       
       <!-- ======================================================== -->
-      <!-- COLUMN 1: โต๊ะ (Tables & Scan) - 3 Columns -->
+      <!-- COLUMN 1: โต๊ะ (Tables & Scan) - 2 Columns (10 โต๊ะต่อหน้า) -->
       <!-- ======================================================== -->
-      <div class="col-span-3 border-2 border-black p-3 flex flex-col justify-between rounded-md bg-gray-50">
-        <div class="flex-1 flex flex-col">
-          <h2 class="text-center font-black text-base border-b-2 border-black pb-1.5 mb-2.5">โต๊ะ</h2>
+      <div class="col-span-2 border-2 border-black p-2 flex flex-col justify-between rounded-md bg-gray-50 min-h-0">
+        <div class="flex-1 flex flex-col min-h-0">
+          <h2 class="text-center font-black text-sm border-b-2 border-black pb-1 mb-2">โต๊ะ</h2>
 
-          <!-- Grid โต๊ะ 4 คอลัมน์ x 2 แถว = 8 โต๊ะต่อหน้า ตาม Wireframe -->
-          <div id="tables-grid" class="grid grid-cols-2 gap-2 flex-1">
+          <!-- Grid โต๊ะ 2 คอลัมน์ x 5 แถว = 10 โต๊ะต่อหน้า -->
+          <div id="tables-grid" class="grid grid-cols-2 gap-1.5 flex-1 min-h-0">
             <!-- Rendered via JS -->
           </div>
         </div>
 
         <!-- แถบล่างของ Column 1: Pagination และปุ่มสแกน -->
-        <div class="mt-2 pt-2 border-t border-gray-300 space-y-2">
+        <div class="mt-2 pt-2 border-t border-gray-300 space-y-1.5">
           <div class="flex justify-between items-center">
             <button onclick="prevTablePage()" id="table-prev-btn" 
-                    class="w-10 h-8 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-sm disabled:opacity-40">
+                    class="w-8 h-7 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-xs disabled:opacity-40 cursor-pointer">
               &lt;
             </button>
-            <span id="table-page-indicator" class="text-xs font-bold text-gray-600">1 / 3</span>
+            <span id="table-page-indicator" class="text-xs font-bold text-gray-600">1 / 2</span>
             <button onclick="nextTablePage()" id="table-next-btn" 
-                    class="w-10 h-8 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-sm disabled:opacity-40">
+                    class="w-8 h-7 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-xs disabled:opacity-40 cursor-pointer">
               &gt;
             </button>
           </div>
 
           <!-- ปุ่มสแกน ตาม Wireframe -->
           <button onclick="openScanModal()" 
-                  class="w-full bg-gray-300 hover:bg-gray-400 border-2 border-black font-black py-2 rounded-xl text-sm transition active:scale-95 shadow-sm">
+                  class="w-full bg-gray-300 hover:bg-gray-400 border-2 border-black font-black py-1.5 rounded-lg text-xs transition active:scale-95 shadow-sm cursor-pointer">
             สแกน (Scan Card)
           </button>
         </div>
       </div>
 
       <!-- ======================================================== -->
-      <!-- COLUMN 2: รายการอาหารโต๊ะ X (Order Items) - 5 Columns -->
+      <!-- COLUMN 2: รายการอาหารโต๊ะ X (Order Items) - 6 Columns (เต็มพื้นที่ 8 แถว) -->
       <!-- ======================================================== -->
-      <div class="col-span-5 border-2 border-black p-3 flex flex-col justify-between rounded-md">
-        <div class="flex-1 flex flex-col overflow-hidden">
+      <div class="col-span-6 border-2 border-black p-3 flex flex-col justify-between rounded-md min-h-0">
+        <div class="flex-1 flex flex-col overflow-hidden min-h-0">
           <h2 class="text-center font-black text-base border-b-2 border-black pb-1.5 mb-2" id="table-title">
             รายการอาหาร (เลือกโต๊ะ)
           </h2>
 
-          <!-- ตารางรายการอาหารของโต๊ะ -->
-          <div class="flex-1 border border-black overflow-y-auto">
-            <table class="w-full border-collapse text-xs text-center">
+          <!-- ตารางรายการอาหารของโต๊ะ (ขยายเต็มพื้นที่ 8 แถว) -->
+          <div class="flex-1 border border-black overflow-hidden flex flex-col min-h-0">
+            <table class="w-full h-full border-collapse text-xs text-center table-fixed">
               <thead>
-                <tr class="border-b border-black bg-gray-100 font-bold sticky top-0">
-                  <th class="border-r border-black p-1.5 w-10">ลำดับ</th>
-                  <th class="border-r border-black p-1.5 text-left pl-2">รายการ</th>
-                  <th class="border-r border-black p-1.5 text-left pl-2">การปรับแต่ง</th>
-                  <th class="border-r border-black p-1.5 w-12">จำนวน</th>
-                  <th class="p-1.5 w-16 text-right pr-2">ราคา</th>
+                <tr class="border-b border-black bg-gray-100 font-bold sticky top-0 h-9">
+                  <th class="border-r border-black p-1 w-10">ลำดับ</th>
+                  <th class="border-r border-black p-1 text-left pl-2">รายการ</th>
+                  <th class="border-r border-black p-1 text-left pl-2">การปรับแต่ง</th>
+                  <th class="border-r border-black p-1 w-12">จำนวน</th>
+                  <th class="p-1 w-16 text-right pr-2">ราคา</th>
                 </tr>
               </thead>
-              <tbody id="bill-tbody">
+              <tbody id="bill-tbody" class="h-full">
                 <!-- Rendered via JS -->
               </tbody>
             </table>
@@ -105,7 +96,7 @@
       <!-- ======================================================== -->
       <!-- COLUMN 3: ชำระเงิน (Payment & Numeric Keypad) - 4 Columns -->
       <!-- ======================================================== -->
-      <div class="col-span-4 border-2 border-black p-3 flex flex-col justify-between rounded-md bg-gray-50">
+      <div class="col-span-4 border-2 border-black p-3 flex flex-col justify-between rounded-md bg-gray-50 min-h-0">
         <div class="flex-1 flex flex-col justify-between">
           <div>
             <h2 class="text-center font-black text-base border-b-2 border-black pb-1.5 mb-2">ชำระเงิน</h2>
@@ -322,12 +313,47 @@
   <script>
     let allTables = [];
     let currentTablePage = 1;
-    const tablesPerPage = 8; // 4 cols x 2 rows = 8 โต๊ะต่อหน้า
+    const tablesPerPage = 10; // 2 cols x 5 rows = 10 โต๊ะต่อหน้า
 
     let selectedTable = null;
     let currentBill = null;
     let paymentMethod = 'CASH';
     let rawAmountPaid = '';
+
+    // BroadcastChannel สำหรับซิงก์สถานะไปยังหน้าจอลูกค้า (Customer Display) แบบ Real-time
+    const cashierBc = new BroadcastChannel('cashier_display_sync');
+
+    function syncToCustomerDisplay(method) {
+      const tableId = selectedTable ? selectedTable.table_id : null;
+      const showQr = (method === 'TRANSFER');
+
+      // 1. BroadcastChannel (0ms sync)
+      try {
+        cashierBc.postMessage({
+          type: 'PAYMENT_METHOD',
+          table_id: tableId,
+          payment_method: method,
+          show_qr: showQr
+        });
+      } catch (e) {}
+
+      // 2. localStorage Event
+      try {
+        localStorage.setItem('cashier_display_state', JSON.stringify({
+          table_id: tableId,
+          payment_method: method,
+          show_qr: showQr,
+          time: Date.now()
+        }));
+      } catch (e) {}
+
+      // 3. API Sync ไปยัง Server
+      fetch('/cashier/api/payment-method', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table_id: tableId, payment_method: method })
+      }).catch(err => console.error('Sync payment error:', err));
+    }
 
     // โหลดรายชื่อโต๊ะทั้งหมด
     function loadTables() {
@@ -342,12 +368,12 @@
         .catch(err => console.error('Error fetching tables:', err));
     }
 
-    // Render ปุ่มโต๊ะ (8 โต๊ะต่อหน้า)
+    // Render ปุ่มโต๊ะ (10 โต๊ะต่อหน้า = 2 cols x 5 rows)
     function renderTablesGrid() {
       const container = document.getElementById('tables-grid');
       container.replaceChildren();
 
-      const totalPages = Math.ceil(allTables.length / tablesPerPage);
+      const totalPages = Math.max(1, Math.ceil(allTables.length / tablesPerPage));
       const start = (currentTablePage - 1) * tablesPerPage;
       const pageTables = allTables.slice(start, start + tablesPerPage);
 
@@ -355,7 +381,7 @@
         const isSelected = selectedTable && selectedTable.table_id === t.table_id;
         const hasUnpaid = t.active_order_count > 0;
 
-        let btnClass = 'p-2 rounded-lg font-bold text-xs flex flex-col items-center justify-center border-2 transition cursor-pointer ';
+        let btnClass = 'p-1.5 rounded-lg font-bold text-xs flex flex-col items-center justify-center border-2 transition cursor-pointer ';
         if (isSelected) {
           btnClass += 'border-red-600 bg-red-100 text-red-900 shadow-sm ring-2 ring-red-400';
         } else if (hasUnpaid) {
@@ -369,7 +395,7 @@
         btn.onclick = () => selectAndLoadTable(t.table_id);
 
         const numSpan = document.createElement('span');
-        numSpan.className = 'text-sm font-black';
+        numSpan.className = 'text-xs font-black';
         numSpan.textContent = t.table_number;
 
         const badgeSpan = document.createElement('span');
@@ -388,7 +414,7 @@
       // ปรับปุ่ม Pagination
       document.getElementById('table-prev-btn').disabled = (currentTablePage <= 1);
       document.getElementById('table-next-btn').disabled = (currentTablePage >= totalPages);
-      document.getElementById('table-page-indicator').innerText = `${currentTablePage} / ${totalPages}`;
+      document.getElementById('table-page-indicator').textContent = `${currentTablePage} / ${totalPages}`;
     }
 
     function prevTablePage() {
@@ -410,6 +436,7 @@
     function selectAndLoadTable(tableId) {
       selectedTable = allTables.find(t => t.table_id === tableId);
       renderTablesGrid();
+      syncToCustomerDisplay(paymentMethod);
 
       fetch(`/cashier/api/table-bill?table_id=${tableId}`)
         .then(res => res.json())
@@ -423,25 +450,26 @@
         });
     }
 
-    // Render รายการอาหารใน Column 2
+    // Render รายการอาหารใน Column 2 (ขยายเต็มพื้นที่ 8 แถว)
     function renderBill() {
       const tbody = document.getElementById('bill-tbody');
       tbody.replaceChildren();
 
       if (!currentBill || !currentBill.items || currentBill.items.length === 0) {
-        document.getElementById('table-title').innerText = selectedTable ? `รายการอาหาร ${selectedTable.table_number} (ไม่มีรายการค้าง)` : 'รายการอาหาร (เลือกโต๊ะ)';
-        document.getElementById('col2-grand-total').innerText = '0';
-        document.getElementById('col3-grand-total').innerText = '0 ฿';
-        document.getElementById('transfer-qr-amount').innerText = '0';
+        document.getElementById('table-title').textContent = selectedTable ? `รายการอาหาร ${selectedTable.table_number} (ไม่มีรายการค้าง)` : 'รายการอาหาร (เลือกโต๊ะ)';
+        document.getElementById('col2-grand-total').textContent = '0';
+        document.getElementById('col3-grand-total').textContent = '0 ฿';
+        document.getElementById('transfer-qr-amount').textContent = '0';
         document.getElementById('confirm-payment-btn').disabled = true;
 
-        // เติม 8 แถวว่าง
+        // เติม 8 แถวว่างเต็มพื้นที่
         for (let i = 0; i < 8; i++) {
           const tr = document.createElement('tr');
-          tr.className = 'h-9 border-b border-black';
+          tr.className = 'border-b border-black';
+          tr.style.height = '12.5%';
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-black';
+            if (j < 4) td.className = 'border-r border-black align-middle';
             tr.appendChild(td);
           }
           tbody.appendChild(tr);
@@ -449,10 +477,10 @@
         return;
       }
 
-      document.getElementById('table-title').innerText = `รายการอาหาร ${currentBill.table_number} (${currentBill.card_id})`;
-      document.getElementById('col2-grand-total').innerText = currentBill.grand_total;
-      document.getElementById('col3-grand-total').innerText = `${currentBill.grand_total} ฿`;
-      document.getElementById('transfer-qr-amount').innerText = currentBill.grand_total;
+      document.getElementById('table-title').textContent = `รายการอาหาร ${currentBill.table_number} (${currentBill.card_id})`;
+      document.getElementById('col2-grand-total').textContent = currentBill.grand_total;
+      document.getElementById('col3-grand-total').textContent = `${currentBill.grand_total} ฿`;
+      document.getElementById('transfer-qr-amount').textContent = currentBill.grand_total;
       document.getElementById('confirm-payment-btn').disabled = false;
 
       const totalSlots = Math.max(8, currentBill.items.length);
@@ -460,37 +488,40 @@
       for (let i = 0; i < totalSlots; i++) {
         const item = currentBill.items[i];
         const tr = document.createElement('tr');
-        tr.className = 'h-9 border-b border-black';
+        tr.className = 'border-b border-black';
+        if (totalSlots === 8) {
+          tr.style.height = '12.5%';
+        }
 
         if (item) {
           tr.classList.add('hover:bg-gray-50');
           const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
 
           const tdIndex = document.createElement('td');
-          tdIndex.className = 'border-r border-black font-bold text-gray-600';
+          tdIndex.className = 'border-r border-black font-bold text-gray-600 align-middle';
           tdIndex.textContent = i + 1;
 
           const tdName = document.createElement('td');
-          tdName.className = 'border-r border-black text-left pl-2 font-bold text-gray-900';
+          tdName.className = 'border-r border-black text-left pl-2 font-bold text-gray-900 align-middle';
           tdName.textContent = item.menu_name;
 
           const tdCustom = document.createElement('td');
-          tdCustom.className = 'border-r border-black text-left pl-2 text-[11px] text-gray-600';
+          tdCustom.className = 'border-r border-black text-left pl-2 text-[11px] text-gray-600 align-middle';
           tdCustom.textContent = customText;
 
           const tdQty = document.createElement('td');
-          tdQty.className = 'border-r border-black font-bold';
+          tdQty.className = 'border-r border-black font-bold align-middle';
           tdQty.textContent = item.quantity;
 
           const tdPrice = document.createElement('td');
-          tdPrice.className = 'text-right pr-2 font-black';
+          tdPrice.className = 'text-right pr-2 font-black align-middle';
           tdPrice.textContent = `${item.item_total} ฿`;
 
           tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
         } else {
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-black';
+            if (j < 4) td.className = 'border-r border-black align-middle';
             tr.appendChild(td);
           }
         }
@@ -523,6 +554,9 @@
         cashContainer.classList.remove('hidden');
         transferContainer.classList.add('hidden');
       }
+
+      // ซิงก์ไปยังหน้าจอลูกค้าทันที
+      syncToCustomerDisplay(method);
     }
 
     function pressKey(key) {
@@ -558,17 +592,17 @@
 
     function updateCashDisplay() {
       const paid = parseFloat(rawAmountPaid) || 0;
-      document.getElementById('display-amount-paid').innerText = rawAmountPaid ? `${rawAmountPaid} ฿` : '0 ฿';
+      document.getElementById('display-amount-paid').textContent = rawAmountPaid ? `${rawAmountPaid} ฿` : '0 ฿';
 
       const grandTotal = currentBill ? currentBill.grand_total : 0;
       const change = paid - grandTotal;
       const changeEl = document.getElementById('display-change');
 
       if (paid === 0 || change < 0) {
-        changeEl.innerText = '0 ฿';
+        changeEl.textContent = '0 ฿';
         changeEl.className = 'text-base font-black text-gray-400';
       } else {
-        changeEl.innerText = `${change.toFixed(2).replace(/\.00$/, '')} ฿`;
+        changeEl.textContent = `${change.toFixed(2).replace(/\.00$/, '')} ฿`;
         changeEl.className = 'text-base font-black text-green-700';
       }
     }
@@ -623,10 +657,10 @@
     // RECEIPT MODAL LOGIC
     // ==========================================
     function showReceiptModal(paymentData) {
-      document.getElementById('receipt-table').innerText = paymentData.table_number;
-      document.getElementById('receipt-card').innerText = paymentData.card_id || '-';
-      document.getElementById('receipt-no').innerText = `#REC-${String(paymentData.payment_id).padStart(4, '0')}`;
-      document.getElementById('receipt-date').innerText = new Date(paymentData.payment_time).toLocaleString('th-TH');
+      document.getElementById('receipt-table').textContent = paymentData.table_number;
+      document.getElementById('receipt-card').textContent = paymentData.card_id || '-';
+      document.getElementById('receipt-no').textContent = `#REC-${String(paymentData.payment_id).padStart(4, '0')}`;
+      document.getElementById('receipt-date').textContent = new Date(paymentData.payment_time).toLocaleString('th-TH');
 
       const itemsList = document.getElementById('receipt-items-list');
       itemsList.replaceChildren();
@@ -664,10 +698,10 @@
         itemsList.appendChild(rowDiv);
       });
 
-      document.getElementById('receipt-total').innerText = paymentData.total_amount;
-      document.getElementById('receipt-method').innerText = paymentData.payment_method;
-      document.getElementById('receipt-paid').innerText = paymentData.amount_paid;
-      document.getElementById('receipt-change').innerText = paymentData.change_amount;
+      document.getElementById('receipt-total').textContent = paymentData.total_amount;
+      document.getElementById('receipt-method').textContent = paymentData.payment_method;
+      document.getElementById('receipt-paid').textContent = paymentData.amount_paid;
+      document.getElementById('receipt-change').textContent = paymentData.change_amount;
 
       document.getElementById('receipt-modal').classList.remove('hidden');
     }
@@ -682,6 +716,8 @@
       selectedTable = null;
       currentBill = null;
       rawAmountPaid = '';
+      paymentMethod = 'CASH';
+      syncToCustomerDisplay('CASH');
       renderBill();
       loadTables();
     }

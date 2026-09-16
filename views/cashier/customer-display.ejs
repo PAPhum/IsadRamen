@@ -39,11 +39,11 @@
     <div class="flex-1 flex gap-6 overflow-hidden">
       
       <!-- ฝั่งซ้าย: ตารางรายการอาหารของโต๊ะ (65%) -->
-      <div class="w-2/3 flex flex-col justify-between border-r-2 border-black pr-6">
-        <div class="flex-1 border border-black overflow-y-auto">
-          <table class="w-full border-collapse text-xs md:text-sm text-center">
+      <div class="w-2/3 flex flex-col justify-between border-r-2 border-black pr-6 h-full min-h-0">
+        <div class="flex-1 border border-black overflow-hidden flex flex-col min-h-0">
+          <table class="w-full h-full border-collapse text-xs md:text-sm text-center table-fixed">
             <thead>
-              <tr class="border-b border-black bg-gray-100 font-bold sticky top-0">
+              <tr class="border-b border-black bg-gray-100 font-bold sticky top-0 h-10">
                 <th class="border-r border-black p-2 w-12">ลำดับ</th>
                 <th class="border-r border-black p-2 text-left pl-3">รายการ</th>
                 <th class="border-r border-black p-2 text-left pl-3">การปรับแต่ง</th>
@@ -51,7 +51,7 @@
                 <th class="p-2 w-24 text-right pr-3">ราคา</th>
               </tr>
             </thead>
-            <tbody id="display-tbody">
+            <tbody id="display-tbody" class="h-full">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -66,13 +66,22 @@
         </div>
       </div>
 
-      <!-- ฝั่งขวา: QR Code ขนาดใหญ่ สำหรับสแกนจ่ายเงิน (35%) -->
-      <div class="w-1/3 flex flex-col items-center justify-center p-4 bg-gray-50 border border-gray-300 rounded-xl text-center">
-        <h3 class="font-black text-xl text-gray-900 mb-3 tracking-wide">สแกนเพื่อชำระเงิน</h3>
-        <p class="text-xs text-gray-500 mb-4">PromptPay / Thai QR Payment</p>
+      <!-- ฝั่งขวา: แสดง QR Code หรือ สถานะเงินสด (35%) -->
+      <!-- กล่องแสดงผลเมื่อซ่อน QR Code (ค่าเริ่มต้น หรือ เมื่อเลือกชำระด้วยเงินสด CASH) -->
+      <div id="display-no-qr-container" class="w-1/3 flex flex-col items-center justify-center p-6 bg-gray-50 border border-gray-300 rounded-xl text-center">
+        <div class="text-6xl mb-4">💵</div>
+        <h3 class="font-black text-xl text-gray-900 mb-2">ชำระเงินที่เคาน์เตอร์</h3>
+        <p class="text-sm font-bold text-gray-700 mb-1" id="no-qr-status-text">ชำระด้วยเงินสด (CASH)</p>
+        <p class="text-xs text-gray-400">กรุณาชำระเงินกับพนักงานที่เคาน์เตอร์แคชเชียร์</p>
+      </div>
+
+      <!-- กล่องแสดงผล QR Code ขนาดใหญ่ (เมื่อหน้าระบบแคชเชียร์เลือก "โอน (QR)" เท่านั้น) -->
+      <div id="display-qr-container" class="hidden w-1/3 flex flex-col items-center justify-center p-4 bg-gray-50 border border-gray-300 rounded-xl text-center">
+        <h3 class="font-black text-xl text-gray-900 mb-2 tracking-wide">สแกนเพื่อชำระเงิน</h3>
+        <p class="text-xs text-gray-500 mb-3">PromptPay / Thai QR Payment</p>
 
         <!-- Big QR Image -->
-        <div class="w-60 h-60 bg-white border-4 border-black rounded-2xl p-2 shadow-md flex items-center justify-center mb-4">
+        <div class="w-56 h-56 bg-white border-4 border-black rounded-2xl p-2 shadow-md flex items-center justify-center mb-3">
           <img src="/images/mock-qr.svg" alt="QR Code Payment" class="w-full h-full object-contain">
         </div>
 
@@ -97,9 +106,47 @@
 
   <script>
     let currentTableId = <%= currentTableId %>;
+    let isQrVisible = false; // การแสดงผล QR Code: ซ่อน/ไม่แสดง QR Code ในตอนแรก
+
+    function setQrVisibility(show) {
+      isQrVisible = !!show;
+      const noQrBox = document.getElementById('display-no-qr-container');
+      const qrBox = document.getElementById('display-qr-container');
+
+      if (isQrVisible) {
+        noQrBox.classList.add('hidden');
+        qrBox.classList.remove('hidden');
+      } else {
+        noQrBox.classList.remove('hidden');
+        qrBox.classList.add('hidden');
+      }
+    }
+
+    // BroadcastChannel รับข้อความจากหน้าแคชเชียร์แบบ 0ms
+    const cashierBc = new BroadcastChannel('cashier_display_sync');
+    cashierBc.onmessage = (event) => {
+      if (event.data && event.data.type === 'PAYMENT_METHOD') {
+        if (!event.data.table_id || event.data.table_id === currentTableId) {
+          setQrVisibility(event.data.payment_method === 'TRANSFER');
+        }
+      }
+    };
+
+    // localStorage Listener รับข้อความข้ามหน้าต่างเบราว์เซอร์
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'cashier_display_state' && e.newValue) {
+        try {
+          const data = JSON.parse(e.newValue);
+          if (!data.table_id || data.table_id === currentTableId) {
+            setQrVisibility(data.payment_method === 'TRANSFER');
+          }
+        } catch (err) {}
+      }
+    });
 
     function changeDisplayTable(tableId) {
-      currentTableId = tableId;
+      currentTableId = parseInt(tableId);
+      setQrVisibility(false); // ซ่อน QR ไว้ก่อนเมื่อเปลี่ยนโต๊ะ
       fetchCustomerBill();
     }
 
@@ -108,9 +155,18 @@
         .then(res => res.json())
         .then(data => {
           if (data.success && data.table_number) {
-            document.getElementById('display-table-header').innerText = `โต๊ะ: ${data.table_number} (${data.card_id})`;
-            document.getElementById('display-grand-total').innerText = data.grand_total;
-            document.getElementById('display-qr-amount').innerText = data.grand_total;
+            document.getElementById('display-table-header').textContent = `โต๊ะ: ${data.table_number} (${data.card_id})`;
+            document.getElementById('display-grand-total').textContent = data.grand_total;
+            document.getElementById('display-qr-amount').textContent = data.grand_total;
+
+            // ตรวจสอบวิธีชำระเงินที่แคชเชียร์เลือก
+            if (data.cashier_state) {
+              if (!data.cashier_state.table_id || data.cashier_state.table_id === currentTableId) {
+                setQrVisibility(data.cashier_state.payment_method === 'TRANSFER');
+              } else {
+                setQrVisibility(false);
+              }
+            }
 
             const tbody = document.getElementById('display-tbody');
             tbody.replaceChildren();
@@ -120,47 +176,51 @@
             for (let i = 0; i < totalSlots; i++) {
               const item = data.items[i];
               const tr = document.createElement('tr');
-              tr.className = 'h-10 border-b border-black';
+              tr.className = 'border-b border-black';
+              if (totalSlots === 8) {
+                tr.style.height = '12.5%';
+              }
 
               if (item) {
                 tr.classList.add('hover:bg-gray-50');
                 const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
 
                 const tdIndex = document.createElement('td');
-                tdIndex.className = 'border-r border-black font-bold text-gray-500';
+                tdIndex.className = 'border-r border-black font-bold text-gray-500 align-middle';
                 tdIndex.textContent = i + 1;
 
                 const tdName = document.createElement('td');
-                tdName.className = 'border-r border-black text-left pl-3 font-bold text-gray-900';
+                tdName.className = 'border-r border-black text-left pl-3 font-bold text-gray-900 align-middle';
                 tdName.textContent = item.menu_name;
 
                 const tdCustom = document.createElement('td');
-                tdCustom.className = 'border-r border-black text-left pl-3 text-xs text-gray-600';
+                tdCustom.className = 'border-r border-black text-left pl-3 text-xs text-gray-600 align-middle';
                 tdCustom.textContent = customText;
 
                 const tdQty = document.createElement('td');
-                tdQty.className = 'border-r border-black font-bold text-base';
+                tdQty.className = 'border-r border-black font-bold text-base align-middle';
                 tdQty.textContent = item.quantity;
 
                 const tdPrice = document.createElement('td');
-                tdPrice.className = 'text-right pr-3 font-black text-base';
+                tdPrice.className = 'text-right pr-3 font-black text-base align-middle';
                 tdPrice.textContent = `${item.item_total} ฿`;
 
                 tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
               } else {
                 for (let j = 0; j < 5; j++) {
                   const td = document.createElement('td');
-                  if (j < 4) td.className = 'border-r border-black';
+                  if (j < 4) td.className = 'border-r border-black align-middle';
                   tr.appendChild(td);
                 }
               }
               tbody.appendChild(tr);
             }
           } else {
-            // โต๊ะไม่มีรายการค้างชำระ
-            document.getElementById('display-table-header').innerText = `โต๊ะ ${currentTableId} (ไม่มีรายการค้างชำระ)`;
-            document.getElementById('display-grand-total').innerText = '0';
-            document.getElementById('display-qr-amount').innerText = '0';
+            // โต๊ะไม่มีรายการค้างชำระ -> ไม่แสดง QR Code
+            setQrVisibility(false);
+            document.getElementById('display-table-header').textContent = `โต๊ะ ${currentTableId} (ไม่มีรายการค้างชำระ)`;
+            document.getElementById('display-grand-total').textContent = '0';
+            document.getElementById('display-qr-amount').textContent = '0';
             const tbody = document.getElementById('display-tbody');
             tbody.replaceChildren();
 
@@ -176,7 +236,8 @@
         .catch(err => console.error('Fetch customer display bill error:', err));
     }
 
-    // Initialize
+    // Initialize: ซ่อน QR ไว้ในตอนแรก
+    setQrVisibility(false);
     fetchCustomerBill();
     setInterval(fetchCustomerBill, 3000);
   </script>

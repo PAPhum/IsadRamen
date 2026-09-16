@@ -39,6 +39,31 @@ router.get('/api/tables', (req, res) => {
   });
 });
 
+// เก็บสถานะวิธีชำระเงินปัจจุบันของแคชเชียร์ สำหรับ Sync ไปยังหน้าจอลูกค้า (Customer Display)
+let currentCashierState = {
+  table_id: null,
+  payment_method: 'CASH',
+  show_qr: false,
+  updated_at: Date.now()
+};
+
+// API สำหรับอัปเดตวิธีชำระเงินจากหน้าแคชเชียร์
+router.post('/api/payment-method', (req, res) => {
+  const { table_id, payment_method } = req.body;
+  currentCashierState = {
+    table_id: table_id ? parseInt(table_id) : null,
+    payment_method: payment_method || 'CASH',
+    show_qr: (payment_method === 'TRANSFER'),
+    updated_at: Date.now()
+  };
+  res.json({ success: true, state: currentCashierState });
+});
+
+// API สำหรับดึงสถานะชำระเงินล่าสุด
+router.get('/api/current-state', (req, res) => {
+  res.json({ success: true, state: currentCashierState });
+});
+
 // 4. API ดึงบิลของโต๊ะ (รองรับทั้ง table_id, card_id, table_number)
 router.get('/api/table-bill', (req, res) => {
   const { table_id, card_id, table_number } = req.query;
@@ -102,7 +127,8 @@ router.get('/api/table-bill', (req, res) => {
         table_number: table.table_number,
         card_id: table.card_id,
         items: items || [],
-        grand_total: grandTotal
+        grand_total: grandTotal,
+        cashier_state: currentCashierState
       });
     });
   });
@@ -172,6 +198,12 @@ router.post('/api/checkout', (req, res) => {
 
           // 4. ดึงข้อมูลโต๊ะ
           db.get('SELECT * FROM TABLES WHERE table_id = ?', [table_id], (tErr, table) => {
+            currentCashierState = {
+              table_id: null,
+              payment_method: 'CASH',
+              show_qr: false,
+              updated_at: Date.now()
+            };
             res.json({
               success: true,
               message: 'ชำระเงินเรียบร้อยแล้ว โต๊ะถูก Reset พร้อมรับลูกค้าใหม่',
