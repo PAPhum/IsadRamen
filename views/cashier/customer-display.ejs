@@ -3,243 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cashier จอลูกค้า (Customer Display) | IsadRamen</title>
+  <title>Customer Payment Display | Koumiya Ramen</title>
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none">
+<body class="bg-gray-100 h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col justify-center items-center">
 
-  <!-- Tablet / Monitor Container (Matching "Cashierจอลูกค้า" in UI.png) -->
-  <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-6 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
+  <!-- Main Container: Full screen fitting iPad Pro / iPad (Zero black bars) -->
+  <div class="w-full h-full bg-white border-4 border-black p-4 md:p-8 relative flex flex-col justify-between items-center text-center shadow-2xl rounded-2xl overflow-hidden flex-1">
     
-    <!-- Top Header: โต๊ะ และปุ่มเลือกโต๊ะสำหรับ Demo -->
-    <div class="flex justify-between items-center border-b-2 border-black pb-3 mb-4">
-      <div class="flex items-center gap-3">
-        <span class="text-3xl">🍜</span>
-        <h1 class="text-3xl font-black text-gray-900" id="display-table-header">
-          โต๊ะ: T01
-        </h1>
-      </div>
-
-      <!-- Quick Switcher สำหรับ Demo -->
+    <!-- Top Bar: Brand, Table Switcher (for demo), Live Sync -->
+    <div class="w-full flex justify-between items-center border-b-2 border-black pb-3 shrink-0">
       <div class="flex items-center gap-2">
-        <label for="table-select" class="text-xs font-bold text-gray-500">เลือกดูโต๊ะ:</label>
-        <select id="table-select" onchange="changeDisplayTable(this.value)" 
-                class="border-2 border-black rounded-lg px-3 py-1 text-sm font-bold bg-gray-50">
-          <% tables.forEach(t => { %>
-            <option value="<%= t.table_id %>" <%= t.table_id == currentTableId ? 'selected' : '' %>>
-              <%= t.table_number %> (<%= t.card_id %>)
-            </option>
-          <% }) %>
-        </select>
+        <span class="text-2xl md:text-3xl">ศLOGO</span>
+        <span class="font-black text-base md:text-xl tracking-wide text-gray-900">Koumiya Ramen</span>
       </div>
     </div>
 
-    <!-- Main Content: Left Order Table + Right Big QR Code -->
-    <div class="flex-1 flex gap-6 overflow-hidden">
+    <!-- Center Content: Matching pay.png exactly (Table Number + QR/Cash Status + Total Amount) -->
+    <div class="flex-1 w-full flex flex-col justify-center items-center my-auto py-2 overflow-hidden min-h-0">
       
-      <!-- ฝั่งซ้าย: ตารางรายการอาหารของโต๊ะ (65%) -->
-      <div class="w-2/3 flex flex-col justify-between border-r-2 border-black pr-6 h-full min-h-0">
-        <div class="flex-1 border border-black overflow-hidden flex flex-col min-h-0">
-          <table class="w-full h-full border-collapse text-xs md:text-sm text-center table-fixed">
-            <thead>
-              <tr class="border-b border-black bg-gray-100 font-bold sticky top-0 h-10">
-                <th class="border-r border-black p-2 w-12">ลำดับ</th>
-                <th class="border-r border-black p-2 text-left pl-3">รายการ</th>
-                <th class="border-r border-black p-2 text-left pl-3">การปรับแต่ง</th>
-                <th class="border-r border-black p-2 w-16">จำนวน</th>
-                <th class="p-2 w-24 text-right pr-3">ราคา</th>
-              </tr>
-            </thead>
-            <tbody id="display-tbody" class="h-full">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
+      <!-- 1. Table Number (เช่น "โต๊ะ 1" หรือ "โต๊ะ 5") -->
+      <h1 id="display-table-text" class="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-2 md:mb-4 shrink-0">
+        โต๊ะ 1
+      </h1>
 
-        <!-- แถบล่างฝั่งซ้าย: ราคารวม -->
-        <div class="border-t-2 border-black pt-4 mt-3 flex justify-between items-center px-2">
-          <span class="font-bold text-xl text-gray-700">ยอดรวมทั้งหมด:</span>
-          <span class="font-black text-4xl text-red-600">
-            <span id="display-grand-total">0</span> ฿
-          </span>
+      <!-- 2. Transfer Mode: แสดงคำว่า qrจ่าย + Mock QR Code ขนาดใหญ่ (เมื่อกดโอน) -->
+      <div id="qr-section" class="hidden flex flex-col items-center justify-center my-auto">
+        <div class="w-52 h-52 md:w-72 md:h-72 bg-white border-4 border-black rounded-2xl p-2 md:p-3 shadow-lg flex items-center justify-center">
+          <img src="/images/mock-qr.svg" alt="Mock QR Code" class="w-full h-full object-contain">
         </div>
       </div>
 
-      <!-- ฝั่งขวา: แสดง QR Code หรือ สถานะเงินสด (35%) -->
-      <!-- กล่องแสดงผลเมื่อซ่อน QR Code (ค่าเริ่มต้น หรือ เมื่อเลือกชำระด้วยเงินสด CASH) -->
-      <div id="display-no-qr-container" class="w-1/3 flex flex-col items-center justify-center p-6 bg-gray-50 border border-gray-300 rounded-xl text-center">
-        <div class="text-6xl mb-4">💵</div>
-        <h3 class="font-black text-xl text-gray-900 mb-2">ชำระเงินที่เคาน์เตอร์</h3>
-        <p class="text-sm font-bold text-gray-700 mb-1" id="no-qr-status-text">ชำระด้วยเงินสด (CASH)</p>
-        <p class="text-xs text-gray-400">กรุณาชำระเงินกับพนักงานที่เคาน์เตอร์แคชเชียร์</p>
-      </div>
-
-      <!-- กล่องแสดงผล QR Code ขนาดใหญ่ (เมื่อหน้าระบบแคชเชียร์เลือก "โอน (QR)" เท่านั้น) -->
-      <div id="display-qr-container" class="hidden w-1/3 flex flex-col items-center justify-center p-4 bg-gray-50 border border-gray-300 rounded-xl text-center">
-        <h3 class="font-black text-xl text-gray-900 mb-2 tracking-wide">สแกนเพื่อชำระเงิน</h3>
-        <p class="text-xs text-gray-500 mb-3">PromptPay / Thai QR Payment</p>
-
-        <!-- Big QR Image -->
-        <div class="w-56 h-56 bg-white border-4 border-black rounded-2xl p-2 shadow-md flex items-center justify-center mb-3">
-          <img src="/images/mock-qr.svg" alt="QR Code Payment" class="w-full h-full object-contain">
+      <!-- 3. Cash Mode: เมื่อเลือกชำระด้วยเงินสด (ไม่ต้องโชว์ QR) -->
+      <div id="cash-section" class="flex flex-col items-center justify-center my-auto">
+        <div class="text-2xl md:text-3xl font-black text-gray-800">
+          ชำระด้วยเงินสด (CASH)
         </div>
+      </div>
 
-        <div class="bg-yellow-100 border border-yellow-400 px-4 py-2 rounded-lg text-xs font-bold text-yellow-900">
-          ยอดเงิน: <span id="display-qr-amount" class="text-base font-black text-red-600">0</span> ฿
+      <!-- 4. Standby Mode: กรณีไม่มีรายการค้างชำระ -->
+      <div id="standby-section" class="hidden flex flex-col items-center justify-center my-auto">
+        <div class="text-2xl md:text-3xl font-black text-gray-800">
+          Koumiya Ramen ยินดีต้อน
         </div>
-        <p class="text-[11px] text-gray-400 mt-2">เปิดแอปธนาคารแล้วสแกน QR Code ด้านบน</p>
       </div>
 
-    </div>
-
-    <!-- Bottom Footer -->
-    <div class="flex justify-between items-center border-t border-gray-300 pt-3 mt-3 text-xs text-gray-500 font-medium">
-      <span>Ramen Restaurant - Customer Screen</span>
-      <div class="flex items-center gap-2">
-        <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
-        <span>Auto Syncing (3s)</span>
+      <!-- 5. Total Amount (ยอดเงิน: 120 ฿ / 600 ฿) -->
+      <div id="amount-section" class="shrink-0 mt-3 md:mt-4">
+        <div class="text-2xl md:text-4xl font-bold text-gray-700">
+          ยอดเงิน
+        </div>
+        <div class="text-5xl md:text-7xl font-black text-red-600 tracking-tight mt-0.5">
+          <span id="display-amount">0</span> ฿
+        </div>
       </div>
+
     </div>
 
   </div>
 
   <script>
     let currentTableId = <%= currentTableId %>;
-    let isQrVisible = false; // การแสดงผล QR Code: ซ่อน/ไม่แสดง QR Code ในตอนแรก
+    let paymentMode = 'CASH'; // 'CASH' or 'TRANSFER'
 
-    function setQrVisibility(show) {
-      isQrVisible = !!show;
-      const noQrBox = document.getElementById('display-no-qr-container');
-      const qrBox = document.getElementById('display-qr-container');
+    // ฟังก์ชันจัดรูปแบบเลขโต๊ะให้เป็นภาษาไทย เช่น 'T01' -> 'โต๊ะ 1', 'T05' -> 'โต๊ะ 5'
+    function formatTableNumber(rawStr) {
+      if (!rawStr) return 'โต๊ะ -';
+      const cleanNum = parseInt(String(rawStr).replace(/\D/g, ''), 10);
+      return isNaN(cleanNum) ? `โต๊ะ ${rawStr}` : `โต๊ะ ${cleanNum}`;
+    }
 
-      if (isQrVisible) {
-        noQrBox.classList.add('hidden');
-        qrBox.classList.remove('hidden');
+    function setPaymentMode(mode) {
+      paymentMode = mode;
+      const qrSection = document.getElementById('qr-section');
+      const cashSection = document.getElementById('cash-section');
+
+      if (paymentMode === 'TRANSFER') {
+        qrSection.classList.remove('hidden');
+        cashSection.classList.add('hidden');
       } else {
-        noQrBox.classList.remove('hidden');
-        qrBox.classList.add('hidden');
+        qrSection.classList.add('hidden');
+        cashSection.classList.remove('hidden');
       }
     }
 
-    // BroadcastChannel รับข้อความจากหน้าแคชเชียร์แบบ 0ms
+    // BroadcastChannel รับข้อความจากหน้าแคชเชียร์แบบ Real-time (0ms)
     const cashierBc = new BroadcastChannel('cashier_display_sync');
     cashierBc.onmessage = (event) => {
       if (event.data && event.data.type === 'PAYMENT_METHOD') {
-        if (!event.data.table_id || event.data.table_id === currentTableId) {
-          setQrVisibility(event.data.payment_method === 'TRANSFER');
+        if (event.data.table_id) {
+          currentTableId = event.data.table_id;
+          const selectEl = document.getElementById('table-select');
+          if (selectEl) selectEl.value = currentTableId;
         }
+        setPaymentMode(event.data.payment_method || 'CASH');
+        fetchCustomerBill();
       }
     };
 
-    // localStorage Listener รับข้อความข้ามหน้าต่างเบราว์เซอร์
+    // localStorage Listener รับข้อความข้ามหน้าต่าง / ข้ามแท็บ
     window.addEventListener('storage', (e) => {
       if (e.key === 'cashier_display_state' && e.newValue) {
         try {
           const data = JSON.parse(e.newValue);
-          if (!data.table_id || data.table_id === currentTableId) {
-            setQrVisibility(data.payment_method === 'TRANSFER');
+          if (data.table_id) {
+            currentTableId = data.table_id;
+            const selectEl = document.getElementById('table-select');
+            if (selectEl) selectEl.value = currentTableId;
           }
+          setPaymentMode(data.payment_method || 'CASH');
+          fetchCustomerBill();
         } catch (err) {}
       }
     });
 
     function changeDisplayTable(tableId) {
-      currentTableId = parseInt(tableId);
-      setQrVisibility(false); // ซ่อน QR ไว้ก่อนเมื่อเปลี่ยนโต๊ะ
+      currentTableId = parseInt(tableId, 10);
       fetchCustomerBill();
     }
 
+    // ดึงข้อมูลบิลของโต๊ะปัจจุบันจาก Server (ไม่ใช้ innerHTML เด็ดขาด)
     function fetchCustomerBill() {
       fetch(`/cashier/api/table-bill?table_id=${currentTableId}`)
         .then(res => res.json())
         .then(data => {
-          if (data.success && data.table_number) {
-            document.getElementById('display-table-header').textContent = `โต๊ะ: ${data.table_number} (${data.card_id})`;
-            document.getElementById('display-grand-total').textContent = data.grand_total;
-            document.getElementById('display-qr-amount').textContent = data.grand_total;
+          const tableTitleEl = document.getElementById('display-table-text');
+          const amountEl = document.getElementById('display-amount');
+          const standbySection = document.getElementById('standby-section');
+          const qrSection = document.getElementById('qr-section');
+          const cashSection = document.getElementById('cash-section');
+          const amountSection = document.getElementById('amount-section');
 
-            // ตรวจสอบวิธีชำระเงินที่แคชเชียร์เลือก
-            if (data.cashier_state) {
-              if (!data.cashier_state.table_id || data.cashier_state.table_id === currentTableId) {
-                setQrVisibility(data.cashier_state.payment_method === 'TRANSFER');
-              } else {
-                setQrVisibility(false);
-              }
+          if (data.success && data.table_number) {
+            tableTitleEl.textContent = formatTableNumber(data.table_number);
+            amountEl.textContent = data.grand_total;
+
+            if (data.cashier_state && data.cashier_state.payment_method) {
+              setPaymentMode(data.cashier_state.payment_method);
             }
 
-            const tbody = document.getElementById('display-tbody');
-            tbody.replaceChildren();
-
-            const totalSlots = Math.max(8, data.items.length);
-
-            for (let i = 0; i < totalSlots; i++) {
-              const item = data.items[i];
-              const tr = document.createElement('tr');
-              tr.className = 'border-b border-black';
-              if (totalSlots === 8) {
-                tr.style.height = '12.5%';
-              }
-
-              if (item) {
-                tr.classList.add('hover:bg-gray-50');
-                const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
-
-                const tdIndex = document.createElement('td');
-                tdIndex.className = 'border-r border-black font-bold text-gray-500 align-middle';
-                tdIndex.textContent = i + 1;
-
-                const tdName = document.createElement('td');
-                tdName.className = 'border-r border-black text-left pl-3 font-bold text-gray-900 align-middle';
-                tdName.textContent = item.menu_name;
-
-                const tdCustom = document.createElement('td');
-                tdCustom.className = 'border-r border-black text-left pl-3 text-xs text-gray-600 align-middle';
-                tdCustom.textContent = customText;
-
-                const tdQty = document.createElement('td');
-                tdQty.className = 'border-r border-black font-bold text-base align-middle';
-                tdQty.textContent = item.quantity;
-
-                const tdPrice = document.createElement('td');
-                tdPrice.className = 'text-right pr-3 font-black text-base align-middle';
-                tdPrice.textContent = `${item.item_total} ฿`;
-
-                tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
+            if (data.items && data.items.length > 0) {
+              standbySection.classList.add('hidden');
+              amountSection.classList.remove('hidden');
+              if (paymentMode === 'TRANSFER') {
+                qrSection.classList.remove('hidden');
+                cashSection.classList.add('hidden');
               } else {
-                for (let j = 0; j < 5; j++) {
-                  const td = document.createElement('td');
-                  if (j < 4) td.className = 'border-r border-black align-middle';
-                  tr.appendChild(td);
-                }
+                qrSection.classList.add('hidden');
+                cashSection.classList.remove('hidden');
               }
-              tbody.appendChild(tr);
+            } else {
+              // กรณีโต๊ะนี้ไม่มีรายการค้างชำระ
+              standbySection.classList.remove('hidden');
+              qrSection.classList.add('hidden');
+              cashSection.classList.add('hidden');
+              amountEl.textContent = '0';
             }
           } else {
-            // โต๊ะไม่มีรายการค้างชำระ -> ไม่แสดง QR Code
-            setQrVisibility(false);
-            document.getElementById('display-table-header').textContent = `โต๊ะ ${currentTableId} (ไม่มีรายการค้างชำระ)`;
-            document.getElementById('display-grand-total').textContent = '0';
-            document.getElementById('display-qr-amount').textContent = '0';
-            const tbody = document.getElementById('display-tbody');
-            tbody.replaceChildren();
-
-            const emptyTr = document.createElement('tr');
-            const emptyTd = document.createElement('td');
-            emptyTd.colSpan = 5;
-            emptyTd.className = 'py-16 text-center text-gray-400 font-bold text-base';
-            emptyTd.textContent = '✨ ไม่มีรายการอาหารที่รอชำระเงินสำหรับโต๊ะนี้';
-            emptyTr.appendChild(emptyTd);
-            tbody.appendChild(emptyTr);
+            tableTitleEl.textContent = `โต๊ะ ${currentTableId}`;
+            amountEl.textContent = '0';
+            standbySection.classList.remove('hidden');
+            qrSection.classList.add('hidden');
+            cashSection.classList.add('hidden');
           }
         })
-        .catch(err => console.error('Fetch customer display bill error:', err));
+        .catch(err => console.error('Fetch customer display error:', err));
     }
 
-    // Initialize: ซ่อน QR ไว้ในตอนแรก
-    setQrVisibility(false);
+    // ดึงสถานะเริ่มต้น
+    setPaymentMode('CASH');
     fetchCustomerBill();
-    setInterval(fetchCustomerBill, 3000);
+    // Auto-sync polling ทุก 2.5 วินาที
+    setInterval(fetchCustomerBill, 2500);
   </script>
 </body>
 </html>

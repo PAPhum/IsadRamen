@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body onclick="window.location.href='/customer/<%= table.table_number %>/menu'" class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none cursor-pointer">
+<body onclick="window.location.href='/customer/<%= table.table_number %>/menu'" class="bg-gray-100 h-screen w-screen p-2 md:p-4 font-sans select-none cursor-pointer overflow-hidden flex flex-col">
 
-  <!-- กรอบหน้าจอแท็บเล็ต แนวนอน 1024x768 ตาม Wireframe (คลิกได้ทั้งหน้าจอ) -->
-  <a href="/customer/<%= table.table_number %>/menu" class="w-full max-w-[1024px] h-[700px] md:h-[740px] bg-white border-4 border-black relative flex flex-col items-center justify-center shadow-2xl rounded-sm cursor-pointer group">
+  <!-- กรอบหน้าจอแท็บเล็ต แนวนอน เต็มหน้าจอ iPad (คลิกได้ทั้งหน้าจอ) -->
+  <a href="/customer/<%= table.table_number %>/menu" class="w-full h-full bg-white border-4 border-black relative flex flex-col items-center justify-center shadow-2xl rounded-sm cursor-pointer group flex-1">
     
     <!-- ปุ่มกลางจอ: กดเพื่อเลือกเมนู -->
     <div class="text-center px-12 py-16 rounded-3xl group-hover:bg-gray-50 transition transform group-hover:scale-105 active:scale-95">
-      <div class="text-7xl mb-4">🍜</div>
+      <div class="text-7xl mb-4">LOGO</div>
       <h1 class="text-5xl md:text-6xl font-black text-black tracking-tight group-hover:text-red-700 transition">
         กดเพื่อเลือกเมนู
       </h1>

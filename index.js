@@ -27,12 +27,17 @@ app.use('/kitchen', chefRouter); // รองรับ alias /kitchen ให้�
 app.use('/cashier', cashierRouter);
 app.use('/scan', scanRouter);
 
-// หน้า Demo Role Selection (GET /)
+// หน้าแรก (GET /) - เมื่อลูกค้าสแกน QR Code (https://koumiya-ramen.onrender.com) จะแจกโต๊ะตามลำดับ T01, T02... และพาไปหน้า Customer
 app.get('/', (req, res) => {
+  scanRouter.assignTableAndRedirect(req, res);
+});
+
+// หน้าศูนย์ควบคุมหลัก (GET /mainControl) - หน้ารวมสำหรับ Admin/Demo
+app.get(['/mainControl', '/maincontrol', '/main-control'], (req, res) => {
   res.render('home');
 });
 
-// API สำหรับ Reset ข้อมูล Orders เพื่อเริ่มทดสอบ Demo ใหม่
+// API สำหรับ Reset ข้อมูล Orders และลำดับโต๊ะ เพื่อเริ่มทดสอบ Demo ใหม่
 app.post('/api/reset-demo-orders', (req, res) => {
   db.serialize(() => {
     db.run('DELETE FROM ORDER_ITEM_OPTION');
@@ -40,8 +45,9 @@ app.post('/api/reset-demo-orders', (req, res) => {
     db.run('DELETE FROM ORDER_ITEM');
     db.run('DELETE FROM ORDERS');
     db.run('DELETE FROM PAYMENT');
-    db.run("DELETE FROM sqlite_sequence WHERE name IN ('ORDERS', 'ORDER_ITEM', 'ORDER_ITEM_OPTION', 'ORDER_ITEM_TOPPING', 'PAYMENT')", () => {
-      res.json({ success: true, message: 'ล้างข้อมูล Orders และ Payments เรียบร้อยแล้ว' });
+    db.run("DELETE FROM sqlite_sequence WHERE name IN ('ORDERS', 'ORDER_ITEM', 'ORDER_ITEM_OPTION', 'ORDER_ITEM_TOPPING', 'PAYMENT')");
+    db.run("INSERT INTO SYSTEM_STATE (key, value) VALUES ('last_assigned_table', '0') ON CONFLICT(key) DO UPDATE SET value = '0'", () => {
+      res.json({ success: true, message: 'ล้างข้อมูล Orders, Payments และรีเซ็ตลำดับโต๊ะสแกนเรียบร้อยแล้ว' });
     });
   });
 });
@@ -49,10 +55,11 @@ app.post('/api/reset-demo-orders', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`=================================`);
   console.log(`🚀 IsadRamen Server is running on port ${PORT}`);
-  console.log(`🔗 Local Hub: http://localhost:${PORT}`);
-  console.log(`🍜 Customer:  http://localhost:${PORT}/customer/T05`);
-  console.log(`👨‍🍳 Chef:      http://localhost:${PORT}/chef`);
-  console.log(`💳 Cashier:   http://localhost:${PORT}/cashier`);
-  console.log(`🖥️ Display:   http://localhost:${PORT}/cashier/customer-display`);
+  console.log(`🎛️ Main Control: http://localhost:${PORT}/mainControl`);
+  console.log(`📱 Customer Scan: http://localhost:${PORT}/`);
+  console.log(`🍜 Customer:     http://localhost:${PORT}/customer/T05`);
+  console.log(`👨‍🍳 Chef:         http://localhost:${PORT}/chef`);
+  console.log(`💳 Cashier:      http://localhost:${PORT}/cashier`);
+  console.log(`🖥️ Display:      http://localhost:${PORT}/cashier/customer-display`);
   console.log(`=================================`);
 });

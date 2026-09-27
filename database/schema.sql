@@ -89,3 +89,10 @@ CREATE TABLE IF NOT EXISTS PAYMENT (
     payment_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (table_id) REFERENCES TABLES(table_id)
 );
+
+-- 11. ตารางเก็บสถานะระบบ (เช่น ลำดับโต๊ะที่แจกเมื่อสแกน QR)
+CREATE TABLE IF NOT EXISTS SYSTEM_STATE (
+    key VARCHAR(50) PRIMARY KEY,
+    value TEXT
+);
+

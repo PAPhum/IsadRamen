@@ -2,41 +2,69 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
-// GET /scan - ระบบสุ่ม/แจกโต๊ะว่างอัตโนมัติ
-router.get('/', (req, res) => {
-  // คิวรีหา table_id ตัวแรกที่ไม่มี order ค้างจ่าย (is_paid = 0)
-  const sql = `
-    SELECT table_id, table_number 
-    FROM TABLES 
-    WHERE table_id NOT IN (
-      SELECT DISTINCT table_id 
-      FROM ORDERS 
-      WHERE is_paid = 0
-    ) 
-    ORDER BY table_id ASC 
-    LIMIT 1
-  `;
+// Helper ถอดรหัส Cookie
+function parseCookies(req) {
+  const list = {};
+  const rc = req.headers.cookie;
+  if (rc) {
+    rc.split(';').forEach(cookie => {
+      const parts = cookie.split('=');
+      if (parts.length >= 2) {
+        list[parts.shift().trim()] = decodeURIComponent(parts.join('='));
+      }
+    });
+  }
+  return list;
+}
 
-  db.get(sql, [], (err, row) => {
-    if (err) {
-      console.error('Error querying available table:', err.message);
-      return res.status(500).send('เกิดข้อผิดพลาดในการค้นหาโต๊ะว่าง');
+// Logic หลักในการแจกโต๊ะตามลำดับ (1 -> 2 -> ... -> 20 แล้ววนลูป) พร้อมจำ Cookie
+function assignTableAndRedirect(req, res) {
+  const cookies = parseCookies(req);
+  const forceNew = req.query.new === '1' || req.query.reset === '1';
+
+  // ถ้ามี Cookie โต๊ะอยู่แล้ว และไม่ได้สั่งขอโต๊ะใหม่ (?new=1) ให้พาไปโต๊ะเดิมทันที
+  if (!forceNew && cookies.customer_table) {
+    const existingTable = cookies.customer_table.trim().toUpperCase();
+    if (/^T\d+$/.test(existingTable)) {
+      return res.redirect(`/customer/${existingTable}`);
+    }
+  }
+
+  // หากไม่มี Cookie หรือต้องการโต๊ะใหม่ ให้รันลำดับโต๊ะถัดไป (1..20)
+  db.get("SELECT value FROM SYSTEM_STATE WHERE key = 'last_assigned_table'", [], (err, row) => {
+    let lastNum = 0;
+    if (row && row.value) {
+      lastNum = parseInt(row.value, 10) || 0;
     }
 
-    if (row) {
-      // ถ้าเจอโต๊ะว่าง ให้ Redirect ไปยังหน้าแท็บเล็ตประจำโต๊ะนั้น
-      console.log(`Assigning Table ID: ${row.table_id} (${row.table_number})`);
-      return res.redirect(`/customer/table/${row.table_id}`);
-    } else {
-      // ถ้าโต๊ะเต็มทั้ง 20 โต๊ะ
-      return res.send(`
-        <div style="text-align: center; font-family: sans-serif; padding-top: 50px;">
-          <h2>⚠️ ขณะนี้โต๊ะเต็มทุกโต๊ะ (1-20)</h2>
-          <p>กรุณารอสักครู่ให้โต๊ะอื่นชำระเงินเรียบร้อยแล้วลองสแกนใหม่อีกครั้ง</p>
-        </div>
-      `);
-    }
+    // รันลำดับโต๊ะถัดไป: 1 ถึง 20 แล้ววนกลับมาที่ 1
+    const nextNum = (lastNum % 20) + 1;
+    const tableNumber = 'T' + String(nextNum).padStart(2, '0');
+
+    // บันทึกลำดับโต๊ะล่าสุดลง SQLite
+    const updateSql = `
+      INSERT INTO SYSTEM_STATE (key, value) VALUES ('last_assigned_table', ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    `;
+
+    db.run(updateSql, [String(nextNum)], (saveErr) => {
+      if (saveErr) {
+        console.error('Error saving last assigned table:', saveErr.message);
+      }
+
+      // ตั้งค่า Cookie จำเครื่องลูกค้าไว้ 24 ชั่วโมง
+      res.setHeader('Set-Cookie', `customer_table=${tableNumber}; Path=/; Max-Age=86400; SameSite=Lax`);
+      console.log(`[QR Scan] เครื่องใหม่ได้รับโต๊ะ: ${tableNumber} (ถัดจากโต๊ะ ${lastNum})`);
+      return res.redirect(`/customer/${tableNumber}`);
+    });
   });
+}
+
+// GET /scan - ระบบสแกนแจกโต๊ะ
+router.get('/', (req, res) => {
+  assignTableAndRedirect(req, res);
 });
 
+// ส่งออก router พร้อมฟังก์ชัน assignTableAndRedirect สำหรับ route GET /
 module.exports = router;
+module.exports.assignTableAndRedirect = assignTableAndRedirect;

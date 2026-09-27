@@ -15,6 +15,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 function initDatabase() {
+  db.run("CREATE TABLE IF NOT EXISTS SYSTEM_STATE (key VARCHAR(50) PRIMARY KEY, value TEXT)", (err) => {
+    if (err) console.error('Error creating SYSTEM_STATE table:', err.message);
+  });
+
   db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='TABLES'", (err, row) => {
     if (err) return console.error('Error checking tables:', err);
     if (!row) {

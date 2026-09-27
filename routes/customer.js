@@ -28,7 +28,7 @@ function findTable(identifier, callback) {
 // 1. หน้าเริ่มต้น (Start Screen: กดเพื่อเลือกเมนู)
 router.get('/:tableNumber', (req, res) => {
   const tableParam = req.params.tableNumber;
-  if (tableParam === 'table') return res.redirect('/');
+  if (tableParam === 'table') return res.redirect('/mainControl');
 
   findTable(tableParam, (err, table) => {
     if (err || !table) {
@@ -36,10 +36,12 @@ router.get('/:tableNumber', (req, res) => {
         <div style="font-family:sans-serif; text-align:center; padding:50px;">
           <h2>❌ ไม่พบข้อมูลโต๊ะ "${tableParam}"</h2>
           <p>กรุณาตรวจสอบหมายเลขโต๊ะ เช่น /customer/T05 หรือ /customer/5</p>
-          <a href="/">กลับหน้าหลัก</a>
+          <a href="/mainControl">กลับหน้าหลัก (Main Control)</a>
         </div>
       `);
     }
+    // จำ Cookie โต๊ะนี้ให้กับเครื่องลูกค้า
+    res.setHeader('Set-Cookie', `customer_table=${table.table_number}; Path=/; Max-Age=86400; SameSite=Lax`);
     res.render('customer/start', { table });
   });
 });

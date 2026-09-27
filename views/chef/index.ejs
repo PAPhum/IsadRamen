@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans select-none">
+<body class="bg-gray-100 h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col">
 
-  <!-- Chef Tablet / Monitor Container (Matching Wireframe in UI.png) -->
-  <div class="w-full max-w-[1024px] h-[720px] bg-white border-4 border-black p-6 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden">
+  <!-- Chef Tablet / Monitor Container (Matching Wireframe in UI.png - Fullscreen iPad Optimized) -->
+  <div class="w-full h-full bg-white border-4 border-black p-4 md:p-6 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden flex-1">
     
     <!-- ======================================================== -->
     <!-- VIEW 1: คิวรายการอาหาร (Queue View) -->
@@ -184,7 +184,7 @@
         <div class="flex gap-3 pt-2">
           <button onclick="printFoodSlip()" 
                   class="flex-1 bg-black text-white font-bold py-2.5 rounded-lg text-sm hover:bg-gray-800 transition">
-            🖨️ พิมพ์ใบจำลอง
+            พิมพ์ใบจำลอง
           </button>
           <button onclick="closeFoodSlip()" 
                   class="flex-1 bg-gray-200 border border-gray-400 font-bold py-2.5 rounded-lg text-sm hover:bg-gray-300 transition">
@@ -549,7 +549,7 @@
     }
 
     function printFoodSlip() {
-      alert('🖨️ [จำลองการพิมพ์] ใบรายการอาหารสำหรับพนักงานเสิร์ฟได้ถูกพิมพ์เรียบร้อยแล้ว');
+      alert('[จำลองการพิมพ์] พิมพ์เรียบร้อย');
       closeFoodSlip();
     }
 
