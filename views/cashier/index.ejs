@@ -7,74 +7,74 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 h-screen w-screen p-2 md:p-3 font-sans select-none overflow-hidden flex flex-col">
+<body class="[background:radial-gradient(circle_at_center,_#fff7ed_0%,_#fef3c7_50%,_#f5f5f4_100%)] h-screen w-screen p-2 md:p-3 font-sans select-none overflow-hidden flex flex-col">
 
-  <!-- Main POS Container (Matching Wireframe in UI.png - Fullscreen iPad Optimized) -->
-  <div class="w-full h-full bg-white border-4 border-black p-3 md:p-4 relative flex flex-col justify-between shadow-2xl rounded-sm overflow-hidden flex-1">
+  <!-- Main POS Container -->
+  <div class="w-full h-full bg-white border-2 border-[#4a3728] shadow-[0_12px_28px_rgba(74,55,40,0.12)] p-3 md:p-4 relative flex flex-col justify-between rounded-sm overflow-hidden flex-1">
     
     <!-- Top Navigation Header -->
-    <div class="flex justify-between items-center border-b-2 border-black pb-2 mb-3">
+    <div class="flex justify-between items-center border-b-2 border-[#4a3728] pb-2 mb-3">
       <div class="flex items-center gap-2">
-        <h1 class="font-black text-xl tracking-wide text-gray-800">ระบบแคชเชียร์ (Cashier POS)</h1>
+        <h1 class="font-black text-xl tracking-wide text-[#4a3728]">ระบบแคชเชียร์ (Cashier POS)</h1>
       </div>
     </div>
 
-    <!-- 3 Columns Layout according to Wireframe in UI.png -->
+    <!-- 3 Columns Layout -->
     <div class="flex-1 grid grid-cols-12 gap-3 overflow-hidden min-h-0">
       
       <!-- ======================================================== -->
-      <!-- COLUMN 1: โต๊ะ (Tables & Scan) - 2 Columns (10 โต๊ะต่อหน้า) -->
+      <!-- COLUMN 1: โต๊ะ (Tables & Scan) -->
       <!-- ======================================================== -->
-      <div class="col-span-2 border-2 border-black p-2 flex flex-col justify-between rounded-md bg-gray-50 min-h-0">
+      <div class="col-span-2 border-2 border-[#4a3728] bg-amber-50/30 p-2 flex flex-col justify-between rounded-md min-h-0">
         <div class="flex-1 flex flex-col min-h-0">
-          <h2 class="text-center font-black text-sm border-b-2 border-black pb-1 mb-2">โต๊ะ</h2>
+          <h2 class="text-center font-black text-sm text-[#4a3728] border-b-2 border-[#4a3728] pb-1 mb-2">โต๊ะ</h2>
 
-          <!-- Grid โต๊ะ 2 คอลัมน์ x 5 แถว = 10 โต๊ะต่อหน้า -->
+          <!-- Grid โต๊ะ -->
           <div id="tables-grid" class="grid grid-cols-2 grid-rows-5 gap-1.5 flex-1 min-h-0">
             <!-- Rendered via JS -->
           </div>
         </div>
 
         <!-- แถบล่างของ Column 1: Pagination และปุ่มสแกน -->
-        <div class="mt-2 pt-2 border-t border-gray-300 space-y-1.5">
+        <div class="mt-2 pt-2 border-t border-[#4a3728]/30 space-y-1.5">
           <div class="flex justify-between items-center">
             <button onclick="prevTablePage()" id="table-prev-btn" 
-                    class="w-8 h-7 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-xs disabled:opacity-40 cursor-pointer">
+                    class="w-8 h-7 bg-white border border-[#4a3728] shadow-[0_2px_0_#4a3728] rounded font-black hover:bg-gray-100 text-xs disabled:opacity-40 cursor-pointer text-[#4a3728]">
               &lt;
             </button>
-            <span id="table-page-indicator" class="text-xs font-bold text-gray-600">1 / 2</span>
+            <span id="table-page-indicator" class="text-xs font-bold text-[#4a3728]">1 / 2</span>
             <button onclick="nextTablePage()" id="table-next-btn" 
-                    class="w-8 h-7 bg-gray-200 border border-black rounded font-black hover:bg-gray-300 text-xs disabled:opacity-40 cursor-pointer">
+                    class="w-8 h-7 bg-white border border-[#4a3728] shadow-[0_2px_0_#4a3728] rounded font-black hover:bg-gray-100 text-xs disabled:opacity-40 cursor-pointer text-[#4a3728]">
               &gt;
             </button>
           </div>
 
-          <!-- ปุ่มสแกน ตาม Wireframe -->
+          <!-- ปุ่มสแกนการ์ด -->
           <button onclick="openScanModal()" 
-                  class="w-full bg-gray-300 hover:bg-gray-400 border-2 border-black font-black py-1.5 rounded-lg text-xs transition active:scale-95 shadow-sm cursor-pointer">
+                  class="w-full bg-gradient-to-r from-amber-100 to-orange-100 border border-[#4a3728] text-[#4a3728] font-black py-1.5 rounded-lg text-xs transition active:scale-95 shadow-sm cursor-pointer">
             สแกน (Scan Card)
           </button>
         </div>
       </div>
 
       <!-- ======================================================== -->
-      <!-- COLUMN 2: รายการอาหารโต๊ะ X (Order Items) - 6 Columns (เต็มพื้นที่ 8 แถว) -->
+      <!-- COLUMN 2: รายการอาหารโต๊ะ X (Order Items) -->
       <!-- ======================================================== -->
-      <div class="col-span-6 border-2 border-black p-3 flex flex-col justify-between rounded-md min-h-0">
+      <div class="col-span-6 border-2 border-[#4a3728] p-3 flex flex-col justify-between rounded-md min-h-0">
         <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-          <h2 class="text-center font-black text-base border-b-2 border-black pb-1.5 mb-2" id="table-title">
+          <h2 class="text-center font-black text-base text-[#4a3728] border-b-2 border-[#4a3728] pb-1.5 mb-2" id="table-title">
             รายการอาหาร (เลือกโต๊ะ)
           </h2>
 
-          <!-- ตารางรายการอาหารของโต๊ะ (ขยายเต็มพื้นที่ 8 แถว) -->
-          <div class="flex-1 border border-black overflow-hidden flex flex-col min-h-0">
+          <!-- ตารางรายการอาหาร -->
+          <div class="flex-1 border border-[#4a3728] overflow-hidden flex flex-col min-h-0">
             <table class="w-full h-full border-collapse text-xs text-center table-fixed">
               <thead>
-                <tr class="border-b border-black bg-gray-100 font-bold sticky top-0 h-9">
-                  <th class="border-r border-black p-1 w-10">ลำดับ</th>
-                  <th class="border-r border-black p-1 text-left pl-2">รายการ</th>
-                  <th class="border-r border-black p-1 text-left pl-2">การปรับแต่ง</th>
-                  <th class="border-r border-black p-1 w-12">จำนวน</th>
+                <tr class="border-b-2 border-[#4a3728] bg-amber-100 text-[#4a3728] font-bold sticky top-0 h-9">
+                  <th class="border-r border-[#4a3728] p-1 w-10">ลำดับ</th>
+                  <th class="border-r border-[#4a3728] p-1 text-left pl-2">รายการ</th>
+                  <th class="border-r border-[#4a3728] p-1 text-left pl-2">การปรับแต่ง</th>
+                  <th class="border-r border-[#4a3728] p-1 w-12">จำนวน</th>
                   <th class="p-1 w-16 text-right pr-2">ราคา</th>
                 </tr>
               </thead>
@@ -86,50 +86,50 @@
         </div>
 
         <!-- แถบล่างของ Column 2: ราคารวม -->
-        <div class="border-t-2 border-black pt-2 mt-2 flex justify-between items-center px-2">
-          <span class="font-bold text-sm text-gray-700">ยอดรวม:</span>
-          <span class="font-black text-2xl text-red-600"><span id="col2-grand-total">0</span> ฿</span>
+        <div class="border-t-2 border-[#4a3728] bg-amber-50/70 p-2 mt-2 flex justify-between items-center rounded">
+          <span class="font-bold text-sm text-[#4a3728]">ยอดรวม:</span>
+          <span class="font-black text-2xl text-orange-600"><span id="col2-grand-total">0</span> ฿</span>
         </div>
       </div>
 
       <!-- ======================================================== -->
-      <!-- COLUMN 3: ชำระเงิน (Payment & Numeric Keypad) - 4 Columns -->
+      <!-- COLUMN 3: ชำระเงิน (Payment & Numeric Keypad) -->
       <!-- ======================================================== -->
-      <div class="col-span-4 border-2 border-black p-3 flex flex-col justify-between rounded-md bg-gray-50 min-h-0">
+      <div class="col-span-4 border-2 border-[#4a3728] p-3 flex flex-col justify-between rounded-md bg-amber-50/30 min-h-0">
         <div class="flex-1 flex flex-col justify-between">
           <div>
-            <h2 class="text-center font-black text-base border-b-2 border-black pb-1.5 mb-2">ชำระเงิน</h2>
+            <h2 class="text-center font-black text-base text-[#4a3728] border-b-2 border-[#4a3728] pb-1.5 mb-2">ชำระเงิน</h2>
 
             <!-- กล่องยอดรวมทั้งหมด -->
-            <div class="bg-gray-100 border border-black p-2 rounded-lg text-center mb-3">
-              <span class="text-xs text-gray-500 font-bold block">ยอดรวมทั้งหมด</span>
-              <span class="text-2xl font-black text-black" id="col3-grand-total">0 ฿</span>
+            <div class="bg-amber-50 border border-[#4a3728] p-2 rounded-lg text-center mb-3">
+              <span class="text-xs text-[#4a3728] font-bold block">ยอดรวมทั้งหมด</span>
+              <span class="text-2xl font-black text-orange-600" id="col3-grand-total">0 ฿</span>
             </div>
 
-            <!-- ปุ่มเลือกวิธีชำระเงิน โอน / เงินสด ตาม Wireframe -->
+            <!-- ปุ่มเลือกวิธีชำระเงิน -->
             <div class="flex gap-2 mb-3">
               <button onclick="setPaymentMethod('TRANSFER')" id="btn-method-transfer"
-                      class="flex-1 py-2 font-bold text-xs rounded-lg border border-black bg-white hover:bg-gray-100 transition">
+                      class="flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-sky-50 text-sky-900 shadow-[0_2px_0_#4a3728] transition">
                 โอน (QR)
               </button>
               <button onclick="setPaymentMethod('CASH')" id="btn-method-cash"
-                      class="flex-1 py-2 font-bold text-xs rounded-lg border-2 border-black bg-black text-white transition">
+                      class="flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-emerald-500 text-white transition">
                 เงินสด (CASH)
               </button>
             </div>
 
-            <!-- โหมดเงินสด (CASH): รับเงินสด, ทอนเงิน, Keypad -->
+            <!-- โหมดเงินสด (CASH) -->
             <div id="cash-mode-container" class="space-y-2">
-              <div class="flex justify-between items-center bg-white border border-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">
-                <span class="text-gray-600">รับเงินสด:</span>
-                <span class="text-base font-black text-gray-900" id="display-amount-paid">0</span>
+              <div class="flex justify-between items-center bg-white border border-[#4a3728] px-3 py-1.5 rounded-lg text-xs font-bold">
+                <span class="text-[#4a3728]">รับเงินสด:</span>
+                <span class="text-base font-black text-[#4a3728]" id="display-amount-paid">0</span>
               </div>
-              <div class="flex justify-between items-center bg-white border border-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">
-                <span class="text-gray-600">ทอนเงิน:</span>
+              <div class="flex justify-between items-center bg-white border border-[#4a3728] px-3 py-1.5 rounded-lg text-xs font-bold">
+                <span class="text-[#4a3728]">ทอนเงิน:</span>
                 <span class="text-base font-black text-green-700" id="display-change">0 ฿</span>
               </div>
 
-              <!-- Numeric Keypad ตาม Wireframe -->
+              <!-- Numeric Keypad -->
               <div class="grid grid-cols-3 gap-1.5 pt-1">
                 <button onclick="pressKey('1')" class="keypad-btn">1</button>
                 <button onclick="pressKey('2')" class="keypad-btn">2</button>
@@ -145,7 +145,7 @@
 
                 <button onclick="pressKey('.')" class="keypad-btn">.</button>
                 <button onclick="pressKey('0')" class="keypad-btn">0</button>
-                <button onclick="pressKey('BACK')" class="keypad-btn bg-red-100 text-red-700 border-red-400">ลบ</button>
+                <button onclick="pressKey('BACK')" class="keypad-btn !bg-rose-50 !text-rose-600 !border-rose-400 !shadow-[0_2px_0_#fb7185]">ลบ</button>
               </div>
 
               <!-- Quick Cash Buttons -->
@@ -153,24 +153,24 @@
                 <button onclick="setExactAmount()" class="quick-btn">พอดี</button>
                 <button onclick="addQuickCash(100)" class="quick-btn">+100</button>
                 <button onclick="addQuickCash(500)" class="quick-btn">+500</button>
-                <button onclick="pressKey('CLEAR')" class="quick-btn bg-gray-300">C</button>
+                <button onclick="pressKey('CLEAR')" class="quick-btn !bg-amber-100">C</button>
               </div>
             </div>
 
-            <!-- โหมดโอนเงิน (TRANSFER / QR Mock) -->
+            <!-- โหมดโอนเงิน (TRANSFER) -->
             <div id="transfer-mode-container" class="hidden text-center py-2 space-y-2">
-              <p class="text-xs font-bold text-gray-700">สแกน QR เพื่อชำระเงินผ่าน Mobile Banking</p>
-              <div class="w-40 h-40 mx-auto border-2 border-black rounded-lg p-1.5 bg-white shadow-sm flex items-center justify-center">
+              <p class="text-xs font-bold text-[#4a3728]">สแกน QR เพื่อชำระเงินผ่าน Mobile Banking</p>
+              <div class="w-40 h-40 mx-auto border-2 border-[#4a3728] rounded-lg p-1.5 bg-white shadow-sm flex items-center justify-center">
                 <img src="/images/mock-qr.svg" alt="Mock QR Code" class="w-full h-full object-contain">
               </div>
-              <p class="text-xs text-green-700 font-bold">ยอดโอน: <span id="transfer-qr-amount">0</span> ฿</p>
+              <p class="text-xs text-orange-600 font-bold">ยอดโอน: <span id="transfer-qr-amount">0</span> ฿</p>
             </div>
           </div>
 
-          <!-- ปุ่มยืนยันชำระเงิน ด้านล่าง ตาม Wireframe -->
+          <!-- ปุ่มยืนยันชำระเงิน -->
           <div class="pt-2">
             <button onclick="confirmPayment()" id="confirm-payment-btn" disabled
-                    class="w-full bg-gray-300 hover:bg-gray-400 border-2 border-black font-black py-3 rounded-xl text-sm transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="w-full bg-orange-600 hover:bg-orange-700 text-white border border-[#4a3728] shadow-[0_3px_0_#4a3728] font-black py-3 rounded-xl text-sm transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed">
               ยืนยันการชำระเงิน
             </button>
           </div>
@@ -179,37 +179,37 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- SCAN PAYMENT CARD MODAL (จำลองการสแกนการ์ด) -->
+    <!-- SCAN PAYMENT CARD MODAL -->
     <!-- ======================================================== -->
     <div id="scan-modal" class="hidden absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div class="bg-white w-[500px] border-4 border-black p-6 rounded-xl shadow-2xl space-y-4">
-        <div class="flex justify-between items-center border-b-2 border-black pb-2">
-          <h3 class="font-black text-lg text-gray-900">จำลองการสแกน Payment Card</h3>
-          <button onclick="closeScanModal()" class="text-gray-400 hover:text-black font-bold text-lg">&times;</button>
+      <div class="bg-white w-[500px] border-2 border-[#4a3728] p-6 rounded-[2rem] shadow-2xl space-y-4">
+        <div class="flex justify-between items-center border-b-2 border-[#4a3728] pb-2">
+          <h3 class="font-black text-lg text-[#4a3728]">จำลองการสแกน Payment Card</h3>
+          <button onclick="closeScanModal()" class="text-gray-400 hover:text-[#4a3728] font-bold text-lg">&times;</button>
         </div>
 
-        <p class="text-xs text-gray-500 font-medium">
+        <p class="text-xs text-[#4a3728] font-medium">
           แตะเลือกการ์ดที่ลูกค้านำมา หรือพิมพ์รหัสการ์ด (CARD-01 ถึง CARD-20):
         </p>
 
-        <!-- Quick Card Grid (CARD-01 to CARD-20) -->
+        <!-- Quick Card Grid -->
         <div class="grid grid-cols-4 gap-2 max-h-[260px] overflow-y-auto p-1">
           <% for(let i = 1; i <= 20; i++) { 
                const cardCode = `CARD-${String(i).padStart(2, '0')}`;
           %>
             <button onclick="selectCardCode('<%= cardCode %>')" 
-                    class="p-2 border border-black rounded-lg text-xs font-bold hover:bg-red-50 hover:border-red-600 transition text-center bg-gray-50">
+                    class="p-2 border border-[#4a3728] shadow-[0_2px_0_#4a3728] text-[#4a3728] rounded-lg text-xs font-bold hover:bg-amber-100 transition text-center bg-white">
               <%= cardCode %>
             </button>
           <% } %>
         </div>
 
-        <div class="flex gap-2 pt-2 border-t">
+        <div class="flex gap-2 pt-2 border-t border-[#4a3728]/30">
           <input type="text" id="manual-card-input" placeholder="หรือพิมพ์ เช่น CARD-05" 
-                 class="flex-1 border-2 border-gray-400 rounded-lg px-3 py-2 text-xs font-bold"
+                 class="flex-1 border-2 border-[#4a3728] rounded-lg px-3 py-2 text-xs font-bold text-[#4a3728]"
                  onkeypress="if(event.key === 'Enter') selectCardCode(this.value)">
           <button onclick="selectCardCode(document.getElementById('manual-card-input').value)" 
-                  class="bg-black text-white font-bold px-5 py-2 rounded-lg text-xs hover:bg-gray-800">
+                  class="bg-orange-600 text-white border border-[#4a3728] shadow-[0_2px_0_#4a3728] font-bold px-5 py-2 rounded-lg text-xs hover:bg-orange-700">
             ค้นหา
           </button>
         </div>
@@ -217,33 +217,33 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- RECEIPT MODAL: ใบเสร็จรับเงินแบบจำลอง (ตรงตาม Prompt Section 23) -->
+    <!-- RECEIPT MODAL -->
     <!-- ======================================================== -->
     <div id="receipt-modal" class="hidden absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div class="bg-white w-[380px] border-4 border-black p-6 rounded-lg shadow-2xl font-mono text-xs flex flex-col justify-between">
+      <div class="bg-[#fffdf7] w-[380px] border-2 border-[#4a3728] shadow-[0_16px_36px_rgba(74,55,40,0.2)] p-6 rounded-lg font-mono text-xs flex flex-col justify-between">
         <div class="space-y-3">
-          <div class="text-center border-b-2 border-dashed border-black pb-3">
-            <h2 class="font-black text-lg tracking-wider">RAMEN RESTAURANT</h2>
-            <p class="font-sans text-[11px] text-gray-500 font-bold">ใบเสร็จรับเงิน (RECEIPT)</p>
+          <div class="text-center border-b-2 border-dashed border-[#4a3728] pb-3">
+            <h2 class="font-black text-lg tracking-wider text-[#4a3728]">RAMEN RESTAURANT</h2>
+            <p class="font-sans text-[11px] text-[#4a3728] font-bold">ใบเสร็จรับเงิน (RECEIPT)</p>
           </div>
 
-          <div class="flex justify-between text-[11px]">
+          <div class="flex justify-between text-[11px] text-[#4a3728]">
             <span>TABLE: <strong id="receipt-table" class="text-sm">T05</strong></span>
             <span>CARD: <strong id="receipt-card">CARD-05</strong></span>
           </div>
-          <div class="flex justify-between text-[11px] text-gray-500 border-b border-dashed border-gray-400 pb-2">
+          <div class="flex justify-between text-[11px] text-[#4a3728]/70 border-b border-dashed border-[#4a3728]/40 pb-2">
             <span id="receipt-date">05/09/2026 19:30</span>
             <span id="receipt-no">#REC-001</span>
           </div>
 
           <!-- Items on Receipt -->
-          <div id="receipt-items-list" class="space-y-1.5 border-b-2 border-dashed border-black pb-3 max-h-[160px] overflow-y-auto">
+          <div id="receipt-items-list" class="space-y-1.5 border-b-2 border-dashed border-[#4a3728] pb-3 max-h-[160px] overflow-y-auto">
             <!-- Rendered by JS -->
           </div>
 
           <!-- Totals -->
-          <div class="space-y-1 text-[11px] pt-1 border-b-2 border-dashed border-black pb-3">
-            <div class="flex justify-between font-black text-sm">
+          <div class="space-y-1 text-[11px] pt-1 border-b-2 border-dashed border-[#4a3728] pb-3 text-[#4a3728]">
+            <div class="flex justify-between font-black text-sm text-orange-600">
               <span>TOTAL:</span>
               <span><span id="receipt-total">0</span> ฿</span>
             </div>
@@ -261,18 +261,18 @@
             </div>
           </div>
 
-          <p class="text-center text-[10px] text-gray-400 font-sans">
+          <p class="text-center text-[10px] text-[#4a3728]/60 font-sans">
             ขอบคุณที่ใช้บริการ / Thank you!
           </p>
         </div>
 
         <div class="flex gap-2 pt-4">
           <button onclick="printReceipt()" 
-                  class="flex-1 bg-black text-white font-bold py-2 rounded-lg text-xs hover:bg-gray-800">
+                  class="flex-1 bg-orange-600 text-white border border-[#4a3728] shadow-[0_2px_0_#4a3728] font-bold py-2 rounded-lg text-xs hover:bg-orange-700">
             พิมพ์ใบเสร็จ
           </button>
           <button onclick="closeReceiptAndReset()" 
-                  class="flex-1 bg-gray-200 border border-black font-bold py-2 rounded-lg text-xs hover:bg-gray-300">
+                  class="flex-1 bg-white border border-[#4a3728] shadow-[0_2px_0_#4a3728] text-[#4a3728] font-bold py-2 rounded-lg text-xs hover:bg-gray-100">
             เสร็จสิ้น (ปิด)
           </button>
         </div>
@@ -283,8 +283,10 @@
 
   <style>
     .keypad-btn {
-      background-color: #f3f4f6;
-      border: 1px solid #000000;
+      background-color: #ffffff;
+      border: 2px solid #4a3728;
+      box-shadow: 0 2px 0 #4a3728;
+      color: #4a3728;
       font-weight: 900;
       font-size: 1rem;
       padding: 0.55rem 0;
@@ -292,12 +294,13 @@
       transition: all 0.1s;
     }
     .keypad-btn:active {
-      transform: scale(0.95);
-      background-color: #e5e7eb;
+      transform: translateY(2px);
+      box-shadow: none;
     }
     .quick-btn {
-      background-color: #e5e7eb;
-      border: 1px solid #9ca3af;
+      background-color: #fffbeb;
+      border: 1px solid #4a3728;
+      color: #4a3728;
       font-weight: 700;
       font-size: 0.75rem;
       padding: 0.35rem 0;
@@ -305,28 +308,26 @@
       transition: all 0.1s;
     }
     .quick-btn:active {
-      background-color: #d1d5db;
+      background-color: #fef3c7;
     }
   </style>
 
   <script>
     let allTables = [];
     let currentTablePage = 1;
-    const tablesPerPage = 10; // 2 cols x 5 rows = 10 โต๊ะต่อหน้า
+    const tablesPerPage = 10;
 
     let selectedTable = null;
     let currentBill = null;
     let paymentMethod = 'CASH';
     let rawAmountPaid = '';
 
-    // BroadcastChannel สำหรับซิงก์สถานะไปยังหน้าจอลูกค้า (Customer Display) แบบ Real-time
     const cashierBc = new BroadcastChannel('cashier_display_sync');
 
     function syncToCustomerDisplay(method) {
       const tableId = selectedTable ? selectedTable.table_id : null;
       const showQr = (method === 'TRANSFER');
 
-      // 1. BroadcastChannel (0ms sync)
       try {
         cashierBc.postMessage({
           type: 'PAYMENT_METHOD',
@@ -336,7 +337,6 @@
         });
       } catch (e) {}
 
-      // 2. localStorage Event
       try {
         localStorage.setItem('cashier_display_state', JSON.stringify({
           table_id: tableId,
@@ -346,7 +346,6 @@
         }));
       } catch (e) {}
 
-      // 3. API Sync ไปยัง Server
       fetch('/cashier/api/payment-method', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -354,7 +353,6 @@
       }).catch(err => console.error('Sync payment error:', err));
     }
 
-    // โหลดรายชื่อโต๊ะทั้งหมด
     function loadTables() {
       fetch('/cashier/api/tables')
         .then(res => res.json())
@@ -367,7 +365,7 @@
         .catch(err => console.error('Error fetching tables:', err));
     }
 
-    // Render ปุ่มโต๊ะ (10 โต๊ะต่อหน้า = 2 cols x 5 rows)
+    // Render ปุ่มโต๊ะ
     function renderTablesGrid() {
       const container = document.getElementById('tables-grid');
       container.replaceChildren();
@@ -381,12 +379,16 @@
         const hasUnpaid = t.active_order_count > 0;
 
         let btnClass = 'p-1.5 rounded-lg font-bold text-xs flex flex-col items-center justify-center border-2 transition cursor-pointer ';
+        
         if (isSelected) {
-          btnClass += 'border-red-600 bg-red-100 text-red-900 shadow-sm ring-2 ring-red-400';
+          // โต๊ะที่เลือก
+          btnClass += 'border-[#4a3728] bg-amber-200 text-[#4a3728] shadow-[0_2px_0_#f97316]';
         } else if (hasUnpaid) {
-          btnClass += 'border-black bg-yellow-100 text-black hover:bg-yellow-200';
+          // โต๊ะค้างชำระ
+          btnClass += 'border-[#4a3728] bg-amber-100 text-[#4a3728] shadow-[0_2px_0_#4a3728]';
         } else {
-          btnClass += 'border-gray-400 bg-white text-gray-700 hover:bg-gray-100';
+          // โต๊ะว่าง
+          btnClass += 'border-[#4a3728]/40 bg-white text-[#4a3728]/70 hover:bg-gray-50';
         }
 
         const btn = document.createElement('button');
@@ -399,7 +401,7 @@
 
         const badgeSpan = document.createElement('span');
         if (hasUnpaid) {
-          badgeSpan.className = 'text-[10px] font-black text-red-600 mt-0.5';
+          badgeSpan.className = 'text-[10px] font-black text-orange-600 mt-0.5';
           badgeSpan.textContent = `${t.unpaid_total} ฿`;
         } else {
           badgeSpan.className = 'text-[10px] text-gray-400 mt-0.5';
@@ -410,7 +412,6 @@
         container.appendChild(btn);
       });
 
-      // ปรับปุ่ม Pagination
       document.getElementById('table-prev-btn').disabled = (currentTablePage <= 1);
       document.getElementById('table-next-btn').disabled = (currentTablePage >= totalPages);
       document.getElementById('table-page-indicator').textContent = `${currentTablePage} / ${totalPages}`;
@@ -431,7 +432,6 @@
       }
     }
 
-    // เมื่อเลือกโต๊ะ
     function selectAndLoadTable(tableId) {
       selectedTable = allTables.find(t => t.table_id === tableId);
       renderTablesGrid();
@@ -449,7 +449,7 @@
         });
     }
 
-    // Render รายการอาหารใน Column 2 (ขยายเต็มพื้นที่ 8 แถว)
+    // Render รายการอาหาร
     function renderBill() {
       const tbody = document.getElementById('bill-tbody');
       tbody.replaceChildren();
@@ -461,14 +461,13 @@
         document.getElementById('transfer-qr-amount').textContent = '0';
         document.getElementById('confirm-payment-btn').disabled = true;
 
-        // เติม 8 แถวว่างเต็มพื้นที่
         for (let i = 0; i < 8; i++) {
           const tr = document.createElement('tr');
-          tr.className = 'border-b border-black';
+          tr.className = 'border-b border-[#4a3728]';
           tr.style.height = '12.5%';
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-black align-middle';
+            if (j < 4) td.className = 'border-r border-[#4a3728] align-middle';
             tr.appendChild(td);
           }
           tbody.appendChild(tr);
@@ -487,47 +486,46 @@
       for (let i = 0; i < totalSlots; i++) {
         const item = currentBill.items[i];
         const tr = document.createElement('tr');
-        tr.className = 'border-b border-black';
+        tr.className = 'border-b border-[#4a3728]';
         if (totalSlots === 8) {
           tr.style.height = '12.5%';
         }
 
         if (item) {
-          tr.classList.add('hover:bg-gray-50');
+          tr.classList.add('hover:bg-amber-50');
           const customText = [item.options_text, item.toppings_text].filter(Boolean).join(' | ') || '-';
 
           const tdIndex = document.createElement('td');
-          tdIndex.className = 'border-r border-black font-bold text-gray-600 align-middle';
+          tdIndex.className = 'border-r border-[#4a3728] font-bold text-[#4a3728]/70 align-middle';
           tdIndex.textContent = i + 1;
 
           const tdName = document.createElement('td');
-          tdName.className = 'border-r border-black text-left pl-2 font-bold text-gray-900 align-middle';
+          tdName.className = 'border-r border-[#4a3728] text-left pl-2 font-bold text-[#4a3728] align-middle';
           tdName.textContent = item.menu_name;
 
           const tdCustom = document.createElement('td');
-          tdCustom.className = 'border-r border-black text-left pl-2 text-[11px] text-gray-600 align-middle';
+          tdCustom.className = 'border-r border-[#4a3728] text-left pl-2 text-[11px] text-[#4a3728]/80 align-middle';
           tdCustom.textContent = customText;
 
           const tdQty = document.createElement('td');
-          tdQty.className = 'border-r border-black font-bold align-middle';
+          tdQty.className = 'border-r border-[#4a3728] font-bold text-[#4a3728] align-middle';
           tdQty.textContent = item.quantity;
 
           const tdPrice = document.createElement('td');
-          tdPrice.className = 'text-right pr-2 font-black align-middle';
+          tdPrice.className = 'text-right pr-2 font-black text-orange-600 align-middle';
           tdPrice.textContent = `${item.item_total} ฿`;
 
           tr.append(tdIndex, tdName, tdCustom, tdQty, tdPrice);
         } else {
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-black align-middle';
+            if (j < 4) td.className = 'border-r border-[#4a3728] align-middle';
             tr.appendChild(td);
           }
         }
         tbody.appendChild(tr);
       }
 
-      // Reset ช่องรับเงิน
       rawAmountPaid = '';
       updateCashDisplay();
     }
@@ -543,18 +541,17 @@
       const transferContainer = document.getElementById('transfer-mode-container');
 
       if (method === 'TRANSFER') {
-        btnTransfer.className = 'flex-1 py-2 font-bold text-xs rounded-lg border-2 border-black bg-black text-white transition';
-        btnCash.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-black bg-white text-black hover:bg-gray-100 transition';
+        btnTransfer.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-sky-600 text-white shadow-[0_2px_0_#4a3728] transition';
+        btnCash.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-white text-[#4a3728] hover:bg-gray-100 transition';
         transferContainer.classList.remove('hidden');
         cashContainer.classList.add('hidden');
       } else {
-        btnCash.className = 'flex-1 py-2 font-bold text-xs rounded-lg border-2 border-black bg-black text-white transition';
-        btnTransfer.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-black bg-white text-black hover:bg-gray-100 transition';
+        btnCash.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-emerald-500 text-white transition';
+        btnTransfer.className = 'flex-1 py-2 font-bold text-xs rounded-lg border border-[#4a3728] bg-white text-[#4a3728] hover:bg-gray-100 transition';
         cashContainer.classList.remove('hidden');
         transferContainer.classList.add('hidden');
       }
 
-      // ซิงก์ไปยังหน้าจอลูกค้าทันที
       syncToCustomerDisplay(method);
     }
 
@@ -568,7 +565,6 @@
           rawAmountPaid = (rawAmountPaid || '0') + '.';
         }
       } else {
-        // จำกัดความยาวไม่เกิน 8 ตัวอักษร
         if (rawAmountPaid.length < 8) {
           rawAmountPaid += key;
         }
@@ -599,14 +595,13 @@
 
       if (paid === 0 || change < 0) {
         changeEl.textContent = '0 ฿';
-        changeEl.className = 'text-base font-black text-gray-400';
+        changeEl.className = 'text-base font-black text-[#4a3728]/40';
       } else {
         changeEl.textContent = `${change.toFixed(2).replace(/\.00$/, '')} ฿`;
         changeEl.className = 'text-base font-black text-green-700';
       }
     }
 
-    // ยืนยันการชำระเงิน
     function confirmPayment() {
       if (!currentBill || !currentBill.items || currentBill.items.length === 0) {
         alert('กรุณาเลือกโต๊ะที่มีรายการอาหารที่ต้องชำระ');
@@ -640,7 +635,6 @@
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          // แสดงใบเสร็จรับเงินทันที
           showReceiptModal(data.payment);
         } else {
           alert('ชำระเงินไม่สำเร็จ: ' + (data.message || 'Error'));
@@ -673,24 +667,24 @@
         leftDiv.className = 'pr-2';
 
         const nameSpan = document.createElement('span');
-        nameSpan.className = 'font-bold text-black';
+        nameSpan.className = 'font-bold text-[#4a3728]';
         nameSpan.textContent = item.menu_name;
 
         const qtySpan = document.createElement('span');
-        qtySpan.className = 'text-gray-500 font-bold ml-1';
+        qtySpan.className = 'text-[#4a3728]/70 font-bold ml-1';
         qtySpan.textContent = ` x${item.quantity}`;
 
         leftDiv.append(nameSpan, qtySpan);
 
         if (custom) {
           const customDiv = document.createElement('div');
-          customDiv.className = 'text-[10px] text-gray-500 pl-1';
+          customDiv.className = 'text-[10px] text-[#4a3728]/60 pl-1';
           customDiv.textContent = `• ${custom}`;
           leftDiv.appendChild(customDiv);
         }
 
         const priceSpan = document.createElement('span');
-        priceSpan.className = 'font-bold text-black whitespace-nowrap';
+        priceSpan.className = 'font-bold text-[#4a3728] whitespace-nowrap';
         priceSpan.textContent = `${item.item_total} ฿`;
 
         rowDiv.append(leftDiv, priceSpan);
@@ -711,7 +705,6 @@
 
     function closeReceiptAndReset() {
       document.getElementById('receipt-modal').classList.add('hidden');
-      // เคลียร์ค่า และโหลดรายชื่อโต๊ะใหม่
       selectedTable = null;
       currentBill = null;
       rawAmountPaid = '';
@@ -743,7 +736,6 @@
           if (data.success) {
             currentBill = data;
             selectedTable = allTables.find(t => t.table_id === data.table_id);
-            // เลื่อนหน้าโต๊ะไปยังหน้าที่โต๊ะนั้นอยู่
             const tableIndex = allTables.findIndex(t => t.table_id === data.table_id);
             if (tableIndex >= 0) {
               currentTablePage = Math.floor(tableIndex / tablesPerPage) + 1;
@@ -760,7 +752,6 @@
     loadTables();
     renderBill();
 
-    // Auto-refresh รายชื่อโต๊ะทุก 5 วินาที
     setInterval(loadTables, 5000);
   </script>
 </body>
