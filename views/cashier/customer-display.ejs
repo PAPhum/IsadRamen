@@ -7,16 +7,16 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="[background:radial-gradient(circle_at_center,_#fff7ed_0%,_#fef3c7_50%,_#f5f5f4_100%)] h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col justify-center items-center">
+<body class="bg-gray-100 h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col justify-center items-center">
 
   <!-- Main Container: Full screen fitting iPad Pro / iPad (Zero black bars) -->
-  <div class="w-full h-full bg-white border-4 border-stone-800 ring-4 ring-amber-200/50 p-4 md:p-8 relative flex flex-col justify-between items-center text-center shadow-2xl rounded-2xl overflow-hidden flex-1">
+  <div class="w-full h-full bg-white border-4 border-black p-4 md:p-8 relative flex flex-col justify-between items-center text-center shadow-2xl rounded-2xl overflow-hidden flex-1">
     
     <!-- Top Bar: Brand, Table Switcher (for demo), Live Sync -->
-    <div class="w-full flex justify-between items-center border-b-2 border-stone-200 pb-3 shrink-0">
+    <div class="w-full flex justify-between items-center border-b-2 border-black pb-3 shrink-0">
       <div class="flex items-center gap-2">
         <span class="text-2xl md:text-3xl">ศLOGO</span>
-        <span class="font-black text-base md:text-xl tracking-wide text-stone-800">Koumiya Ramen</span>
+        <span class="font-black text-base md:text-xl tracking-wide text-gray-900">Koumiya Ramen</span>
       </div>
     </div>
 
@@ -24,37 +24,37 @@
     <div class="flex-1 w-full flex flex-col justify-center items-center my-auto py-2 overflow-hidden min-h-0">
       
       <!-- 1. Table Number (เช่น "โต๊ะ 1" หรือ "โต๊ะ 5") -->
-      <h1 id="display-table-text" class="text-5xl md:text-7xl font-black text-stone-800 tracking-tight mb-2 md:mb-4 shrink-0">
+      <h1 id="display-table-text" class="text-5xl md:text-7xl font-black text-gray-900 tracking-tight mb-2 md:mb-4 shrink-0">
         โต๊ะ 1
       </h1>
 
       <!-- 2. Transfer Mode: แสดงคำว่า qrจ่าย + Mock QR Code ขนาดใหญ่ (เมื่อกดโอน) -->
       <div id="qr-section" class="hidden flex flex-col items-center justify-center my-auto">
-        <div class="w-52 h-52 md:w-72 md:h-72 bg-white border-4 border-stone-800 rounded-2xl p-2 md:p-3 shadow-lg flex items-center justify-center">
+        <div class="w-52 h-52 md:w-72 md:h-72 bg-white border-4 border-black rounded-2xl p-2 md:p-3 shadow-lg flex items-center justify-center">
           <img src="/images/mock-qr.svg" alt="Mock QR Code" class="w-full h-full object-contain">
         </div>
       </div>
 
       <!-- 3. Cash Mode: เมื่อเลือกชำระด้วยเงินสด (ไม่ต้องโชว์ QR) -->
       <div id="cash-section" class="flex flex-col items-center justify-center my-auto">
-        <div class="text-2xl md:text-3xl font-black text-stone-800">
+        <div class="text-2xl md:text-3xl font-black text-gray-800">
           ชำระด้วยเงินสด (CASH)
         </div>
       </div>
 
       <!-- 4. Standby Mode: กรณีไม่มีรายการค้างชำระ -->
       <div id="standby-section" class="hidden flex flex-col items-center justify-center my-auto">
-        <div class="text-2xl md:text-3xl font-black text-stone-800">
-          Koumiya Ramen ยินดีต้อนรับ
+        <div class="text-2xl md:text-3xl font-black text-gray-800">
+          Koumiya Ramen ยินดีต้อน
         </div>
       </div>
 
       <!-- 5. Total Amount (ยอดเงิน: 120 ฿ / 600 ฿) -->
       <div id="amount-section" class="shrink-0 mt-3 md:mt-4">
-        <div class="text-2xl md:text-4xl font-bold text-stone-700">
+        <div class="text-2xl md:text-4xl font-bold text-gray-700">
           ยอดเงิน
         </div>
-        <div class="text-5xl md:text-7xl font-black text-orange-600 tracking-tight mt-0.5">
+        <div class="text-5xl md:text-7xl font-black text-red-600 tracking-tight mt-0.5">
           <span id="display-amount">0</span> ฿
         </div>
       </div>
