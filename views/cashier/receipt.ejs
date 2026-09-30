@@ -3,59 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ใบเสร็จรับเงิน #<%= payment.payment_id %> | IsadRamen</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>ใบเสร็จรับเงิน #REC-<%= String(payment.payment_id || 7).padStart(4, '0') %> | IsadRamen</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: { fontFamily: { sans: ['Prompt', 'sans-serif'] } }
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-mono">
+<body class="bg-gradient-to-br from-[#fff7ed] via-[#fef3c7] to-[#f5f5f4] min-h-screen flex items-center justify-center p-4 select-none text-[#4a3728] font-sans relative overflow-hidden">
 
-  <div class="bg-white w-[380px] border-4 border-black p-6 rounded-lg shadow-2xl space-y-4">
-    <div class="text-center border-b-2 border-dashed border-black pb-4">
-      <h1 class="font-black text-xl tracking-wider">RAMEN RESTAURANT</h1>
-      <p class="font-sans text-xs text-gray-500 font-bold mt-1">ใบเสร็จรับเงิน (RECEIPT)</p>
-    </div>
-
-    <div class="flex justify-between text-xs font-bold">
-      <span>TABLE: <%= payment.table_number %></span>
-      <span>CARD: <%= payment.card_id %></span>
-    </div>
-    <div class="flex justify-between text-xs text-gray-600 border-b border-dashed border-gray-400 pb-3">
-      <span><%= new Date(payment.payment_time).toLocaleString('th-TH') %></span>
-      <span>#REC-<%= String(payment.payment_id).padStart(4, '0') %></span>
-    </div>
-
-    <div class="space-y-1.5 border-b-2 border-dashed border-black pb-4 text-xs">
-      <div class="flex justify-between font-black text-sm">
-        <span>TOTAL AMOUNT:</span>
-        <span><%= payment.total_amount %> ฿</span>
+  <!-- ฉากหลังจำลองหน้าจอแคชเชียร์แบบเบลอ -->
+  <div class="absolute inset-0 flex items-center justify-center p-4 blur-sm opacity-85 scale-[0.99] pointer-events-none z-[1]">
+    <div class="w-full max-w-[1200px] h-[820px] bg-white border-2 border-[#4a3728] rounded-[28px] p-5 flex flex-col justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl border-2 border-[#4a3728] bg-[#fef3c7] flex items-center justify-center text-2xl">💳</div>
+        <h1 class="text-2xl font-black">ระบบแคชเชียร์</h1>
+        <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full">IsadRamen POS</span>
       </div>
-      <div class="flex justify-between">
-        <span>PAYMENT METHOD:</span>
-        <span><%= payment.payment_method %></span>
+      <div class="grid grid-cols-[185px_1fr_345px] gap-4 flex-1 mt-2">
+        <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 bg-[#fffdfa] flex flex-col justify-between">
+          <div class="text-center font-black text-sm">เลือกโต๊ะ</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T01<br><small>ว่าง</small></div>
+            <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T02<br><small>ว่าง</small></div>
+            <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T03<br><small>ว่าง</small></div>
+            <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T04<br><small>ว่าง</small></div>
+            <div class="rounded-2xl border-2 border-[#eab308] bg-[#fef08a] p-2.5 text-center font-black text-[#a16207]">T05<br><small class="text-[#ea580c]"><%= payment.total_amount || 280 %> ฿</small></div>
+            <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T06<br><small>ว่าง</small></div>
+          </div>
+          <div class="h-10 bg-[#fef3c7] border-2 border-[#4a3728] rounded-xl text-center leading-9 font-black">💳 สแกนการ์ด</div>
+        </div>
+        <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 bg-[#fffdfa] flex flex-col justify-between">
+          <div class="text-center font-black">📋 รายการอาหาร <%= payment.table_number || 'T05' %></div>
+          <div class="flex-1 border-2 border-[#4a3728] rounded-2xl bg-white my-2"></div>
+          <div class="border-2 border-[#4a3728] rounded-xl py-2.5 px-7 flex justify-between font-black">
+            <span>ยอดรวมโต๊ะนี้:</span><span class="text-[#ea580c]"><%= payment.total_amount || 280 %> ฿</span>
+          </div>
+        </div>
+        <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 bg-[#fffdfa] flex flex-col justify-between">
+          <div class="text-center font-black">จัดการชำระเงิน</div>
+          <div class="border-2 border-[#4a3728] rounded-2xl p-2.5 text-center bg-[#fffbeb]">
+            <small class="text-[#716155] font-extrabold">ยอดรวมทั้งสิ้น (TOTAL)</small>
+            <div class="text-3xl font-black text-[#ea580c]"><%= payment.total_amount || 280 %> ฿</div>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5">
+            <div class="h-9 border border-[#4a3728] rounded-lg bg-white"></div>
+            <div class="h-9 border border-[#4a3728] rounded-lg bg-white"></div>
+            <div class="h-9 border border-[#4a3728] rounded-lg bg-white"></div>
+          </div>
+          <div class="h-12 bg-[#ea580c] rounded-2xl border-2 border-[#9a3412]"></div>
+        </div>
       </div>
-      <div class="flex justify-between">
-        <span>AMOUNT PAID:</span>
-        <span><%= payment.amount_paid %> ฿</span>
-      </div>
-      <div class="flex justify-between font-bold text-green-700">
-        <span>CHANGE:</span>
-        <span><%= payment.change_amount %> ฿</span>
-      </div>
-    </div>
-
-    <p class="text-center text-[10px] text-gray-400 font-sans">
-      ขอบคุณที่ใช้บริการ / Thank you!
-    </p>
-
-    <div class="flex gap-2 pt-2">
-      <button onclick="window.print()" class="flex-1 bg-black text-white font-bold py-2 rounded-lg text-xs hover:bg-gray-800">
-        🖨️ พิมพ์ใบเสร็จ
-      </button>
-      <a href="/cashier" class="flex-1 bg-gray-200 border border-black font-bold py-2 rounded-lg text-xs text-center hover:bg-gray-300">
-        กลับหน้าแคชเชียร์
-      </a>
     </div>
   </div>
 
+  <!-- ม่านมืดเบลอ -->
+  <div class="absolute inset-0 bg-[#4a3728]/25 backdrop-blur-[3px] z-[2]"></div>
+
+  <!-- ใบเสร็จรับเงิน (ขนาดสเกลตามรูป 3 เป๊ะ) -->
+  <div class="relative z-10 bg-white w-[400px] border-2 border-[#4a3728] rounded-[28px] p-6 flex flex-col gap-2.5 shadow-[0_25px_35px_-5px_rgba(74,55,40,0.35)]">
+    
+    <div class="text-center border-b-2 border-dashed border-[#4a3728] pb-2">
+      <h1 class="font-black text-lg tracking-tight m-0">ISADRAMEN RESTAURANT</h1>
+      <p class="text-[11px] font-extrabold text-[#716155] mt-0.5">ใบเสร็จรับเงิน (RECEIPT)</p>
+    </div>
+
+    <div class="flex justify-between text-xs font-black">
+      <span>TABLE: <strong class="text-sm"><%= payment.table_number || 'T05' %></strong></span>
+      <span>CARD: <strong><%= payment.card_id || 'CARD-05' %></strong></span>
+    </div>
+
+    <% 
+      const d = payment.payment_time ? new Date(payment.payment_time) : new Date();
+      const thaiYear = d.getFullYear() + 543;
+      const dateFormatted = `${d.getDate()}/${d.getMonth() + 1}/${thaiYear} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+    %>
+    <div class="flex justify-between text-[11px] font-bold text-[#8c7a6b] border-b border-dashed border-[#dfd5c6] pb-1.5">
+      <span><%= dateFormatted %></span>
+      <span>#REC-<%= String(payment.payment_id || 7).padStart(4, '0') %></span>
+    </div>
+
+    <div class="max-h-[180px] overflow-y-auto flex flex-col gap-2 border-b-2 border-dashed border-[#4a3728] pb-2.5">
+      <% if (payment.items && payment.items.length > 0) { %>
+        <% payment.items.forEach(function(item) { 
+             const custom = [item.options_text, item.toppings_text].filter(Boolean).join(' / ');
+        %>
+          <div class="flex justify-between items-start">
+            <div class="pr-2">
+              <div class="font-black text-[13px] text-[#4a3728]">
+                <%= item.menu_name %> <span class="text-[#716155] text-xs font-extrabold">x<%= item.quantity %></span>
+              </div>
+              <% if (custom) { %>
+                <div class="text-[10px] text-[#8c7a6b] font-bold mt-px">- <%= custom %></div>
+              <% } %>
+            </div>
+            <div class="font-black text-[13px] text-[#4a3728] whitespace-nowrap"><%= item.item_total %> ฿</div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="flex justify-between items-start">
+          <div class="pr-2">
+            <div class="font-black text-[13px] text-[#4a3728]">โชยุราเมง <span class="text-[#716155] text-xs font-extrabold">x1</span></div>
+            <div class="text-[10px] text-[#8c7a6b] font-bold mt-px">- ปานกลาง / ปานกลาง / เผ็ดมาก / ใส่เยอะ</div>
+          </div>
+          <div class="font-black text-[13px] text-[#4a3728] whitespace-nowrap">120 ฿</div>
+        </div>
+        <div class="flex justify-between items-start">
+          <div class="pr-2">
+            <div class="font-black text-[13px] text-[#4a3728]">ต้มยำชาชูเมง <span class="text-[#716155] text-xs font-extrabold">x1</span></div>
+            <div class="text-[10px] text-[#8c7a6b] font-bold mt-px">- ปานกลาง / ปานกลาง / ปานกลาง / ใส่</div>
+          </div>
+          <div class="font-black text-[13px] text-[#4a3728] whitespace-nowrap">160 ฿</div>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="flex flex-col gap-1 text-xs border-b-2 border-dashed border-[#4a3728] pb-2.5">
+      <div class="flex justify-between font-black text-sm">
+        <span>TOTAL:</span><span class="text-[#ea580c] text-[15px]"><%= payment.total_amount || 280 %> ฿</span>
+      </div>
+      <div class="flex justify-between font-extrabold"><span>Payment:</span><span><%= payment.payment_method || 'CASH' %></span></div>
+      <div class="flex justify-between font-extrabold"><span>Paid:</span><span><%= payment.amount_paid || 500 %> ฿</span></div>
+      <div class="flex justify-between font-black text-[#10b981]"><span>Change:</span><span><%= payment.change_amount || 220 %> ฿</span></div>
+    </div>
+
+    <p class="text-center text-[10px] text-[#8c7a6b] font-bold my-0.5">ขอบคุณที่ใช้บริการ / Thank you!</p>
+
+    <div class="flex gap-2.5 mt-1">
+      <button type="button" onclick="handlePrintAlert()" class="flex-1 h-10 bg-[#ea580c] border-2 border-[#9a3412] rounded-xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center gap-1.5">
+        <span>🖨️</span><span>พิมพ์ใบเสร็จ</span>
+      </button>
+      <a href="/cashier" class="flex-1 h-10 bg-white border-2 border-[#4a3728] rounded-xl text-[#4a3728] font-black text-xs shadow-[0_2px_0_#4a3728] hover:bg-[#fef9c3] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
+        เสร็จสิ้น (ปิด)
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    function handlePrintAlert() {
+      alert('🖨️ [จำลองการพิมพ์] ใบเสร็จรับเงินถูกส่งไปยังเครื่องพิมพ์เรียบร้อยแล้ว');
+    }
+  </script>
 </body>
 </html>

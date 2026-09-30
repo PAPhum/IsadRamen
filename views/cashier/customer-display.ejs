@@ -1,181 +1,725 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Customer Payment Display | Koumiya Ramen</title>
+
   <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Prompt Font เหมือนหน้าอื่น -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="[background:radial-gradient(circle_at_center,_#fff7ed_0%,_#fef3c7_50%,_#f5f5f4_100%)] h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col justify-center items-center">
 
-  <!-- Main Container: Full screen fitting iPad Pro / iPad (Zero black bars) -->
-  <div class="w-full h-full bg-white border-4 border-stone-800 ring-4 ring-amber-200/50 p-4 md:p-8 relative flex flex-col justify-between items-center text-center shadow-2xl rounded-2xl overflow-hidden flex-1">
-    
-    <!-- Top Bar: Brand, Table Switcher (for demo), Live Sync -->
-    <div class="w-full flex justify-between items-center border-b-2 border-stone-200 pb-3 shrink-0">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl md:text-3xl">ศLOGO</span>
-        <span class="font-black text-base md:text-xl tracking-wide text-stone-800">Koumiya Ramen</span>
+
+<body class="
+    [background:radial-gradient(circle_at_center,_#fff7ed_0%,_#fef3c7_50%,_#f5f5f4_100%)]
+    h-screen
+    w-screen
+    p-2
+    md:p-4
+    font-sans
+    select-none
+    overflow-hidden
+    flex
+    items-center
+    justify-center
+    text-[#4a3728]
+  ">
+
+
+  <!-- =========================
+       MAIN FRAME
+  ========================== -->
+  <div class="
+      w-full
+      h-full
+      bg-[#fffdfa]
+      border-4
+      border-[#4a3728]
+      ring-4
+      ring-[#fef3c7]
+      rounded-2xl
+      shadow-2xl
+      relative
+      overflow-hidden
+      flex
+      flex-col
+      p-4
+      md:p-7
+    ">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <div class="
+        w-full
+        flex
+        items-center
+        justify-start
+        shrink-0
+        pb-3
+        md:pb-4
+        border-b-2
+        border-[#dfd5c6]
+      ">
+
+      <!-- Logo + Restaurant Name -->
+      <div class="flex items-center gap-3">
+
+        <!-- Logo Box -->
+        <div class="
+            w-14
+            h-14
+            md:w-16
+            md:h-16
+            bg-[#fffdfa]
+            border-2
+            border-[#4a3728]
+            rounded-xl
+            p-1.5
+            flex
+            items-center
+            justify-center
+            shadow-[0_3px_0_#ea580c]
+          ">
+
+          <div class="
+              w-full
+              h-full
+              bg-[#fef3c7]
+              border
+              border-[#dfd5c6]
+              rounded-lg
+              overflow-hidden
+              flex
+              items-center
+              justify-center
+            ">
+
+            <img src="/images/logo.png" alt="Koumiya Ramen Logo" class="w-full h-full object-contain">
+
+          </div>
+
+        </div>
+
+
+        <!-- Restaurant Name -->
+        <div class="flex flex-col justify-center">
+
+          <div class="
+              font-black
+              text-lg
+              md:text-2xl
+              tracking-wide
+              text-[#4a3728]
+              leading-tight
+            ">
+            Koumiya Ramen
+          </div>
+
+        </div>
+
       </div>
+
     </div>
 
-    <!-- Center Content: Matching pay.png exactly (Table Number + QR/Cash Status + Total Amount) -->
-    <div class="flex-1 w-full flex flex-col justify-center items-center my-auto py-2 overflow-hidden min-h-0">
-      
-      <!-- 1. Table Number (เช่น "โต๊ะ 1" หรือ "โต๊ะ 5") -->
-      <h1 id="display-table-text" class="text-5xl md:text-7xl font-black text-stone-800 tracking-tight mb-2 md:mb-4 shrink-0">
-        โต๊ะ 1
-      </h1>
 
-      <!-- 2. Transfer Mode: แสดงคำว่า qrจ่าย + Mock QR Code ขนาดใหญ่ (เมื่อกดโอน) -->
-      <div id="qr-section" class="hidden flex flex-col items-center justify-center my-auto">
-        <div class="w-52 h-52 md:w-72 md:h-72 bg-white border-4 border-stone-800 rounded-2xl p-2 md:p-3 shadow-lg flex items-center justify-center">
-          <img src="/images/mock-qr.svg" alt="Mock QR Code" class="w-full h-full object-contain">
-        </div>
+    <!-- =========================
+         CENTER CONTENT
+    ========================== -->
+    <div class="
+        flex-1
+        w-full
+        flex
+        flex-col
+        items-center
+        justify-center
+        text-center
+        min-h-0
+        py-4
+      ">
+
+
+      <!-- =========================
+           TABLE NUMBER
+      ========================== -->
+      <div class="
+          bg-[#fef3c7]
+          border-2
+          border-[#4a3728]
+          rounded-xl
+          px-8
+          md:px-12
+          py-2
+          md:py-3
+          shadow-[0_3px_0_#ca8a04]
+          mb-5
+        ">
+
+        <h1 id="display-table-text" class="
+            text-4xl
+            md:text-6xl
+            font-black
+            text-[#4a3728]
+            tracking-tight
+            leading-none
+          ">
+          โต๊ะ 1
+        </h1>
+
       </div>
 
-      <!-- 3. Cash Mode: เมื่อเลือกชำระด้วยเงินสด (ไม่ต้องโชว์ QR) -->
-      <div id="cash-section" class="flex flex-col items-center justify-center my-auto">
-        <div class="text-2xl md:text-3xl font-black text-stone-800">
-          ชำระด้วยเงินสด (CASH)
-        </div>
-      </div>
 
-      <!-- 4. Standby Mode: กรณีไม่มีรายการค้างชำระ -->
-      <div id="standby-section" class="hidden flex flex-col items-center justify-center my-auto">
-        <div class="text-2xl md:text-3xl font-black text-stone-800">
-          Koumiya Ramen ยินดีต้อนรับ
-        </div>
-      </div>
+      <!-- =========================
+           PAYMENT AREA
+      ========================== -->
+      <div class="
+          flex-1
+          w-full
+          flex
+          flex-col
+          items-center
+          justify-center
+          text-center
+          min-h-0
+          py-4
+        ">
 
-      <!-- 5. Total Amount (ยอดเงิน: 120 ฿ / 600 ฿) -->
-      <div id="amount-section" class="shrink-0 mt-3 md:mt-4">
-        <div class="text-2xl md:text-4xl font-bold text-stone-700">
-          ยอดเงิน
+
+        <!-- QR PAYMENT -->
+        <div id="qr-section" class="
+            hidden
+            flex-col
+            items-center
+            justify-center
+          ">
+
+          <div class="
+              bg-white
+              border-4
+              border-[#4a3728]
+              rounded-2xl
+              p-3
+              shadow-[0_4px_0_#4a3728]
+            ">
+
+            <div class="
+                w-48
+                h-48
+                md:w-64
+                md:h-64
+                bg-white
+                flex
+                items-center
+                justify-center
+                rounded-xl
+                overflow-hidden
+              ">
+
+              <img src="/images/mock-qr.svg" alt="QR Code" class="w-full h-full object-contain">
+
+            </div>
+
+          </div>
+
+          <div class="
+              mt-3
+              bg-[#fef3c7]
+              border-2
+              border-[#4a3728]
+              rounded-xl
+              px-5
+              py-1.5
+              font-bold
+              text-[#4a3728]
+            ">
+            สแกน QR Code เพื่อชำระเงิน
+          </div>
+
         </div>
-        <div class="text-5xl md:text-7xl font-black text-orange-600 tracking-tight mt-0.5">
-          <span id="display-amount">0</span> ฿
+
+
+        <!-- CASH PAYMENT -->
+        <div id="cash-section" class="
+            flex
+            flex-col
+            items-center
+            justify-center
+          ">
+
+          <div class="
+              bg-[#fef3c7]
+              border-2
+              border-[#4a3728]
+              rounded-2xl
+              px-8
+              md:px-12
+              py-4
+              md:py-5
+              shadow-[0_3px_0_#4a3728]
+            ">
+
+            <div class="
+                text-2xl
+                md:text-3xl
+                font-black
+                text-[#4a3728]
+              ">
+              ชำระด้วยเงินสด
+            </div>
+
+            <div class="
+                text-sm
+                md:text-base
+                font-medium
+                text-[#8c7a6b]
+                mt-1
+              ">
+              CASH
+            </div>
+
+          </div>
+
         </div>
+
+
+        <!-- STANDBY -->
+        <div id="standby-section" class="
+            hidden
+            flex-col
+            items-center
+            justify-center
+          ">
+
+          <div class="
+              bg-[#fffdfa]
+              border-2
+              border-[#4a3728]
+              rounded-2xl
+              px-8
+              md:px-12
+              py-5
+              shadow-[0_3px_0_#4a3728]
+            ">
+
+            <div class="
+                text-2xl
+                md:text-3xl
+                font-black
+                text-[#4a3728]
+              ">
+              Koumiya Ramen
+            </div>
+
+            <div class="
+                text-xl
+                md:text-2xl
+                font-bold
+                text-[#8c7a6b]
+                mt-1
+              ">
+              ยินดีต้อนรับ
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             TOTAL PAYMENT
+        ========================== -->
+        <div id="amount-section" class="
+            shrink-0
+            mt-7
+            md:mt-9
+          ">
+
+          <div class="
+              text-xl
+              md:text-3xl
+              font-bold
+              text-[#716155]
+            ">
+            ยอดชำระ
+          </div>
+
+          <div class="
+              text-5xl
+              md:text-7xl
+              font-black
+              text-[#ea580c]
+              tracking-tight
+              mt-1
+            ">
+
+            <span id="display-amount">0</span>
+            ฿
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <div class="
+        w-full
+        border-t-2
+        border-[#dfd5c6]
+        pt-2
+        text-center
+        shrink-0
+      ">
+
+      <span class="
+          text-xs
+          md:text-sm
+          font-medium
+          text-[#8c7a6b]
+        ">
+        ขอบคุณที่ใช้บริการ Koumiya Ramen
+      </span>
+
+    </div>
+
 
   </div>
 
-  <script>
-    let currentTableId = <%= currentTableId %>;
-    let paymentMode = 'CASH'; // 'CASH' or 'TRANSFER'
 
-    // ฟังก์ชันจัดรูปแบบเลขโต๊ะให้เป็นภาษาไทย เช่น 'T01' -> 'โต๊ะ 1', 'T05' -> 'โต๊ะ 5'
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+  <script>
+
+    let currentTableId = <%= currentTableId %>;
+    let paymentMode = 'CASH';
+
+
+    // ========================================
+    // จัดรูปแบบเลขโต๊ะ
+    // ========================================
     function formatTableNumber(rawStr) {
+
       if (!rawStr) return 'โต๊ะ -';
-      const cleanNum = parseInt(String(rawStr).replace(/\D/g, ''), 10);
-      return isNaN(cleanNum) ? `โต๊ะ ${rawStr}` : `โต๊ะ ${cleanNum}`;
+
+      const cleanNum =
+        parseInt(String(rawStr).replace(/\D/g, ''), 10);
+
+      return isNaN(cleanNum)
+        ? `โต๊ะ ${rawStr}`
+        : `โต๊ะ ${cleanNum}`;
     }
 
+
+    // ========================================
+    // เปลี่ยนรูปแบบการชำระเงิน
+    // ========================================
     function setPaymentMode(mode) {
+
       paymentMode = mode;
-      const qrSection = document.getElementById('qr-section');
-      const cashSection = document.getElementById('cash-section');
+
+      const qrSection =
+        document.getElementById('qr-section');
+
+      const cashSection =
+        document.getElementById('cash-section');
+
 
       if (paymentMode === 'TRANSFER') {
+
         qrSection.classList.remove('hidden');
+        qrSection.classList.add('flex');
+
         cashSection.classList.add('hidden');
+        cashSection.classList.remove('flex');
+
       } else {
+
         qrSection.classList.add('hidden');
+        qrSection.classList.remove('flex');
+
         cashSection.classList.remove('hidden');
+        cashSection.classList.add('flex');
+
       }
+
     }
 
-    // BroadcastChannel รับข้อความจากหน้าแคชเชียร์แบบ Real-time (0ms)
-    const cashierBc = new BroadcastChannel('cashier_display_sync');
+
+    // ========================================
+    // BroadcastChannel
+    // ========================================
+    const cashierBc =
+      new BroadcastChannel('cashier_display_sync');
+
+
     cashierBc.onmessage = (event) => {
-      if (event.data && event.data.type === 'PAYMENT_METHOD') {
+
+      if (
+        event.data &&
+        event.data.type === 'PAYMENT_METHOD'
+      ) {
+
         if (event.data.table_id) {
-          currentTableId = event.data.table_id;
-          const selectEl = document.getElementById('table-select');
-          if (selectEl) selectEl.value = currentTableId;
+
+          currentTableId =
+            event.data.table_id;
+
         }
-        setPaymentMode(event.data.payment_method || 'CASH');
+
+        setPaymentMode(
+          event.data.payment_method || 'CASH'
+        );
+
         fetchCustomerBill();
+
       }
+
     };
 
-    // localStorage Listener รับข้อความข้ามหน้าต่าง / ข้ามแท็บ
+
+    // ========================================
+    // LocalStorage Listener
+    // ========================================
     window.addEventListener('storage', (e) => {
-      if (e.key === 'cashier_display_state' && e.newValue) {
+
+      if (
+        e.key === 'cashier_display_state' &&
+        e.newValue
+      ) {
+
         try {
-          const data = JSON.parse(e.newValue);
+
+          const data =
+            JSON.parse(e.newValue);
+
+
           if (data.table_id) {
-            currentTableId = data.table_id;
-            const selectEl = document.getElementById('table-select');
-            if (selectEl) selectEl.value = currentTableId;
+
+            currentTableId =
+              data.table_id;
+
           }
-          setPaymentMode(data.payment_method || 'CASH');
+
+
+          setPaymentMode(
+            data.payment_method || 'CASH'
+          );
+
+
           fetchCustomerBill();
-        } catch (err) {}
+
+        } catch (err) { }
+
       }
+
     });
 
+
+    // ========================================
+    // เปลี่ยนโต๊ะ
+    // ========================================
     function changeDisplayTable(tableId) {
-      currentTableId = parseInt(tableId, 10);
+
+      currentTableId =
+        parseInt(tableId, 10);
+
       fetchCustomerBill();
+
     }
 
-    // ดึงข้อมูลบิลของโต๊ะปัจจุบันจาก Server (ไม่ใช้ innerHTML เด็ดขาด)
+
+    // ========================================
+    // ดึงข้อมูลบิล
+    // ========================================
     function fetchCustomerBill() {
-      fetch(`/cashier/api/table-bill?table_id=${currentTableId}`)
+
+      fetch(
+        `/cashier/api/table-bill?table_id=${currentTableId}`
+      )
+
         .then(res => res.json())
+
         .then(data => {
-          const tableTitleEl = document.getElementById('display-table-text');
-          const amountEl = document.getElementById('display-amount');
-          const standbySection = document.getElementById('standby-section');
-          const qrSection = document.getElementById('qr-section');
-          const cashSection = document.getElementById('cash-section');
-          const amountSection = document.getElementById('amount-section');
 
-          if (data.success && data.table_number) {
-            tableTitleEl.textContent = formatTableNumber(data.table_number);
-            amountEl.textContent = data.grand_total;
+          const tableTitleEl =
+            document.getElementById(
+              'display-table-text'
+            );
 
-            if (data.cashier_state && data.cashier_state.payment_method) {
-              setPaymentMode(data.cashier_state.payment_method);
+          const amountEl =
+            document.getElementById(
+              'display-amount'
+            );
+
+          const standbySection =
+            document.getElementById(
+              'standby-section'
+            );
+
+          const qrSection =
+            document.getElementById(
+              'qr-section'
+            );
+
+          const cashSection =
+            document.getElementById(
+              'cash-section'
+            );
+
+          const amountSection =
+            document.getElementById(
+              'amount-section'
+            );
+
+
+          if (
+            data.success &&
+            data.table_number
+          ) {
+
+            tableTitleEl.textContent =
+              formatTableNumber(
+                data.table_number
+              );
+
+
+            amountEl.textContent =
+              data.grand_total;
+
+
+            if (
+              data.cashier_state &&
+              data.cashier_state.payment_method
+            ) {
+
+              setPaymentMode(
+                data.cashier_state.payment_method
+              );
+
             }
 
-            if (data.items && data.items.length > 0) {
+
+            if (
+              data.items &&
+              data.items.length > 0
+            ) {
+
               standbySection.classList.add('hidden');
+
               amountSection.classList.remove('hidden');
-              if (paymentMode === 'TRANSFER') {
+
+
+              if (
+                paymentMode === 'TRANSFER'
+              ) {
+
                 qrSection.classList.remove('hidden');
+                qrSection.classList.add('flex');
+
                 cashSection.classList.add('hidden');
+                cashSection.classList.remove('flex');
+
               } else {
+
                 qrSection.classList.add('hidden');
+                qrSection.classList.remove('flex');
+
                 cashSection.classList.remove('hidden');
+                cashSection.classList.add('flex');
+
               }
+
             } else {
-              // กรณีโต๊ะนี้ไม่มีรายการค้างชำระ
+
               standbySection.classList.remove('hidden');
+              standbySection.classList.add('flex');
+
               qrSection.classList.add('hidden');
+              qrSection.classList.remove('flex');
+
               cashSection.classList.add('hidden');
+              cashSection.classList.remove('flex');
+
               amountEl.textContent = '0';
+
             }
+
           } else {
-            tableTitleEl.textContent = `โต๊ะ ${currentTableId}`;
+
+            tableTitleEl.textContent =
+              `โต๊ะ ${currentTableId}`;
+
             amountEl.textContent = '0';
+
             standbySection.classList.remove('hidden');
+            standbySection.classList.add('flex');
+
             qrSection.classList.add('hidden');
+            qrSection.classList.remove('flex');
+
             cashSection.classList.add('hidden');
+            cashSection.classList.remove('flex');
+
           }
+
         })
-        .catch(err => console.error('Fetch customer display error:', err));
+
+        .catch(err =>
+          console.error(
+            'Fetch customer display error:',
+            err
+          )
+        );
+
     }
 
-    // ดึงสถานะเริ่มต้น
+
+    // ========================================
+    // เริ่มต้น
+    // ========================================
     setPaymentMode('CASH');
+
     fetchCustomerBill();
-    // Auto-sync polling ทุก 2.5 วินาที
-    setInterval(fetchCustomerBill, 2500);
+
+
+    // Auto Sync ทุก 2.5 วินาที
+    setInterval(
+      fetchCustomerBill,
+      2500
+    );
+
   </script>
+
 </body>
+
 </html>

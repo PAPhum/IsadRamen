@@ -3,28 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้าเริ่มต้น - โต๊ะ <%= table.table_number %> | IsadRamen</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>ยินดีต้อนรับ | Koumiya Ramen</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Prompt', 'sans-serif'] } } }
+    }
+  </script>
 </head>
-<body onclick="window.location.href='/customer/<%= table.table_number %>/menu'" class="bg-gray-100 h-screen w-screen p-2 md:p-4 font-sans select-none cursor-pointer overflow-hidden flex flex-col">
+<body onclick="window.location.href='/customer/<%= table.table_number %>/menu'" class="bg-gradient-to-br from-[#fff7ed] via-[#fef3c7] to-[#f5f5f4] min-h-screen flex items-center justify-center p-4 select-none text-[#4a3728] font-sans cursor-pointer">
 
-  <!-- กรอบหน้าจอแท็บเล็ต แนวนอน เต็มหน้าจอ iPad (คลิกได้ทั้งหน้าจอ) -->
-  <a href="/customer/<%= table.table_number %>/menu" class="w-full h-full bg-white border-4 border-black relative flex flex-col items-center justify-center shadow-2xl rounded-sm cursor-pointer group flex-1">
+  <!-- Tablet Frame -->
+  <a href="/customer/<%= table.table_number %>/menu" class="w-full max-w-[1080px] h-[740px] bg-[#fffdfa] border-2 border-[#4a3728] rounded-[32px] p-8 relative flex flex-col items-center justify-between shadow-[0_12px_30px_-5px_rgba(74,55,40,0.08)] overflow-hidden cursor-pointer group">
     
-    <!-- ปุ่มกลางจอ: กดเพื่อเลือกเมนู -->
-    <div class="text-center px-12 py-16 rounded-3xl group-hover:bg-gray-50 transition transform group-hover:scale-105 active:scale-95">
-      <div class="text-7xl mb-4">LOGO</div>
-      <h1 class="text-5xl md:text-6xl font-black text-black tracking-tight group-hover:text-red-700 transition">
-        กดเพื่อเลือกเมนู
-      </h1>
-      <p class="text-gray-400 font-medium text-lg mt-4">แตะหน้าจอเพื่อเริ่มสั่งอาหาร</p>
+    <!-- Header เล็กน่ารักด้านบน -->
+    <div class="flex items-center gap-2 pt-2">
+      <span class="text-xs font-black tracking-widest text-[#a46700] bg-[#fef3c7] border border-[#fde68a] px-4 py-1.5 rounded-full">
+        KOUMIYA RAMEN
+      </span>
     </div>
 
-    <!-- หมายเลขโต๊ะ มุมขวาล่าง ตาม Wireframe -->
-    <div class="absolute bottom-4 right-4 bg-gray-200 border-2 border-gray-400 px-6 py-2 text-base font-bold text-black rounded-lg shadow-sm">
-      โต๊ะ <%= table.table_number %>
+    <!-- ส่วนเนื้อหาหลักตรงกลาง (โลโก้ไร้กรอบเหลี่ยม + ปุ่มใหญ่เต็มตา) -->
+    <div class="flex flex-col items-center text-center max-w-[600px] -mt-4">
+      
+      <!-- ถ้วยราเมงขนาดใหญ่ พร้อมเอฟเฟกต์เด้งดุ๊กดิ๊กเวลา Hover -->
+      <div class="w-56 h-56 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-300">
+        <img src="/images/logo.png" alt="Koumiya Ramen" class="w-full h-full object-contain drop-shadow-[0_8px_16px_rgba(74,55,40,0.12)]">
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-black text-[#4a3728] tracking-tight group-hover:text-[#ea580c] transition-colors duration-200">
+        ยินดีต้อนรับ
+      </h1>
+      
+      <p class="text-[#716155] font-extrabold text-base md:text-lg mt-2">
+        "เติมเต็มความสุขในทุกคำที่ลิ้มลอง"
+      </p>
+
+      <!-- ปุ่มกดขนาดใหญ่ ชัดเจน มีมิติ 3D -->
+      <div class="mt-8 px-12 py-3.5 bg-[#ea580c] border-2 border-[#9a3412] rounded-full text-white font-black text-lg shadow-[0_4px_0_#9a3412] group-hover:bg-[#c2410c] group-hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition duration-150 flex items-center gap-2">
+        <span>แตะหน้าจอเพื่อเริ่มสั่งอาหาร</span>
+      </div>
     </div>
+
+    <!-- แถบด้านล่าง -->
+    <div class="w-full flex justify-between items-center text-xs font-bold text-[#8c7a6b] pb-1 border-t border-[#f0e6d6] pt-3">
+      <span>Touch anywhere to begin</span>
+      <span class="bg-[#fef3c7] border border-[#4a3728] px-4 py-1 rounded-full text-[#4a3728] font-black">
+        โต๊ะ <%= table.table_number %>
+      </span>
+    </div>
+
   </a>
 
 </body>

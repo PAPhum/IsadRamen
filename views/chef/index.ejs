@@ -4,51 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ห้องครัว (Chef KDS) | IsadRamen</title>
-  <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: { fontFamily: { sans: ['Prompt', 'sans-serif'] } }
+      }
+    }
+  </script>
+  <style>
+    /* แถบเลื่อน Scrollbar สีนวลครีมเหลืองอ่อน มนสั้น สวยงาม */
+    .custom-chef-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-chef-scroll::-webkit-scrollbar-track {
+      background: #fffdfa;
+      border-radius: 8px;
+    }
+    .custom-chef-scroll::-webkit-scrollbar-thumb {
+      background-color: #fde047;
+      border: 1.5px solid #ca8a04;
+      border-radius: 8px;
+    }
+    .custom-chef-scroll::-webkit-scrollbar-thumb:hover {
+      background-color: #facc15;
+    }
+  </style>
 </head>
-<body class="[background:radial-gradient(circle_at_center,_#fff7ed_0%,_#fef3c7_45%,_#f5f5f4_100%)] h-screen w-screen p-2 md:p-4 font-sans select-none overflow-hidden flex flex-col">
+<body class="bg-gradient-to-br from-[#fff7ed] via-[#fef3c7] to-[#f5f5f4] min-h-screen flex items-center justify-center p-4 select-none text-[#4a3728] font-sans">
 
   <!-- Chef Tablet / Monitor Container -->
-  <div class="w-full h-full bg-white border-2 border-[#4a3728] shadow-[0_12px_28px_rgba(74,55,40,0.10)] ring-4 ring-amber-200/40 p-4 md:p-6 relative flex flex-col justify-between rounded-sm overflow-hidden flex-1">
+  <div class="w-full max-w-[1080px] h-[760px] bg-white border-2 border-[#4a3728] rounded-[28px] p-6 relative flex flex-col justify-between shadow-[0_10px_25px_-5px_rgba(74,55,40,0.06)] overflow-hidden">
     
     <!-- ======================================================== -->
     <!-- VIEW 1: คิวรายการอาหาร (Queue View) -->
     <!-- ======================================================== -->
     <div id="view-queue" class="flex-1 flex flex-col justify-between h-full min-h-0">
       <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-        <div class="mb-4 flex items-center justify-center gap-3">
-          <!-- กล่องไอคอน -->
-          <div class="bg-amber-100 border-2 border-[#4a3728] shadow-[0_2px_0_#4a3728] p-1.5 rounded-lg text-xl flex items-center justify-center">
-            🍜
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b-2 border-[#4a3728] pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl border-2 border-[#4a3728] bg-[#fef3c7] flex items-center justify-center text-2xl shadow-[0_2px_0_#4a3728]">👨‍🍳</div>
+            <h1 class="text-2xl font-black text-[#4a3728]">คิวรายการอาหาร (Kitchen Queue)</h1>
+            <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full border border-[#fde68a]">
+              Chef KDS
+            </span>
           </div>
-          <h2 class="text-center font-black text-2xl tracking-wide text-[#4a3728]">คิวรายการอาหาร</h2>
         </div>
 
-        <!-- ตารางคิวอาหาร -->
-        <div class="flex-1 border border-[#4a3728] overflow-hidden flex flex-col min-h-0 rounded-sm">
-          <table class="w-full h-full border-collapse text-xs md:text-sm text-center table-fixed">
-            <thead>
-              <tr class="border-b-2 border-[#4a3728] bg-[#fbe8b3]/90 font-bold h-10 text-[#4a3728]">
-                <th class="border-r border-[#edd69a] p-2 w-16">ID</th>
-                <th class="border-r border-[#edd69a] p-2 w-20">โต๊ะ</th>
-                <th class="border-r border-[#edd69a] p-2 text-left pl-4">รายการอาหาร</th>
-                <th class="border-r border-[#edd69a] p-2 w-20">จำนวน</th>
-                <th class="p-2 w-28">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody id="queue-tbody" class="h-full">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
+        <!-- ตารางคิวอาหาร (ตรึงเริ่มต้น 8 แถว และเลื่อนลงได้) -->
+        <div class="flex-1 border-2 border-[#4a3728] rounded-2xl overflow-hidden flex flex-col min-h-0 bg-white shadow-[0_1.5px_0_#4a3728]">
+          <div class="overflow-y-auto flex-1 h-full custom-chef-scroll">
+            <table class="w-full border-collapse text-xs md:text-sm text-center table-fixed">
+              <thead class="sticky top-0 z-10">
+                <tr class="bg-[#fef3c7] text-[#4a3728] font-extrabold h-11 border-b-2 border-[#4a3728]">
+                  <th class="border-r border-[#4a3728] w-16">ID</th>
+                  <th class="border-r border-[#4a3728] w-20">โต๊ะ</th>
+                  <th class="border-r border-[#4a3728] text-left pl-4">รายการอาหาร</th>
+                  <th class="border-r border-[#4a3728] w-20">จำนวน</th>
+                  <th class="w-28">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="queue-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- แถบด้านล่าง: ปุ่มประวัติรายการ -->
-      <div class="flex justify-start items-center border-t-2 border-[#4a3728]/30 pt-4 mt-4">
+      <div class="flex justify-start items-center border-t border-[#dfd5c6] pt-4 mt-3">
         <button onclick="switchChefView('history')" 
-                class="bg-emerald-50/80 border-2 border-emerald-300 text-emerald-800 hover:bg-emerald-100 font-bold px-8 py-2.5 rounded-xl transition text-sm cursor-pointer shadow-sm">
-          ประวัติรายการ
+                class="h-12 bg-white border-2 border-[#4a3728] hover:bg-[#fef9c3] font-black px-10 rounded-2xl text-[#4a3728] text-base shadow-[0_3px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
+          ประวัติรายการอาหาร
         </button>
       </div>
     </div>
@@ -58,142 +91,165 @@
     <!-- ======================================================== -->
     <div id="view-history" class="hidden flex-1 flex flex-col justify-between h-full min-h-0">
       <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-        <div class="mb-4 flex items-center justify-center gap-3">
-          <div class="bg-amber-100 border-2 border-[#4a3728] shadow-[0_2px_0_#4a3728] p-1.5 rounded-lg text-xl flex items-center justify-center">
-            📋
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b-2 border-[#4a3728] pb-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl border-2 border-[#4a3728] bg-[#fef3c7] flex items-center justify-center text-2xl shadow-[0_2px_0_#4a3728]">👨‍🍳</div>
+            <h1 class="text-2xl font-black text-[#4a3728]">ประวัติรายการอาหารที่เสร็จแล้ว</h1>
+            <span class="bg-[#e8f8f2] text-[#059669] text-xs font-extrabold px-3 py-1 rounded-full border border-[#a7e8ce]">
+              Completed
+            </span>
           </div>
-          <h2 class="text-center font-black text-2xl tracking-wide text-[#4a3728]">ประวัติรายการอาหาร</h2>
         </div>
 
-        <!-- ตารางประวัติที่ทำเสร็จแล้ว -->
-        <div class="flex-1 border border-[#4a3728] overflow-hidden flex flex-col min-h-0 rounded-sm">
-          <table class="w-full h-full border-collapse text-xs md:text-sm text-center table-fixed">
-            <thead>
-              <tr class="border-b-2 border-[#4a3728] bg-[#fbe8b3]/90 font-bold h-10 text-[#4a3728]">
-                <th class="border-r border-[#edd69a] p-2 w-16">ID</th>
-                <th class="border-r border-[#edd69a] p-2 w-20">โต๊ะ</th>
-                <th class="border-r border-[#edd69a] p-2 text-left pl-4">รายการอาหาร</th>
-                <th class="border-r border-[#edd69a] p-2 w-20">จำนวน</th>
-                <th class="p-2 w-28">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody id="history-tbody" class="h-full">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
+        <!-- ตารางประวัติ (ตรึงเริ่มต้น 8 แถว และเลื่อนลงได้) -->
+        <div class="flex-1 border-2 border-[#4a3728] rounded-2xl overflow-hidden flex flex-col min-h-0 bg-white shadow-[0_1.5px_0_#4a3728]">
+          <div class="overflow-y-auto flex-1 h-full custom-chef-scroll">
+            <table class="w-full border-collapse text-xs md:text-sm text-center table-fixed">
+              <thead class="sticky top-0 z-10">
+                <tr class="bg-[#fef3c7] text-[#4a3728] font-extrabold h-11 border-b-2 border-[#4a3728]">
+                  <th class="border-r border-[#4a3728] w-16">ID</th>
+                  <th class="border-r border-[#4a3728] w-20">โต๊ะ</th>
+                  <th class="border-r border-[#4a3728] text-left pl-4">รายการอาหาร</th>
+                  <th class="border-r border-[#4a3728] w-20">จำนวน</th>
+                  <th class="w-28">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- แถบด้านล่าง: ปุ่มย้อนกลับ -->
-      <div class="flex justify-start items-center border-t-2 border-[#4a3728]/30 pt-4 mt-4">
+      <div class="flex justify-start items-center border-t border-[#dfd5c6] pt-4 mt-3">
         <button onclick="switchChefView('queue')" 
-                class="bg-stone-50 border-2 border-[#4a3728] text-[#4a3728] shadow-[0_2px_0_#4a3728] hover:bg-stone-100 font-bold px-8 py-2.5 rounded-xl transition text-sm cursor-pointer">
-          ย้อนกลับ
+                class="h-12 bg-white border-2 border-[#4a3728] hover:bg-[#fef9c3] font-black px-10 rounded-2xl text-[#4a3728] text-base shadow-[0_3px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
+          กลับไปหน้าคิว
         </button>
       </div>
     </div>
 
     <!-- ======================================================== -->
-    <!-- DETAIL MODAL: เมื่อกดที่รายการอาหาร -->
+    <!-- DETAIL MODAL: ป็อปอัปแสดงรายละเอียด -->
     <!-- ======================================================== -->
-    <div id="chef-detail-modal" class="hidden absolute inset-0 bg-white border-4 border-[#4a3728] p-8 flex flex-col justify-between z-40">
-      <div>
-        <h2 class="text-center font-black text-3xl mb-6 text-[#4a3728]" id="detail-modal-title">
-          ID: 005
-        </h2>
+    <div id="chef-detail-modal" class="hidden absolute inset-0 bg-[#4a3728]/45 backdrop-blur-[4px] items-center justify-center p-6 z-40">
+      <div class="bg-white border-2 border-[#4a3728] rounded-[32px] p-7 w-full max-w-[840px] shadow-[0_25px_35px_-5px_rgba(74,55,40,0.35)] flex flex-col justify-between gap-6 relative">
+        
+        <!-- ปุ่มปิดมุมขวาบน -->
+        <button onclick="closeDetailModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full border-1.5 border-[#4a3728] bg-white text-[#4a3728] font-black hover:bg-[#fef9c3] transition cursor-pointer flex items-center justify-center">✕</button>
 
-        <!-- ตารางสรุปย่อ -->
-        <table class="w-full border-collapse border border-[#4a3728] text-sm text-center mb-6">
-          <thead>
-            <tr class="border-b-2 border-[#4a3728] bg-[#fbe8b3]/90 font-bold text-[#4a3728]">
-              <th class="border-r border-[#edd69a] p-2 w-20">ID</th>
-              <th class="border-r border-[#edd69a] p-2 w-24">โต๊ะ</th>
-              <th class="border-r border-[#edd69a] p-2 text-left pl-4">รายการอาหาร</th>
-              <th class="border-r border-[#edd69a] p-2 w-20">จำนวน</th>
-              <th class="p-2 w-28">สถานะ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b border-stone-200">
-              <td class="border-r border-stone-200 p-3 font-bold text-stone-600 bg-stone-50/60" id="detail-id">-</td>
-              <td class="border-r border-stone-200 p-3 font-black text-orange-600 bg-orange-50/40 text-base" id="detail-table">-</td>
-              <td class="border-r border-stone-200 p-3 text-left pl-4 font-bold text-[#4a3728]" id="detail-menu">-</td>
-              <td class="border-r border-stone-200 p-3 font-bold text-[#4a3728]" id="detail-qty">-</td>
-              <td class="p-3 font-bold text-[#4a3728]" id="detail-status">-</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="flex flex-col gap-5 pt-1">
+          
+          <!-- ข้อความแสดง ID ด้านบนสุด -->
+          <div>
+            <span class="bg-[#fef3c7] border-1.5 border-[#d97706] text-[#a16207] font-black text-xs px-3 py-1 rounded-full shadow-[0_1px_0_#d97706]">
+              ORDER ID: <span id="detail-modal-top-id">005</span>
+            </span>
+          </div>
 
-        <!-- รายละเอียดการปรับแต่งและท็อปปิ้ง -->
-        <div class="bg-amber-50/50 border-2 border-dashed border-amber-300 p-4 rounded-lg space-y-2">
-          <p class="font-bold text-[#4a3728] text-sm">รายละเอียดการสั่ง:</p>
-          <div id="detail-customization" class="text-sm text-stone-600 pl-4 space-y-1">
-            <!-- Rendered by JS -->
+          <!-- 1. แถบสรุปคำสั่งซื้อทรงมนแคปซูล -->
+          <div class="border-2 border-[#4a3728] rounded-2xl overflow-hidden shadow-[0_1.5px_0_#4a3728]">
+            <table class="w-full border-collapse text-xs md:text-sm text-center table-fixed">
+              <thead>
+                <tr class="bg-[#fef3c7] text-[#4a3728] font-extrabold h-10 border-b-2 border-[#4a3728]">
+                  <th class="border-r border-[#4a3728] w-20">ID</th>
+                  <th class="border-r border-[#4a3728] w-24">โต๊ะ</th>
+                  <th class="border-r border-[#4a3728] text-left pl-4">รายการอาหาร</th>
+                  <th class="border-r border-[#4a3728] w-20">จำนวน</th>
+                  <th class="w-32">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bg-white h-12">
+                  <td class="border-r border-[#e8decb] font-bold text-[#716155]" id="detail-id">005</td>
+                  <td class="border-r border-[#e8decb] font-black text-[#ea580c] text-base bg-[#fff9f5]" id="detail-table">T05</td>
+                  <td class="border-r border-[#e8decb] text-left pl-4 font-black text-[#2d221b]" id="detail-menu">ทงคตสึราเมง</td>
+                  <td class="border-r border-[#e8decb] font-black text-base text-[#2d221b]" id="detail-qty">1</td>
+                  <td class="p-2 font-black text-sm" id="detail-status">
+                    <!-- แสดงสถานะผ่าน JS -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 2. กล่องรายละเอียดการปรุงและท็อปปิ้ง เส้นประสีเหลืองทอง -->
+          <div class="bg-[#fffdf0] border-2 border-dashed border-[#facc15] p-5 rounded-2xl space-y-2">
+            <div class="flex items-center gap-1.5 font-black text-[#4a3728] text-sm">
+              <span>📝</span>
+              <span>รายละเอียดการปรุงและท็อปปิ้ง:</span>
+            </div>
+            <div id="detail-customization" class="text-xs md:text-sm text-[#4a3728] pl-2 font-bold space-y-1">
+              <!-- Rendered via JS -->
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Action Buttons -->
-      <div>
-        <!-- ปุ่มหลักสำหรับ Queue / Prepare / Finish -->
-        <div id="detail-actions" class="flex justify-center items-center gap-6 mb-4">
-          <!-- Dynamic Buttons will be inserted here -->
+        <!-- 3. Action Buttons & ปุ่มปิดหน้าต่าง -->
+        <div class="flex flex-col gap-3 pt-2">
+          <div id="detail-actions" class="w-full flex justify-center items-center gap-4">
+            <!-- Dynamic Buttons will be inserted here -->
+          </div>
+
+          <div class="flex justify-start border-t border-[#dfd5c6] pt-3 mt-1">
+            <button onclick="closeDetailModal()" 
+                    class="h-10 bg-white border-2 border-[#4a3728] hover:bg-[#fef9c3] font-black px-6 rounded-xl text-[#4a3728] text-xs shadow-[0_1.5px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer">
+              ปิดหน้าต่าง
+            </button>
+          </div>
         </div>
 
-        <!-- ปุ่มย้อนกลับ มุมล่างซ้าย -->
-        <div class="flex justify-start border-t border-[#4a3728]/30 pt-4">
-          <button onclick="closeDetailModal()" 
-                  class="bg-stone-50 border-2 border-[#4a3728] text-[#4a3728] shadow-[0_2px_0_#4a3728] hover:bg-stone-100 font-bold px-8 py-2.5 rounded-xl transition text-sm">
-            ย้อนกลับ
-          </button>
-        </div>
       </div>
     </div>
 
     <!-- ======================================================== -->
-    <!-- FOOD SLIP MODAL: ใบรายการอาหารแบบจำลอง -->
+    <!-- FOOD SLIP MODAL: ใบรายการอาหารสำหรับส่งโต๊ะ -->
     <!-- ======================================================== -->
-    <div id="food-slip-modal" class="hidden absolute inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div class="bg-white border-2 border-amber-200/90 ring-4 ring-amber-100/70 w-[380px] p-6 rounded-lg shadow-2xl flex flex-col justify-between font-mono">
+    <div id="food-slip-modal" class="hidden absolute inset-0 bg-[#4a3728]/45 backdrop-blur-[4px] items-center justify-center p-4 z-50">
+      <div class="bg-white w-[390px] border-2 border-[#4a3728] rounded-[28px] p-6 shadow-[0_25px_35px_-5px_rgba(74,55,40,0.35)] flex flex-col justify-between gap-3">
         <div>
-          <div class="text-center border-b-2 border-dashed border-[#4a3728] pb-3 mb-3">
-            <h3 class="font-black text-xl text-[#4a3728] tracking-widest">FOOD SLIP</h3>
-            <p class="text-xs text-[#4a3728]/70 font-sans mt-0.5">ใบรายการอาหารสำหรับส่งโต๊ะ</p>
+          <div class="text-center border-b-2 border-dashed border-[#4a3728] pb-2 mb-2.5">
+            <h3 class="font-black text-lg text-[#4a3728] tracking-widest">FOOD SLIP</h3>
+            <p class="text-[11px] font-extrabold text-[#716155] mt-0.5">ใบรายการอาหารสำหรับส่งโต๊ะ</p>
           </div>
 
-          <div class="bg-amber-50/40 border border-amber-200/70 p-2.5 rounded-md mb-3 space-y-1 text-sm border-dashed">
-            <div class="flex justify-between font-bold text-base items-center">
-              <span class="text-[#4a3728]">TABLE:</span>
-              <span id="slip-table" class="bg-white border border-orange-200 text-orange-600 font-black px-2 py-0.5 rounded">T05</span>
+          <div class="space-y-1 text-xs border-b border-dashed border-[#dfd5c6] pb-2 mb-2.5 font-bold">
+            <div class="flex justify-between text-sm">
+              <span class="text-[#716155]">TABLE:</span>
+              <span id="slip-table" class="text-[#ea580c] font-black text-base">T05</span>
             </div>
-            <div class="flex justify-between text-xs text-[#4a3728]/80">
+            <div class="flex justify-between text-xs text-[#8c7a6b]">
               <span>ITEM ID:</span>
               <span id="slip-id">#005</span>
             </div>
-            <div class="flex justify-between text-xs text-[#4a3728]/80">
+            <div class="flex justify-between text-xs text-[#8c7a6b]">
               <span>TIME:</span>
               <span id="slip-time">19:30</span>
             </div>
           </div>
 
-          <div class="border-b-2 border-dashed border-[#4a3728] pb-3 mb-4 space-y-2">
-            <div class="flex justify-between font-black text-lg text-[#4a3728]">
+          <div class="border-b-2 border-dashed border-[#4a3728] pb-3 mb-2 space-y-1.5">
+            <div class="flex justify-between font-black text-base text-[#2d221b]">
               <span id="slip-menu">ทงคตสึราเมง</span>
-              <span id="slip-qty">x1</span>
+              <span id="slip-qty" class="text-[#ea580c]">x1</span>
             </div>
-            <div id="slip-details" class="text-xs text-[#4a3728]/80 pl-2 space-y-1 font-sans">
+            <div id="slip-details" class="text-xs text-[#716155] pl-2 space-y-1 font-bold">
               <!-- Options & Toppings -->
             </div>
           </div>
         </div>
 
-        <div class="flex gap-3 pt-2">
+        <div class="flex gap-2.5 mt-1">
           <button onclick="printFoodSlip()" 
-                  class="flex-1 bg-amber-500 hover:bg-amber-600 border-2 border-[#4a3728] text-white shadow-[0_3px_0_#4a3728] font-bold py-2.5 rounded-lg text-sm transition">
+                  class="flex-1 h-11 bg-[#ea580c] border-2 border-[#9a3412] rounded-xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
             พิมพ์ใบจำลอง
           </button>
           <button onclick="closeFoodSlip()" 
-                  class="flex-1 bg-white border-2 border-stone-300 text-stone-700 shadow-[0_3px_0_#d6d3d1] hover:bg-stone-50 font-bold py-2.5 rounded-lg text-sm transition">
+                  class="flex-1 h-11 bg-white border-2 border-[#4a3728] rounded-xl text-[#4a3728] font-black text-xs shadow-[0_2px_0_#4a3728] hover:bg-[#fef9c3] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
             ปิด
           </button>
         </div>
@@ -246,7 +302,7 @@
       return String(id).padStart(3, '0');
     }
 
-    // Render ตารางคิวรายการอาหาร (Queue View)
+    // Render ตารางคิวรายการอาหาร (8 แถว) พร้อมคอลัมน์โต๊ะสีส้มอ่อนละมุน
     function renderQueueTable() {
       const tbody = document.getElementById('queue-tbody');
       tbody.replaceChildren();
@@ -256,52 +312,50 @@
       for (let i = 0; i < totalSlots; i++) {
         const item = queueOrders[i];
         const tr = document.createElement('tr');
-        tr.className = 'border-b border-stone-200 hover:bg-amber-100/70 transition';
-        if (totalSlots === 8) {
-          tr.style.height = '12.5%';
-        }
+        tr.className = 'border-b border-[#e8decb] h-[58px] transition';
 
         if (item) {
-          tr.classList.add('cursor-pointer');
+          tr.classList.add('hover:bg-[#fffbeb]', 'cursor-pointer');
           tr.onclick = () => openDetailModal(item.order_item_id);
 
           const tdId = document.createElement('td');
-          tdId.className = 'border-r border-stone-200 font-bold text-stone-600 bg-stone-50/60 align-middle';
+          tdId.className = 'border-r border-[#e8decb] font-bold text-[#716155] align-middle';
           tdId.textContent = padId(item.order_item_id);
 
           const tdTable = document.createElement('td');
-          tdTable.className = 'border-r border-stone-200 font-black text-orange-600 bg-orange-50/40 text-base align-middle';
+          tdTable.className = 'border-r border-[#e8decb] font-black text-[#ea580c] text-base align-middle bg-[#fff9f5]';
           tdTable.textContent = item.table_number;
 
           const tdName = document.createElement('td');
-          tdName.className = 'border-r border-stone-200 text-left pl-4 align-middle';
+          tdName.className = 'border-r border-[#e8decb] text-left pl-4 align-middle';
           const nameDiv = document.createElement('div');
-          nameDiv.className = 'font-bold text-[#4a3728]';
+          nameDiv.className = 'font-black text-[#2d221b]';
           nameDiv.textContent = item.menu_name;
           tdName.appendChild(nameDiv);
 
           const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
           if (summaryDetail) {
             const detailDiv = document.createElement('div');
-            detailDiv.className = 'text-[11px] text-stone-500';
+            detailDiv.className = 'text-[11px] text-[#8c7a6b] font-bold';
             detailDiv.textContent = summaryDetail;
             tdName.appendChild(detailDiv);
           }
 
           const tdQty = document.createElement('td');
-          tdQty.className = 'border-r border-stone-200 font-bold text-[#4a3728] text-base align-middle';
+          tdQty.className = 'border-r border-[#e8decb] font-black text-base text-[#2d221b] align-middle';
           tdQty.textContent = item.quantity;
 
           const tdStatus = document.createElement('td');
-          tdStatus.className = 'p-2 font-bold text-xs md:text-sm text-[#4a3728] align-middle';
           const isPreparing = item.status === 'prepare';
+          tdStatus.className = `p-2 font-black text-xs md:text-sm align-middle ${isPreparing ? 'text-[#c2410c]' : 'text-[#0284c7]'}`;
           tdStatus.textContent = isPreparing ? 'กำลังทำ' : 'อยู่ในคิว';
 
           tr.append(tdId, tdTable, tdName, tdQty, tdStatus);
         } else {
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-stone-200 align-middle';
+            if (j === 1) td.className = 'border-r border-[#e8decb] bg-[#fff9f5] align-middle';
+            else if (j < 4) td.className = 'border-r border-[#e8decb] align-middle';
             tr.appendChild(td);
           }
         }
@@ -309,7 +363,7 @@
       }
     }
 
-    // Render ตารางประวัติรายการ (History View)
+    // Render ตารางประวัติรายการ (8 แถว)
     function renderHistoryTable() {
       const tbody = document.getElementById('history-tbody');
       tbody.replaceChildren();
@@ -319,51 +373,49 @@
       for (let i = 0; i < totalSlots; i++) {
         const item = historyOrders[i];
         const tr = document.createElement('tr');
-        tr.className = 'border-b border-stone-200 hover:bg-amber-100/70 transition';
-        if (totalSlots === 8) {
-          tr.style.height = '12.5%';
-        }
+        tr.className = 'border-b border-[#e8decb] h-[58px] transition';
 
         if (item) {
-          tr.classList.add('cursor-pointer');
+          tr.classList.add('hover:bg-[#fffbeb]', 'cursor-pointer');
           tr.onclick = () => openDetailModal(item.order_item_id);
 
           const tdId = document.createElement('td');
-          tdId.className = 'border-r border-stone-200 font-bold text-stone-600 bg-stone-50/60 align-middle';
+          tdId.className = 'border-r border-[#e8decb] font-bold text-[#716155] align-middle';
           tdId.textContent = padId(item.order_item_id);
 
           const tdTable = document.createElement('td');
-          tdTable.className = 'border-r border-stone-200 font-black text-orange-600 bg-orange-50/40 text-base align-middle';
+          tdTable.className = 'border-r border-[#e8decb] font-black text-[#ea580c] text-base align-middle bg-[#fff9f5]';
           tdTable.textContent = item.table_number;
 
           const tdName = document.createElement('td');
-          tdName.className = 'border-r border-stone-200 text-left pl-4 align-middle';
+          tdName.className = 'border-r border-[#e8decb] text-left pl-4 align-middle';
           const nameDiv = document.createElement('div');
-          nameDiv.className = 'font-bold text-[#4a3728]';
+          nameDiv.className = 'font-black text-[#2d221b]';
           nameDiv.textContent = item.menu_name;
           tdName.appendChild(nameDiv);
 
           const summaryDetail = [item.options_text, item.toppings_text].filter(Boolean).join(' | ');
           if (summaryDetail) {
             const detailDiv = document.createElement('div');
-            detailDiv.className = 'text-[11px] text-stone-500';
+            detailDiv.className = 'text-[11px] text-[#8c7a6b] font-bold';
             detailDiv.textContent = summaryDetail;
             tdName.appendChild(detailDiv);
           }
 
           const tdQty = document.createElement('td');
-          tdQty.className = 'border-r border-stone-200 font-bold text-[#4a3728] text-base align-middle';
+          tdQty.className = 'border-r border-[#e8decb] font-black text-base text-[#2d221b] align-middle';
           tdQty.textContent = item.quantity;
 
           const tdStatus = document.createElement('td');
-          tdStatus.className = 'p-2 font-bold text-xs md:text-sm text-[#4a3728] align-middle';
+          tdStatus.className = 'p-2 font-black text-xs md:text-sm text-[#059669] align-middle';
           tdStatus.textContent = 'เสร็จสิ้น';
 
           tr.append(tdId, tdTable, tdName, tdQty, tdStatus);
         } else {
           for (let j = 0; j < 5; j++) {
             const td = document.createElement('td');
-            if (j < 4) td.className = 'border-r border-stone-200 align-middle';
+            if (j === 1) td.className = 'border-r border-[#e8decb] bg-[#fff9f5] align-middle';
+            else if (j < 4) td.className = 'border-r border-[#e8decb] align-middle';
             tr.appendChild(td);
           }
         }
@@ -371,6 +423,7 @@
       }
     }
 
+    // Modal รายละเอียด
     function openDetailModal(orderItemId) {
       const all = [...queueOrders, ...historyOrders];
       const item = all.find(o => o.order_item_id === orderItemId);
@@ -378,85 +431,83 @@
 
       currentSelectedOrder = item;
       updateDetailModalContent(item);
-      document.getElementById('chef-detail-modal').classList.remove('hidden');
+      const modal = document.getElementById('chef-detail-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeDetailModal() {
-      document.getElementById('chef-detail-modal').classList.add('hidden');
+      const modal = document.getElementById('chef-detail-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
       currentSelectedOrder = null;
     }
 
     function updateDetailModalContent(item) {
-      document.getElementById('detail-modal-title').textContent = `ID: ${padId(item.order_item_id)}`;
+      document.getElementById('detail-modal-top-id').textContent = padId(item.order_item_id);
       document.getElementById('detail-id').textContent = padId(item.order_item_id);
       document.getElementById('detail-table').textContent = item.table_number;
       document.getElementById('detail-menu').textContent = item.menu_name;
       document.getElementById('detail-qty').textContent = item.quantity;
 
-      const statusMap = {
-        'queue': 'อยู่ในคิว',
-        'prepare': 'กำลังทำ',
-        'finish': 'เสร็จสิ้น'
-      };
-      document.getElementById('detail-status').textContent = statusMap[item.status] || item.status;
+      const statusContainer = document.getElementById('detail-status');
+      if (item.status === 'queue') {
+        statusContainer.innerHTML = `<span class="text-[#0284c7] font-black">อยู่ในคิว</span>`;
+      } else if (item.status === 'prepare') {
+        statusContainer.innerHTML = `<span class="text-[#c2410c] font-black">กำลังทำ</span>`;
+      } else {
+        statusContainer.innerHTML = `<span class="text-[#059669] font-black">เสร็จสิ้น</span>`;
+      }
 
       const customDiv = document.getElementById('detail-customization');
       customDiv.replaceChildren();
+
       if (item.options_text) {
         const optDiv = document.createElement('div');
-        const strong = document.createElement('strong');
-        strong.textContent = 'ตัวเลือก:';
-        optDiv.append(strong, document.createTextNode(' ' + item.options_text));
+        optDiv.innerHTML = `<span class="font-extrabold text-[#2d221b]">ตัวเลือก:</span> ${item.options_text}`;
         customDiv.appendChild(optDiv);
       }
       if (item.toppings_text) {
         const topDiv = document.createElement('div');
-        const strong = document.createElement('strong');
-        strong.textContent = 'ท็อปปิ้ง:';
-        topDiv.append(strong, document.createTextNode(' ' + item.toppings_text));
+        topDiv.innerHTML = `<span class="font-extrabold text-[#2d221b]">ท็อปปิ้ง:</span> ${item.toppings_text}`;
         customDiv.appendChild(topDiv);
       }
       if (!item.options_text && !item.toppings_text) {
-        const noCustomSpan = document.createElement('span');
-        noCustomSpan.className = 'text-stone-400';
-        noCustomSpan.textContent = 'ไม่มีการปรับแต่งเพิ่มเติม';
-        customDiv.appendChild(noCustomSpan);
+        customDiv.innerHTML = `<span class="text-[#8c7a6b] font-medium">ไม่มีการปรับแต่งเพิ่มเติม</span>`;
       }
 
+      // Action Buttons (ปรับขนาดปุ่มให้ใหญ่เท่ากันทุกสถานะ ไม่มีสติกเกอร์)
       const actionsDiv = document.getElementById('detail-actions');
       actionsDiv.replaceChildren();
 
       if (item.status === 'queue') {
-        // ปุ่มรับคำสั่งซื้อ (สถานะ queue)
         const btn = document.createElement('button');
         btn.onclick = () => updateOrderStatus(item.order_item_id, 'prepare');
-        btn.className = 'bg-orange-500 hover:bg-orange-600 border-2 border-[#4a3728] text-white shadow-[0_3px_0_#4a3728] font-bold px-12 py-4 rounded-2xl text-xl transition active:scale-95';
+        btn.className = 'w-72 h-14 bg-[#ea580c] border-2 border-[#9a3412] hover:bg-[#c2410c] text-white font-black rounded-2xl text-lg shadow-[0_3px_0_#9a3412] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center';
         btn.textContent = 'รับคำสั่งซื้อ';
         actionsDiv.appendChild(btn);
       } else if (item.status === 'prepare') {
-        // ปุ่มย้ายกลับไปในคิว (สถานะ prepare)
         const btnBack = document.createElement('button');
         btnBack.onclick = () => updateOrderStatus(item.order_item_id, 'queue');
-        btnBack.className = 'bg-sky-50 border-2 border-sky-400 text-sky-800 shadow-[0_2px_0_#38bdf8] hover:bg-sky-100 font-bold px-8 py-3 rounded-2xl text-base transition active:scale-95';
-        btnBack.textContent = 'อยู่ในคิว (กลับ)';
+        btnBack.className = 'w-56 h-14 bg-[#f0f9ff] border-2 border-[#0284c7] hover:bg-[#e0f2fe] text-[#0284c7] font-black rounded-2xl text-base shadow-[0_2px_0_#0284c7] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center';
+        btnBack.textContent = 'ย้ายกลับไปในคิว';
 
         const btnFinish = document.createElement('button');
         btnFinish.onclick = () => finishOrderAndShowSlip(item.order_item_id);
-        btnFinish.className = 'bg-orange-500 hover:bg-orange-600 border-2 border-[#4a3728] shadow-[0_3px_0_#4a3728] text-white font-bold px-8 py-3.5 rounded-2xl text-lg transition active:scale-95 flex items-center justify-center gap-2';
+        btnFinish.className = 'w-56 h-14 bg-[#ea580c] border-2 border-[#9a3412] hover:bg-[#c2410c] text-white font-black rounded-2xl text-base shadow-[0_3px_0_#9a3412] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center';
         btnFinish.textContent = 'ทำเสร็จแล้ว';
 
         actionsDiv.append(btnBack, btnFinish);
       } else if (item.status === 'finish') {
-        // ปุ่มนำกลับไปอยู่ในคิว และ ปุ่มพิมพ์ใบเมนูซ้ำ (สถานะ finish)
         const btnQueue = document.createElement('button');
         btnQueue.onclick = () => updateOrderStatus(item.order_item_id, 'queue');
-        btnQueue.className = 'bg-sky-50 border-2 border-sky-300 text-sky-800 shadow-[0_2px_0_#bae6fd] hover:bg-sky-100 font-bold px-8 py-3 rounded-2xl text-sm transition active:scale-95';
+        btnQueue.className = 'w-56 h-14 bg-white border-2 border-[#4a3728] hover:bg-[#fef9c3] text-[#4a3728] font-black rounded-2xl text-base shadow-[0_3px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center';
         btnQueue.textContent = 'นำกลับไปอยู่ในคิว';
 
         const btnPrint = document.createElement('button');
         btnPrint.onclick = () => showFoodSlip(currentSelectedOrder);
-        btnPrint.className = 'bg-amber-100 border-2 border-[#4a3728] text-[#4a3728] shadow-[0_2px_0_#4a3728] hover:bg-amber-200 font-bold px-8 py-3 rounded-2xl text-sm transition active:scale-95';
-        btnPrint.textContent = 'พิมพ์ใบเมนู';
+        btnPrint.className = 'w-56 h-14 bg-[#fef3c7] border-2 border-[#d97706] hover:bg-[#fef08a] text-[#a16207] font-black rounded-2xl text-base shadow-[0_3px_0_#d97706] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center';
+        btnPrint.textContent = 'พิมพ์ใบเมนูซ้ำ';
 
         actionsDiv.append(btnQueue, btnPrint);
       }
@@ -517,27 +568,31 @@
       }
       if (item.toppings_text) {
         const header = document.createElement('div');
-        header.className = 'font-bold pt-1';
+        header.className = 'font-bold pt-1 text-[#4a3728]';
         header.textContent = 'ท็อปปิ้ง:';
         detailsContainer.appendChild(header);
 
         item.toppings_text.split(', ').forEach(top => {
           const div = document.createElement('div');
-          div.className = 'pl-2';
+          div.className = 'pl-2 text-[#ea580c]';
           div.textContent = `+ ${top}`;
           detailsContainer.appendChild(div);
         });
       }
 
-      document.getElementById('food-slip-modal').classList.remove('hidden');
+      const modal = document.getElementById('food-slip-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
     function closeFoodSlip() {
-      document.getElementById('food-slip-modal').classList.add('hidden');
+      const modal = document.getElementById('food-slip-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     function printFoodSlip() {
-      alert('[จำลองการพิมพ์] พิมพ์เรียบร้อย');
+      alert('🖨️ [จำลองการพิมพ์] ใบรายการอาหารสำหรับพนักงานเสิร์ฟได้ถูกพิมพ์เรียบร้อยแล้ว');
       closeFoodSlip();
     }
 
