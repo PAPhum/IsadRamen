@@ -451,29 +451,45 @@
       document.getElementById('detail-qty').textContent = item.quantity;
 
       const statusContainer = document.getElementById('detail-status');
+      statusContainer.replaceChildren();
+      const statusSpan = document.createElement('span');
+      statusSpan.className = 'font-black';
       if (item.status === 'queue') {
-        statusContainer.innerHTML = `<span class="text-[#0284c7] font-black">อยู่ในคิว</span>`;
+        statusSpan.classList.add('text-[#0284c7]');
+        statusSpan.textContent = 'อยู่ในคิว';
       } else if (item.status === 'prepare') {
-        statusContainer.innerHTML = `<span class="text-[#c2410c] font-black">กำลังทำ</span>`;
+        statusSpan.classList.add('text-[#c2410c]');
+        statusSpan.textContent = 'กำลังทำ';
       } else {
-        statusContainer.innerHTML = `<span class="text-[#059669] font-black">เสร็จสิ้น</span>`;
+        statusSpan.classList.add('text-[#059669]');
+        statusSpan.textContent = 'เสร็จสิ้น';
       }
+      statusContainer.appendChild(statusSpan);
 
       const customDiv = document.getElementById('detail-customization');
       customDiv.replaceChildren();
 
       if (item.options_text) {
         const optDiv = document.createElement('div');
-        optDiv.innerHTML = `<span class="font-extrabold text-[#2d221b]">ตัวเลือก:</span> ${item.options_text}`;
+        const optLabel = document.createElement('span');
+        optLabel.className = 'font-extrabold text-[#2d221b]';
+        optLabel.textContent = 'ตัวเลือก: ';
+        optDiv.append(optLabel, document.createTextNode(item.options_text));
         customDiv.appendChild(optDiv);
       }
       if (item.toppings_text) {
         const topDiv = document.createElement('div');
-        topDiv.innerHTML = `<span class="font-extrabold text-[#2d221b]">ท็อปปิ้ง:</span> ${item.toppings_text}`;
+        const topLabel = document.createElement('span');
+        topLabel.className = 'font-extrabold text-[#2d221b]';
+        topLabel.textContent = 'ท็อปปิ้ง: ';
+        topDiv.append(topLabel, document.createTextNode(item.toppings_text));
         customDiv.appendChild(topDiv);
       }
       if (!item.options_text && !item.toppings_text) {
-        customDiv.innerHTML = `<span class="text-[#8c7a6b] font-medium">ไม่มีการปรับแต่งเพิ่มเติม</span>`;
+        const noCustomSpan = document.createElement('span');
+        noCustomSpan.className = 'text-[#8c7a6b] font-medium';
+        noCustomSpan.textContent = 'ไม่มีการปรับแต่งเพิ่มเติม';
+        customDiv.appendChild(noCustomSpan);
       }
 
       // Action Buttons (ปรับขนาดปุ่มให้ใหญ่เท่ากันทุกสถานะ ไม่มีสติกเกอร์)

@@ -237,7 +237,8 @@
     }
 
     function renderTablesGrid() {
-      const container = document.getElementById('tables-grid'); container.innerHTML = '';
+      const container = document.getElementById('tables-grid');
+      container.replaceChildren();
       const totalPages = Math.max(1, Math.ceil(allTables.length / tablesPerPage));
       const pageTables = allTables.slice((currentTablePage - 1) * tablesPerPage, currentTablePage * tablesPerPage);
 
@@ -246,8 +247,16 @@
         const btn = document.createElement('button');
         btn.className = `rounded-2xl border-2 p-2.5 flex flex-col items-center justify-center transition cursor-pointer ${isSel ? 'border-[#eab308] bg-[#fef08a] shadow-[0_2px_0_#ca8a04]' : 'border-[#dfd5c6] bg-white shadow-[0_1.5px_0_#dfd5c6] hover:bg-[#fef9c3] hover:border-[#facc15]'}`;
         btn.onclick = () => selectAndLoadTable(t.table_id);
-        btn.innerHTML = `<span class="text-xs font-black ${isSel ? 'text-[#a16207]' : 'text-[#4a3728]'}">${t.table_number}</span>
-                         <span class="text-[11px] font-extrabold mt-0.5 ${hasUnpaid ? 'text-[#ea580c]' : 'text-[#a89a8c]'}">${hasUnpaid ? t.unpaid_total+' ฿' : 'ว่าง'}</span>`;
+
+        const spanNumber = document.createElement('span');
+        spanNumber.className = `text-xs font-black ${isSel ? 'text-[#a16207]' : 'text-[#4a3728]'}`;
+        spanNumber.textContent = t.table_number;
+
+        const spanStatus = document.createElement('span');
+        spanStatus.className = `text-[11px] font-extrabold mt-0.5 ${hasUnpaid ? 'text-[#ea580c]' : 'text-[#a89a8c]'}`;
+        spanStatus.textContent = hasUnpaid ? `${t.unpaid_total} ฿` : 'ว่าง';
+
+        btn.append(spanNumber, spanStatus);
         container.appendChild(btn);
       });
 
@@ -264,7 +273,8 @@
     }
 
     function renderBill() {
-      const tbody = document.getElementById('bill-tbody'); tbody.innerHTML = '';
+      const tbody = document.getElementById('bill-tbody');
+      tbody.replaceChildren();
       const items = currentBill?.items || [];
       const hasBill = currentBill && items.length > 0;
       const total = hasBill ? currentBill.grand_total : 0;
@@ -281,11 +291,28 @@
         if (items.length <= 8) tr.style.height = '12.5%';
         if (item) {
           const custom = [item.options_text, item.toppings_text].filter(Boolean).join(' / ') || '-';
-          tr.innerHTML = `<td class="font-extrabold border-r border-b border-[#e8decb]">${i+1}</td>
-                          <td class="text-left pl-3.5 font-extrabold text-[#2d221b] border-r border-b border-[#e8decb]">${item.menu_name}</td>
-                          <td class="text-left pl-3.5 text-[11px] text-[#716155] border-r border-b border-[#e8decb]">${custom}</td>
-                          <td class="font-black text-[#2d221b] border-r border-b border-[#e8decb]">${item.quantity}</td>
-                          <td class="font-black text-[#ea580c] border-b border-[#e8decb]">${item.item_total} ฿</td>`;
+
+          const tdIndex = document.createElement('td');
+          tdIndex.className = 'font-extrabold border-r border-b border-[#e8decb]';
+          tdIndex.textContent = i + 1;
+
+          const tdName = document.createElement('td');
+          tdName.className = 'text-left pl-3.5 font-extrabold text-[#2d221b] border-r border-b border-[#e8decb]';
+          tdName.textContent = item.menu_name;
+
+          const tdCustom = document.createElement('td');
+          tdCustom.className = 'text-left pl-3.5 text-[11px] text-[#716155] border-r border-b border-[#e8decb]';
+          tdCustom.textContent = custom;
+
+          const tdQty = document.createElement('td');
+          tdQty.className = 'font-black text-[#2d221b] border-r border-b border-[#e8decb]';
+          tdQty.textContent = item.quantity;
+
+          const tdTotal = document.createElement('td');
+          tdTotal.className = 'font-black text-[#ea580c] border-b border-[#e8decb]';
+          tdTotal.textContent = `${item.item_total} ฿`;
+
+          tr.append(tdIndex, tdName, tdCustom, tdQty, tdTotal);
         } else {
           for(let j=0; j<5; j++) {
             const td = document.createElement('td');
@@ -345,16 +372,39 @@
       const d = p.payment_time ? new Date(p.payment_time) : new Date();
       document.getElementById('receipt-date').textContent = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()+543} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
 
-      const list = document.getElementById('receipt-items-list'); list.innerHTML = '';
+      const list = document.getElementById('receipt-items-list');
+      list.replaceChildren();
       (p.items || currentBill?.items || []).forEach(it => {
         const custom = [it.options_text, it.toppings_text].filter(Boolean).join(' / ');
-        list.innerHTML += `<div class="flex justify-between items-start">
-          <div class="pr-2">
-            <div class="font-black text-[13px] text-[#4a3728]">${it.menu_name} <span class="text-[#716155] text-xs font-extrabold">x${it.quantity}</span></div>
-            ${custom ? `<div class="text-[10px] text-[#8c7a6b] font-bold mt-px">- ${custom}</div>` : ''}
-          </div>
-          <div class="font-black text-[13px] text-[#4a3728] whitespace-nowrap">${it.item_total} ฿</div>
-        </div>`;
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'flex justify-between items-start';
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'pr-2';
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'font-black text-[13px] text-[#4a3728]';
+        nameDiv.textContent = `${it.menu_name} `;
+
+        const qtySpan = document.createElement('span');
+        qtySpan.className = 'text-[#716155] text-xs font-extrabold';
+        qtySpan.textContent = `x${it.quantity}`;
+        nameDiv.appendChild(qtySpan);
+        infoDiv.appendChild(nameDiv);
+
+        if (custom) {
+          const customDiv = document.createElement('div');
+          customDiv.className = 'text-[10px] text-[#8c7a6b] font-bold mt-px';
+          customDiv.textContent = `- ${custom}`;
+          infoDiv.appendChild(customDiv);
+        }
+
+        const priceDiv = document.createElement('div');
+        priceDiv.className = 'font-black text-[13px] text-[#4a3728] whitespace-nowrap';
+        priceDiv.textContent = `${it.item_total} ฿`;
+
+        rowDiv.append(infoDiv, priceDiv);
+        list.appendChild(rowDiv);
       });
       document.getElementById('receipt-total').textContent = p.total_amount;
       document.getElementById('receipt-method').textContent = p.payment_method;

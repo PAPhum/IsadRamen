@@ -14,16 +14,12 @@
     <!-- Hero Header: Main Control -->
     <div class="text-center space-y-3 pt-2">
       <div class="inline-flex items-center gap-2 bg-red-600 text-white font-black px-4 py-1.5 rounded-full text-xs tracking-widest uppercase shadow">
-        <span>🎛️</span> MAIN CONTROL PANEL
+        MAIN CONTROL PANEL EIEI
       </div>
-      <h1 class="text-3xl md:text-5xl font-black tracking-tight text-gray-900">
-        🍜 ศูนย์ควบคุมหลัก (Main Control)
-      </h1>
       <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto font-medium">
-        Koumiya Ramen Hub • เข้าหน้านี้ผ่าน URL: <code class="bg-gray-200 px-2 py-0.5 rounded font-mono text-red-600 font-bold">/mainControl</code>
+        Koumiya Ramen <code class="bg-gray-200 px-2 py-0.5 rounded font-mono text-red-600 font-bold">/mainControl</code>
       </p>
     </div>
-
     <!-- QR Scan & Table Auto-Assignment Simulator Box -->
     <div class="bg-gradient-to-r from-red-50 to-orange-50 border-4 border-black p-5 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-4">
@@ -32,31 +28,27 @@
         </div>
         <div class="space-y-1">
           <div class="inline-block bg-black text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-            📱 การทำงานเมื่อลูกค้าสแกน QR Code หน้าเว็บหลัก ( / )
+            การทำงานเมื่อลูกค้าสแกน QR
           </div>
           <h2 class="text-lg md:text-xl font-black text-gray-900">
-            ระบบแจกลำดับโต๊ะอัตโนมัติ (คนแรกได้โต๊ะ 1, คนสองได้โต๊ะ 2...)
+            ระบบแจกลำดับโต๊ะอัตโนมัติ
           </h2>
-          <p class="text-xs md:text-sm text-gray-600">
-            เมื่อลูกค้าสแกน QR Code หน้าเว็บ <span class="font-bold text-black">https://koumiya-ramen.onrender.com/</span> ระบบจะส่งลูกค้าไปยังหน้าโต๊ะของตัวเองทันที พร้อมจำ Cookie ไว้ในเครื่อง
-          </p>
         </div>
       </div>
       <div class="flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto">
         <a href="/scan?new=1" target="_blank"
            class="bg-red-600 hover:bg-red-700 text-white font-black px-5 py-3 rounded-xl text-center text-xs md:text-sm shadow transition flex items-center justify-center gap-2">
-          <span>📲</span> จำลองลูกค้าสแกนได้โต๊ะใหม่
+          จำลองลูกค้าสแกนได้โต๊ะใหม่
         </a>
         <button onclick="clearMyTableCookie()" 
                 class="bg-white hover:bg-gray-100 text-gray-800 border-2 border-black font-bold px-4 py-3 rounded-xl text-center text-xs transition">
-          🔄 ล้าง Cookie โต๊ะเครื่องนี้
+          ล้าง Cookie
         </button>
       </div>
     </div>
 
     <!-- 3 Main Role Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      
       <!-- CARD 1: Customer Tablet -->
       <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-xl flex flex-col justify-between hover:-translate-y-1 transition duration-200">
         <div class="space-y-4">
@@ -65,9 +57,6 @@
           </div>
           <div>
             <h2 class="text-2xl font-black text-gray-900">1. ฝั่งลูกค้า (Customer)</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">
-              หน้าจอ Tablet ประจำโต๊ะ (Touch/Click only, แสดงเต็มหน้าจอ iPad)
-            </p>
           </div>
           <div class="space-y-2 pt-2">
             <label for="quick-table-select" class="text-xs font-bold text-gray-600 block">เลือกโต๊ะที่ต้องการเปิดดู:</label>
@@ -88,13 +77,6 @@
             </div>
           </div>
         </div>
-
-        <div class="pt-6 border-t border-gray-200 mt-4 space-y-2">
-          <a href="/customer/T05" 
-             class="block w-full bg-black text-white hover:bg-gray-800 font-bold py-3 rounded-xl text-center text-sm shadow transition">
-            เปิด Tablet โต๊ะ T05 (Acceptance Test)
-          </a>
-        </div>
       </div>
 
       <!-- CARD 2: Chef KDS -->
@@ -105,18 +87,8 @@
           </div>
           <div>
             <h2 class="text-2xl font-black text-gray-900">2. ฝั่งครัว (Chef KDS)</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">
-              คิวอาหาร (queue → prepare → finish), จัดการทีละ Item, พิมพ์ Food Slip อัตโนมัติ
-            </p>
           </div>
-          <ul class="text-xs text-gray-600 space-y-1 pt-2 font-medium">
-            <li>✓ รับคำสั่งซื้อ (อยู่ในคิว → กำลังทำ)</li>
-            <li>✓ ทำเสร็จสิ้น (กำลังทำ → เสร็จสิ้น)</li>
-            <li>✓ แสดง Food Slip จำลองทันทีเมื่อเสร็จ</li>
-            <li>✓ ขยายเต็มจอ iPad พอดี ไร้ขอบดำ</li>
-          </ul>
         </div>
-
         <div class="pt-6 border-t border-gray-200 mt-4">
           <a href="/chef" 
              class="block w-full bg-yellow-500 hover:bg-yellow-600 text-black font-black py-3 rounded-xl text-center text-sm shadow transition">
@@ -133,17 +105,8 @@
           </div>
           <div>
             <h2 class="text-2xl font-black text-gray-900">3. ฝั่งแคชเชียร์ (Cashier)</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">
-              เคาน์เตอร์ POS และหน้าจอลูกค้า (แสดงเฉพาะโต๊ะ ยอดเงิน และ QR Code)
-            </p>
           </div>
-          <ul class="text-xs text-gray-600 space-y-1 pt-2 font-medium">
-            <li>✓ รวมบิลโต๊ะ, Numeric Keypad, ทอนเงิน, ใบเสร็จ</li>
-            <li>✓ จอลูกค้าสแกนจ่าย แสดง โต๊ะ + ยอดเงิน + Mock QR</li>
-            <li>✓ ขยายเต็มจอ iPad พอดี ไร้ขอบดำ</li>
-          </ul>
         </div>
-
         <div class="pt-6 border-t border-gray-200 mt-4 space-y-2">
           <a href="/cashier" 
              class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-center text-sm shadow transition">
@@ -155,67 +118,8 @@
           </a>
         </div>
       </div>
-
     </div>
-
-    <!-- Acceptance Test Checklist Summary (29 Steps) -->
-    <div class="bg-white border-4 border-black p-6 rounded-2xl shadow-sm space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3">
-        <h3 class="font-black text-lg text-gray-900 flex items-center gap-2">
-          <span>📋</span> ลำดับการทดสอบ Acceptance Test (ครบ 29 ขั้นตอน)
-        </h3>
-        <button onclick="resetAllDemoOrders()" 
-                class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-300 font-bold px-4 py-1.5 rounded-lg text-xs transition cursor-pointer">
-          🔄 ล้างข้อมูล Order ทั้งหมด & เริ่มต้นนับโต๊ะสแกนใหม่
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-gray-700">
-        <div class="space-y-1.5 bg-gray-50 p-3 rounded-lg border">
-          <p class="font-bold text-gray-900 border-b pb-1">ขั้นตอนที่ 1-15: สั่งอาหาร & ทำครัว</p>
-          <p>1. เปิด <a href="/customer/T05" class="text-blue-600 underline">/customer/T05</a></p>
-          <p>2. กดปุ่มใหญ่ "กดเพื่อเลือกเมนู"</p>
-          <p>3. เลือกหมวดราเมง</p>
-          <p>4. กด "ทงคตสึราเมง"</p>
-          <p>5. เลือก Option: เส้นแข็ง, ซุปข้นมาก, เผ็ดปานกลาง</p>
-          <p>6. เลือก Topping: เพิ่มหมูชาชู (+10)</p>
-          <p>7. ปรับจำนวน และกด "เพิ่มลงตะกร้า"</p>
-          <p>8. เลือก "เกี๊ยวซ่า" (ของทานเล่น) เพิ่มเข้าตะกร้าตรงๆ</p>
-          <p>9. แก้ไขจำนวน / ลบ / กดชื่อเพื่อแก้ไขได้</p>
-          <p>10. กดยืนยันรายการ "สั่งอาหาร"</p>
-          <p>11. หน้าจอแสดง "รออาหารสักครู่" ค้าง 5 วิ แล้วกลับหน้าเมนู</p>
-          <p>12. เปิด <a href="/chef" target="_blank" class="text-blue-600 underline">/chef</a> เห็นรายการ T05 ใน Queue</p>
-          <p>13. กดที่รายการ → กด "รับคำสั่งซื้อ" (queue → prepare)</p>
-          <p>14. กด "เสร็จสิ้น" (prepare → finish)</p>
-          <p>15. ระบบแสดง Food Slip แบบจำลองทันที</p>
-        </div>
-
-        <div class="space-y-1.5 bg-gray-50 p-3 rounded-lg border">
-          <p class="font-bold text-gray-900 border-b pb-1">ขั้นตอนที่ 16-29: สั่งเพิ่ม & ชำระเงิน & Reset โต๊ะ</p>
-          <p>16. Customer โต๊ะ T05 สั่งโค้กเพิ่ม และเกิด Order รอบใหม่ได้</p>
-          <p>17. ตรวจสอบ "ประวัติการสั่ง/ชำระเงิน" รวมทุกรอบที่ยังไม่จ่าย</p>
-          <p>18. กดชำระเงิน → แสดง "นำ paymentcard ไปชำระเงินที่แคชเชียร์"</p>
-          <p>19. เปิด <a href="/cashier" target="_blank" class="text-blue-600 underline">/cashier</a></p>
-          <p>20. กด "สแกน" แล้วเลือก CARD-05</p>
-          <p>21. ระบบค้นหาโต๊ะ T05 และรวมรายการค้างจ่ายทั้งหมด</p>
-          <p>22. จอลูกค้า (/cashier/customer-display) แสดงเฉพาะโต๊ะ ยอดเงิน และ QR เมื่อเลือกโอน</p>
-          <p>23. เงินสด: กดปุ่ม Numeric Keypad คำนวณเงินทอน</p>
-          <p>24. กดยืนยันการชำระเงิน</p>
-          <p>25. แสดงใบเสร็จรับเงิน (Receipt)</p>
-          <p>26. ระบบ Reset โต๊ะ T05 ให้ว่าง</p>
-          <p>27. กลับไปที่ <a href="/customer/T05" class="text-blue-600 underline">/customer/T05</a> จะไม่เห็นรายการของลูกค้าคนก่อน</p>
-          <p>28. ลูกค้าคนใหม่เริ่มสั่งอาหารรอบใหม่ได้อย่างถูกต้อง</p>
-        </div>
-      </div>
-    </div>
-
   </div>
-
-  <!-- Footer -->
-  <footer class="text-center text-xs text-gray-500 py-4">
-    Koumiya Ramen System • Express.js + SQLite + EJS + Tailwind CSS
-  </footer>
-
   <script>
     function goToCustomerTable() {
       const tableVal = document.getElementById('quick-table-select').value;
