@@ -1,4 +1,4 @@
-# 🍜 IsadRamen (Koumiya Ramen) - System & File Documentation
+npm run dev# 🍜 IsadRamen (Koumiya Ramen) - System & File Documentation
 
 เอกสารฉบับนี้จัดทำขึ้นเพื่ออธิบายโครงสร้างระบบ รายละเอียดของทุกไฟล์และโฟลเดอร์ในโปรเจกต์ ว่าแต่ละส่วนทำหน้าที่อะไรและทำงานร่วมกันอย่างไร
 
