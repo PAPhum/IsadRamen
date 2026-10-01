@@ -25,7 +25,7 @@
     <div class="flex items-center pb-2 gap-3">
       <div class="w-12 h-12 rounded-2xl border-2 border-[#4a3728] bg-[#fef3c7] flex items-center justify-center text-2xl shadow-[0_2px_0_#4a3728]">💳</div>
       <h1 class="text-2xl font-black text-[#4a3728]">ระบบแคชเชียร์</h1>
-      <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full border border-[#fde68a]">IsadRamen POS</span>
+      <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full border border-[#fde68a]">Koumiya Ramen</span>
     </div>
 
     <!-- 3 Columns Layout -->
@@ -44,7 +44,7 @@
             <button onclick="changePage(1)" id="table-next-btn" class="w-8 h-[30px] border-2 border-[#4a3728] rounded-lg bg-white text-[#4a3728] font-extrabold text-xs flex items-center justify-center shadow-[0_2px_0_#4a3728] hover:bg-[#fef9c3] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer">&gt;</button>
           </div>
           <button onclick="toggleModal('scan-modal', true)" class="w-full h-[42px] bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] border-2 border-[#4a3728] rounded-[14px] font-black text-xs text-[#4a3728] flex items-center justify-center gap-2 shadow-[0_2px_0_#4a3728] hover:from-[#fef08a] hover:to-[#fde68a] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer">
-            <span>💳</span><span>สแกนการ์ด</span>
+            <span>สแกนการ์ด</span>
           </button>
         </div>
       </div>
@@ -53,7 +53,7 @@
       <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 flex flex-col justify-between min-h-0 bg-[#fffdfa]">
         <div class="flex flex-col flex-1 min-h-0">
           <div class="flex items-center justify-center gap-1.5 mb-2 font-black text-sm">
-            <span>📋</span><span id="table-title">รายการอาหาร (เลือกโต๊ะ)</span>
+            <span id="table-title">รายการอาหาร (เลือกโต๊ะ)</span>
           </div>
           <div class="flex-1 border-2 border-[#4a3728] rounded-2xl overflow-hidden flex flex-col min-h-0 bg-white">
             <table class="w-full h-full border-collapse table-fixed text-xs text-center">
@@ -88,8 +88,8 @@
             </div>
 
             <div class="flex gap-2 mb-2.5">
-              <button onclick="setPaymentMethod('TRANSFER')" id="btn-transfer" class="flex-1 h-10 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 shadow-[0_2px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer border-2 border-[#4a3728] bg-[#f0f9ff] text-[#0284c7]">📱 โอน (QR)</button>
-              <button onclick="setPaymentMethod('CASH')" id="btn-cash" class="flex-1 h-10 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 shadow-[0_2px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer border-2 border-[#047857] bg-[#10b981] text-white">💵 เงินสด (CASH)</button>
+              <button onclick="setPaymentMethod('TRANSFER')" id="btn-transfer" class="flex-1 h-10 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 shadow-[0_2px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer border-2 border-[#4a3728] bg-[#f0f9ff] text-[#0284c7]">โอน (QR)</button>
+              <button onclick="setPaymentMethod('CASH')" id="btn-cash" class="flex-1 h-10 rounded-xl font-black text-xs flex items-center justify-center gap-1.5 shadow-[0_2px_0_#4a3728] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer border-2 border-[#047857] bg-[#10b981] text-white">เงินสด (CASH)</button>
             </div>
 
             <div id="cash-mode" class="flex flex-col gap-1.5">
@@ -135,7 +135,7 @@
             </div>
           </div>
           <button onclick="confirmPayment()" id="confirm-payment-btn" disabled class="w-full h-[50px] bg-[#ea580c] border-2 border-[#9a3412] rounded-[18px] text-white text-[15px] font-black flex items-center justify-center gap-2 shadow-[0_3px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none transition cursor-pointer">
-            ✨ ยืนยันการชำระเงิน
+            ยืนยันการชำระเงิน
           </button>
         </div>
       </div>
@@ -168,7 +168,7 @@
         <div class="flex gap-2.5">
           <input type="text" id="manual-card-input" placeholder="หรือพิมพ์ เช่น CARD-05" class="flex-1 h-11 border-2 border-[#4a3728] rounded-2xl px-4 text-xs font-extrabold outline-none" onkeypress="if(event.key === 'Enter') selectCardCode(this.value)">
           <button onclick="selectCardCode(document.getElementById('manual-card-input').value)" class="w-28 h-11 bg-[#ea580c] border-2 border-[#9a3412] rounded-2xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] flex items-center justify-center gap-1.5 cursor-pointer transition">
-            <span>🔍</span><span>ค้นหา</span>
+            <span>ค้นหา</span>
           </button>
         </div>
       </div>
@@ -209,8 +209,8 @@
         <p class="text-center text-[10px] text-[#8c7a6b] font-bold my-0.5">ขอบคุณที่ใช้บริการ / Thank you!</p>
 
         <div class="flex gap-2.5 mt-1">
-          <button type="button" onclick="alert('🖨️ [จำลองการพิมพ์] ใบเสร็จรับเงินถูกส่งไปยังเครื่องพิมพ์เรียบร้อยแล้ว')" class="flex-1 h-10 bg-[#ea580c] border-2 border-[#9a3412] rounded-xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center gap-1.5">
-            <span>🖨️</span><span>พิมพ์ใบเสร็จ</span>
+          <button type="button" onclick="alert('[จำลองการพิมพ์] ใบเสร็จรับเงินถูกส่งไปยังเครื่องพิมพ์เรียบร้อยแล้ว')" class="flex-1 h-10 bg-[#ea580c] border-2 border-[#9a3412] rounded-xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center gap-1.5">
+            <span>พิมพ์ใบเสร็จ</span>
           </button>
           <button type="button" onclick="closeReceiptAndReset()" class="flex-1 h-10 bg-white border-2 border-[#4a3728] rounded-xl text-[#4a3728] font-black text-xs shadow-[0_2px_0_#4a3728] hover:bg-[#fef9c3] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer">
             เสร็จสิ้น (ปิด)

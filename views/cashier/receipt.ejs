@@ -24,7 +24,7 @@
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-2xl border-2 border-[#4a3728] bg-[#fef3c7] flex items-center justify-center text-2xl">💳</div>
         <h1 class="text-2xl font-black">ระบบแคชเชียร์</h1>
-        <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full">IsadRamen POS</span>
+        <span class="bg-[#fef3c7] text-[#a46700] text-xs font-extrabold px-3 py-1 rounded-full">Koumiya Ramen</span>
       </div>
       <div class="grid grid-cols-[185px_1fr_345px] gap-4 flex-1 mt-2">
         <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 bg-[#fffdfa] flex flex-col justify-between">
@@ -37,10 +37,10 @@
             <div class="rounded-2xl border-2 border-[#eab308] bg-[#fef08a] p-2.5 text-center font-black text-[#a16207]">T05<br><small class="text-[#ea580c]"><%= payment.total_amount || 280 %> ฿</small></div>
             <div class="rounded-2xl border-2 border-[#dfd5c6] p-2.5 text-center bg-white">T06<br><small>ว่าง</small></div>
           </div>
-          <div class="h-10 bg-[#fef3c7] border-2 border-[#4a3728] rounded-xl text-center leading-9 font-black">💳 สแกนการ์ด</div>
+          <div class="h-10 bg-[#fef3c7] border-2 border-[#4a3728] rounded-xl text-center leading-9 font-black">สแกนการ์ด</div>
         </div>
         <div class="border-2 border-[#4a3728] rounded-[20px] p-3.5 bg-[#fffdfa] flex flex-col justify-between">
-          <div class="text-center font-black">📋 รายการอาหาร <%= payment.table_number || 'T05' %></div>
+          <div class="text-center font-black">รายการอาหาร <%= payment.table_number || 'T05' %></div>
           <div class="flex-1 border-2 border-[#4a3728] rounded-2xl bg-white my-2"></div>
           <div class="border-2 border-[#4a3728] rounded-xl py-2.5 px-7 flex justify-between font-black">
             <span>ยอดรวมโต๊ะนี้:</span><span class="text-[#ea580c]"><%= payment.total_amount || 280 %> ฿</span>
@@ -70,7 +70,7 @@
   <div class="relative z-10 bg-white w-[400px] border-2 border-[#4a3728] rounded-[28px] p-6 flex flex-col gap-2.5 shadow-[0_25px_35px_-5px_rgba(74,55,40,0.35)]">
     
     <div class="text-center border-b-2 border-dashed border-[#4a3728] pb-2">
-      <h1 class="font-black text-lg tracking-tight m-0">ISADRAMEN RESTAURANT</h1>
+      <h1 class="font-black text-lg tracking-tight m-0">Koumiya Ramen</h1>
       <p class="text-[11px] font-extrabold text-[#716155] mt-0.5">ใบเสร็จรับเงิน (RECEIPT)</p>
     </div>
 
@@ -137,7 +137,7 @@
 
     <div class="flex gap-2.5 mt-1">
       <button type="button" onclick="handlePrintAlert()" class="flex-1 h-10 bg-[#ea580c] border-2 border-[#9a3412] rounded-xl text-white font-black text-xs shadow-[0_2px_0_#9a3412] hover:bg-[#c2410c] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center gap-1.5">
-        <span>🖨️</span><span>พิมพ์ใบเสร็จ</span>
+        <span>พิมพ์ใบเสร็จ</span>
       </button>
       <a href="/cashier" class="flex-1 h-10 bg-white border-2 border-[#4a3728] rounded-xl text-[#4a3728] font-black text-xs shadow-[0_2px_0_#4a3728] hover:bg-[#fef9c3] hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none transition cursor-pointer flex items-center justify-center">
         เสร็จสิ้น (ปิด)
@@ -148,7 +148,7 @@
 
   <script>
     function handlePrintAlert() {
-      alert('🖨️ [จำลองการพิมพ์] ใบเสร็จรับเงินถูกส่งไปยังเครื่องพิมพ์เรียบร้อยแล้ว');
+      alert('[จำลองการพิมพ์] ใบเสร็จรับเงินถูกส่งไปยังเครื่องพิมพ์เรียบร้อยแล้ว');
     }
   </script>
 </body>
